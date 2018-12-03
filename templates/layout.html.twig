@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Annonce ton jdr - {% block title %}{% endblock %}</title>
+        <link href="{{ asset('build/app.css') }}" rel="stylesheet" />
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <nav class="navbar navbar-light bg-light">
+            <span class="navbar-brand mb-0 h1">Navbar</span>
+            {% if app.user %}
+            {% else %}
+            <form class="form-inline">
+                <button class="btn btn-outline-success" type="button">login</button>
+                <button class="btn btn-outline-secondary" type="button">register</button>
+            </form>
+            {% endif %}
+        </nav>
+        {% block body %}{% endblock %}
+        <script src="{{ asset('build/app.js') }}"></script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
