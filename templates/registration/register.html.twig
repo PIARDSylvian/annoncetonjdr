@@ -1,0 +1,17 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}register{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+    {{ form_row(form.firstName) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.pseudonym) }}
+    {{ form_row(form.birthDate) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.password.first) }}
+    {{ form_row(form.password.second) }}
+
+    <button type="submit">Register!</button>
+{{ form_end(form) }}
+{% endblock %}

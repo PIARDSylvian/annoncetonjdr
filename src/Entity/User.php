@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -18,7 +19,9 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=180, unique=true)
+     * @ORM\Column(type="string", unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
@@ -30,8 +33,34 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\Length(min=8, max=20)
      */
     private $password;
+
+    /**
+     * @ORM\Column(type="string", length=25, nullable=true)
+     * @Assert\Length(max=25)
+     */
+    private $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=25, nullable=true)
+     * @Assert\Length(max=25)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="date")
+     * @Assert\NotBlank()
+     */
+    private $birthDate;
+
+    /**
+     * @ORM\Column(type="string", length=25)
+     * @Assert\Length(max=25)
+     * @Assert\NotBlank()
+     */
+    private $pseudonym;
 
     public function getId(): ?int
     {
@@ -109,5 +138,53 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(?string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getBirthDate(): ?\DateTimeInterface
+    {
+        return $this->birthDate;
+    }
+
+    public function setBirthDate(\DateTimeInterface $birthDate): self
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    public function getPseudonym(): ?string
+    {
+        return $this->pseudonym;
+    }
+
+    public function setPseudonym(string $pseudonym): self
+    {
+        $this->pseudonym = $pseudonym;
+
+        return $this;
     }
 }
