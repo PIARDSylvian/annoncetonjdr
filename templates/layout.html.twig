@@ -10,11 +10,12 @@
         <nav class="navbar navbar-light bg-light">
             <span class="navbar-brand mb-0 h1">Navbar</span>
             {% if app.user %}
+                {{ app.user.pseudonym }}
             {% else %}
-            <form class="form-inline">
-                <button class="btn btn-outline-success" type="button">login</button>
-                <button class="btn btn-outline-secondary" type="button">register</button>
-            </form>
+            <span>
+                <a class="btn btn-outline-success" href="{{path('app_login')}}">login</a>
+                <a class="btn btn-outline-secondary" href="{{path('app_register')}}">register</a>
+            </span>
             {% endif %}
         </nav>
         {% block body %}{% endblock %}
