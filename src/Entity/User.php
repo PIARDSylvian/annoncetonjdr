@@ -56,7 +56,7 @@ class User implements UserInterface
     private $birthDate;
 
     /**
-     * @ORM\Column(type="string", length=25)
+     * @ORM\Column(type="string", length=25, unique=true)
      * @Assert\Length(max=25)
      * @Assert\NotBlank()
      */
