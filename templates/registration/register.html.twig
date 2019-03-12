@@ -3,15 +3,23 @@
 {% block title %}register{% endblock %}
 
 {% block body %}
-{{ form_start(form) }}
-    {{ form_row(form.firstName) }}
-    {{ form_row(form.name) }}
-    {{ form_row(form.pseudonym) }}
-    {{ form_row(form.birthDate) }}
-    {{ form_row(form.email) }}
-    {{ form_row(form.password.first) }}
-    {{ form_row(form.password.second) }}
-
-    <button type="submit">Register!</button>
-{{ form_end(form) }}
+<div class="container">
+    <div class="justify-content-center">
+        {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+        {{ form_start(form) }}
+            {{ form_row(form.firstName) }}
+            {{ form_row(form.name) }}
+            {{ form_row(form.pseudonym) }}
+            {{ form_row(form.birthDate) }}
+            {{ form_row(form.email) }}
+            {{ form_row(form.secretQ) }}
+            {{ form_row(form.secretR) }}
+            {{ form_row(form.password.first) }}
+            {{ form_row(form.password.second) }}
+            <div class="text-center">
+                <button type="submit">{% trans %}register_btn{% endtrans %}</button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>        
 {% endblock %}

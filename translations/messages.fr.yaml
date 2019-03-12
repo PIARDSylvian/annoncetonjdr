@@ -1,0 +1,15 @@
+#register
+
+First name: Prénom
+Name: Nom
+Pseudonym: Pseudonyme
+Birth date: Date de naissance
+Email: Courriel
+Secret q: Question Secrète
+rq_1: rq_1_fr
+rq_2: rq_2_fr
+rq_3: rq_3_fr
+Secret r: Réponse secrète
+Password: Mot de passe
+Repeat Password: Répéter le mot de passe 
+register_btn: S'enregistrer
