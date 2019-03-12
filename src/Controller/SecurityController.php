@@ -33,6 +33,10 @@ class SecurityController extends AbstractController
      */
     public function forgottenPassword(Request $request, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer, TokenGeneratorInterface $tokenGenerator): Response
     {
+        if($this->getUser() != null) {
+            return $this->redirectToRoute('home');
+        }
+    
         if($request->isXMLHttpRequest()) {
             $submittedToken = $request->query->get('_csrf_token');
             $email = $request->query->get('email');
