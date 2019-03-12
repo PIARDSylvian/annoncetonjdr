@@ -63,6 +63,20 @@ class User implements UserInterface
     private $pseudonym;
 
     /**
+     * @ORM\Column(type="string", length=10)
+     * @Assert\Length(max=10)
+     * @Assert\NotBlank()
+     */
+    private $secretQ;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\Length(max=255)
+     * @Assert\NotBlank()
+     */
+    private $secretR;
+
+    /**
      * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -202,6 +216,30 @@ class User implements UserInterface
     public function setResetToken(?string $resetToken): self
     {
         $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+    public function getSecretQ(): ?string
+    {
+        return $this->secretQ;
+    }
+
+    public function setSecretQ(string $secretQ): self
+    {
+        $this->secretQ = $secretQ;
+
+        return $this;
+    }
+
+    public function getSecretR(): ?string
+    {
+        return $this->secretR;
+    }
+
+    public function setSecretR(string $secretR): self
+    {
+        $this->secretR = $secretR;
 
         return $this;
     }
