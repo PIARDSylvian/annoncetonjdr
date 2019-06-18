@@ -26,6 +26,9 @@ class Party
     /**
      * @ORM\Column(type="integer")
      * @Assert\LessThan(propertyPath="maxPlayer")
+     * @Assert\Range(
+     *      min = 0
+     * )
      */
     private $alreadySubscribed;
 
@@ -44,7 +47,6 @@ class Party
     /**
      * @ORM\Column(type="datetime")
      * @ORM\JoinColumn(nullable=false)
-     * @var string A "d-m-Y H:i:s" formatted value
      * @Assert\NotBlank()
      * @Assert\Range(
      *      min = "now"

@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class PartyType extends AbstractType
 {
@@ -15,8 +16,8 @@ class PartyType extends AbstractType
     {
         $builder
             ->add('maxPlayer')
-            ->add('alreadySubscribed')
-            ->add('date', DateTimeType::class, ['data' => new \DateTime('now'),'widget' => 'single_text'] )
+            ->add('alreadySubscribed', IntegerType::class, ['data' => 0])
+            ->add('date', DateTimeType::class, ['format'=>'dd-MM-yyyy H:m', 'data' => new \DateTime('now'),'widget' => 'single_text'] )
             ->add('minor', CheckboxType::class, ['required' => false])
             ->add('gameName')
             ->add('gameEdition', CheckboxType::class, ['required' => false])

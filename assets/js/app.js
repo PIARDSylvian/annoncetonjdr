@@ -1,7 +1,6 @@
 /*
  * annoncetonjdr V3
  */
-
 require('../scss/app.scss');
 var $ = require('jquery');
 require('bootstrap');
