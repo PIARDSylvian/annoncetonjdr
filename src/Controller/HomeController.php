@@ -23,14 +23,9 @@ class HomeController extends AbstractController {
         if ($form->isSubmitted() && $form->isValid()) {
 
             $party->setOwner($this->getUser());
-
-            // 4) save the User!
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($party);
             $entityManager->flush();
-
-            // ... do any other work - like sending them an email, etc
-            // maybe set a "flash" success message for the user
 
             return $this->redirectToRoute('home');
         }

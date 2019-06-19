@@ -24,6 +24,13 @@ class Party
     private $owner;
 
     /**
+     * @ORM\Column(type="string", length=50)
+     * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotBlank()
+     */
+    private $partyName;
+
+    /**
      * @ORM\Column(type="integer")
      * @Assert\LessThan(propertyPath="maxPlayer")
      * @Assert\Range(
@@ -60,7 +67,7 @@ class Party
     private $minor;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Game")
      */
     private $gameName;
 
@@ -70,18 +77,40 @@ class Party
     private $gameEdition;
 
     /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $nameScenario;
+
+    /**
      * @ORM\Column(type="boolean")
      */
-    private $gameScenario;
+    private $scenarioEdition;
 
     /**
      * @ORM\Column(type="boolean")
      */
     private $openedCampaign;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $gameDescription;
+
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getPartyName(): ?string
+    {
+        return $this->partyName;
+    }
+
+    public function setPartyName(string $partyName): self
+    {
+        $this->partyName = $partyName;
+
+        return $this;
     }
 
     public function getAlreadySubscribed(): ?int
@@ -120,18 +149,6 @@ class Party
         return $this;
     }
 
-    public function getOwner(): ?User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(?User $owner): self
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
     public function getMinor(): ?bool
     {
         return $this->minor;
@@ -140,18 +157,6 @@ class Party
     public function setMinor(bool $minor): self
     {
         $this->minor = $minor;
-
-        return $this;
-    }
-
-    public function getGameName(): ?string
-    {
-        return $this->gameName;
-    }
-
-    public function setGameName(string $gameName): self
-    {
-        $this->gameName = $gameName;
 
         return $this;
     }
@@ -168,14 +173,26 @@ class Party
         return $this;
     }
 
-    public function getGameScenario(): ?bool
+    public function getNameScenario(): ?string
     {
-        return $this->gameScenario;
+        return $this->nameScenario;
     }
 
-    public function setGameScenario(bool $gameScenario): self
+    public function setNameScenario(string $nameScenario): self
     {
-        $this->gameScenario = $gameScenario;
+        $this->nameScenario = $nameScenario;
+
+        return $this;
+    }
+
+    public function getScenarioEdition(): ?bool
+    {
+        return $this->scenarioEdition;
+    }
+
+    public function setScenarioEdition(bool $scenarioEdition): self
+    {
+        $this->scenarioEdition = $scenarioEdition;
 
         return $this;
     }
@@ -188,6 +205,42 @@ class Party
     public function setOpenedCampaign(bool $openedCampaign): self
     {
         $this->openedCampaign = $openedCampaign;
+
+        return $this;
+    }
+
+    public function getGameDescription(): ?string
+    {
+        return $this->gameDescription;
+    }
+
+    public function setGameDescription(?string $gameDescription): self
+    {
+        $this->gameDescription = $gameDescription;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    public function getGameName(): ?Game
+    {
+        return $this->gameName;
+    }
+
+    public function setGameName(?Game $gameName): self
+    {
+        $this->gameName = $gameName;
 
         return $this;
     }

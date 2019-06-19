@@ -1,2 +1,8 @@
 // Boostrap 4.1
 @import "~tempusdominus-bootstrap-4/src/sass/tempusdominus-bootstrap-4-build";
+@import "~select2/src/scss/core";
+@import "~@ttskch/select2-bootstrap4-theme/src/layout";
+
+.select2 .select2-selection {
+    background-color: #fff;
+}

@@ -10,6 +10,7 @@
 annonce ton jdr home
 
 {{ form_start(form) }}
+    {{ form_row(form.partyName) }}
     {{ form_row(form.maxPlayer) }}
     {{ form_row(form.alreadySubscribed) }}
     <label for="party_date" class="required">Date</label>
@@ -18,15 +19,7 @@ annonce ton jdr home
             <div class="col-sm-6">
                 <div class="form-group">
                     <div class="input-group date" id="datetimepicker" data-target-input="nearest">
-
-
-                        
-
-
-
-
                         <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker" name="party[date]" required="required" value="{{ form.date.vars.value }}"/>
-                        
                         <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
@@ -38,10 +31,11 @@ annonce ton jdr home
     {{ form_row(form.minor) }}
     {{ form_row(form.gameName) }}
     {{ form_row(form.gameEdition) }}
-    {{ form_row(form.gameScenario) }}
+    {{ form_row(form.nameScenario) }}
+    {{ form_row(form.scenarioEdition) }}
     {{ form_row(form.openedCampaign) }}
+    {{ form_row(form.gameDescription) }}
     {{ form_widget(form._token) }}
-
     <input type="submit" class="btn" value="Create"/>
 {{ form_end(form, {'render_rest': false}) }}
 {% endblock %}
