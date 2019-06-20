@@ -6,7 +6,7 @@ $(function() {
     $('form').on('submit', function(event){
         event.preventDefault();
         $.ajax({
-            url: "http://annoncetonjdr.test/forgotten_password",
+            url: "/forgotten_password",
             data: $("form").serialize(),
         })
         .done(function(ajax_response) {

@@ -22,24 +22,21 @@ Encore
     .addEntry('party_form', './assets/js/party_form.js')
     //.addEntry('page2', './assets/js/page2.js')
 
-    /*
-     * FEATURE CONFIG
-     *
-     * Enable & configure other features below. For a full
-     * list of features, see:
-     * https://symfony.com/doc/current/frontend.html#adding-more-features
-     */
+    // will require an extra script tag for runtime.js
+    // but, you probably want this, unless you're building a single-page app
+    .enableSingleRuntimeChunk()
+
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
     // enables hashed filenames (e.g. app.abc123.css)
     .enableVersioning(Encore.isProduction())
 
-    // enables Sass/SCSS support
-    .enableSassLoader()
-
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
+
+    // uncomment if you use Sass/SCSS files
+    .enableSassLoader()
 
     // uncomment if you're having problems with a jQuery plugin
     .autoProvidejQuery()
