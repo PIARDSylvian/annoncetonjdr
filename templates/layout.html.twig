@@ -35,7 +35,7 @@
             </div>
         {% endfor %}
         {% block body %}{% endblock %}
-        <script src="{{ asset('build/app.js') }}"></script>
+        {{ encore_entry_script_tags('app') }}
         {% block javascripts %}{% endblock %}
     </body>
 </html>

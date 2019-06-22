@@ -132,15 +132,16 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        if ($request->isMethod('POST') && ($newPassword === $repeatPassword) && strlen($newPassword) >= 8 ) {
-            $entityManager = $this->getDoctrine()->getManager();
- 
-            $user = $entityManager->getRepository(User::class)->findOneByResetToken($token);
+        $entityManager = $this->getDoctrine()->getManager();
+        $user = $entityManager->getRepository(User::class)->findOneByResetToken($token);
 
-            if ($user === null) {
-                $this->addFlash('danger', 'Token Inconnu');
-                return $this->redirectToRoute('home');
-            }
+        if ($user === null) {
+            $this->addFlash('danger', 'Token Inconnu');
+            return $this->redirectToRoute('home');
+        }
+
+        if ($request->isMethod('POST') && ($newPassword === $repeatPassword) && strlen($newPassword) >= 8 ) {
+ 
  
             $user->setResetToken(null);
 
