@@ -124,6 +124,7 @@ class SecurityController extends AbstractController
     public function resetPassword(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
     {
         $newPassword = $request->request->get('password');
+        $repeatPassword = $request->request->get('password2');
         $submittedToken = $request->request->get('_csrf_token');
 
         if ($request->isMethod('POST') && ! $this->isCsrfTokenValid('resetPassword', $submittedToken)) {
@@ -131,15 +132,16 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
-        if ($request->isMethod('POST') && strlen($newPassword) >= 8) {
-            $entityManager = $this->getDoctrine()->getManager();
- 
-            $user = $entityManager->getRepository(User::class)->findOneByResetToken($token);
+        $entityManager = $this->getDoctrine()->getManager();
+        $user = $entityManager->getRepository(User::class)->findOneByResetToken($token);
 
-            if ($user === null) {
-                $this->addFlash('danger', 'Token Inconnu');
-                return $this->redirectToRoute('home');
-            }
+        if ($user === null) {
+            $this->addFlash('danger', 'Token Inconnu');
+            return $this->redirectToRoute('home');
+        }
+
+        if ($request->isMethod('POST') && ($newPassword === $repeatPassword) && strlen($newPassword) >= 8 ) {
+ 
  
             $user->setResetToken(null);
 

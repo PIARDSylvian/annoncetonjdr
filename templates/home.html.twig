@@ -2,22 +2,53 @@
 
 {% block title %}home{% endblock %}
 
+{% block stylesheets %}
+<link href="{{ asset('build/party_form.css') }}" rel="stylesheet" />
+<style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+{% endblock %}
+
 {% block body %}
-{% for message in app.flashes('notice') %}
-    <div class="alert alert-success alert-dismissible fade show">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {{ message }}
-    </div>
-{% endfor %}
-{% for message in app.flashes('danger') %}
-    <div class="alert alert-danger alert-dismissible fade show">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        {{ message }}
-    </div>
-{% endfor %}
 annonce ton jdr home
+
+{{ form_start(form) }}
+    {{ form_row(form.partyName) }}
+    {{ form_row(form.online) }}
+    {{ form_row(form.address) }}
+    {{ form_row(form.lat) }}
+    {{ form_row(form.lng) }}
+    {{ form_row(form.maxPlayer) }}
+    {{ form_row(form.alreadySubscribed) }}
+    <div id="party_date_container">
+    {{ form_row(form.date) }}
+    </div>
+    {{ form_row(form.minor) }}
+    {{ form_row(form.gameName) }}
+    {{ form_row(form.gameEdition) }}
+    {{ form_row(form.nameScenario) }}
+    {{ form_row(form.scenarioEdition) }}
+    {{ form_row(form.openedCampaign) }}
+    {{ form_row(form.gameDescription) }}
+    {{ form_widget(form._token) }}
+    <input type="submit" class="btn" value="Create"/>
+{{ form_end(form, {'render_rest': false}) }}
+<div id="map"></div>
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags('party_form') }}
+{# <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script> #}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBz_uO-S0aOksuAq1lTTKCVGDgzqxzHI3g&libraries=places"></script>
+
 {% endblock %}
