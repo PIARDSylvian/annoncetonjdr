@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PartyRepository")
@@ -95,6 +96,26 @@ class Party
      * @ORM\Column(type="text", nullable=true)
      */
     private $gameDescription;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $address;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $lat;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $lng;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $online;
 
     public function getId(): ?int
     {
@@ -243,5 +264,65 @@ class Party
         $this->gameName = $gameName;
 
         return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getLat(): ?float
+    {
+        return $this->lat;
+    }
+
+    public function setLat(float $lat): self
+    {
+        $this->lat = $lat;
+
+        return $this;
+    }
+
+    public function getLng(): ?float
+    {
+        return $this->lng;
+    }
+
+    public function setLng(float $lng): self
+    {
+        $this->lng = $lng;
+
+        return $this;
+    }
+
+    public function getOnline(): ?bool
+    {
+        return $this->online;
+    }
+
+    public function setOnline(bool $online): self
+    {
+        $this->online = $online;
+
+        return $this;
+    }
+
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if(!$this->getOnline() && is_null($this->getAddress())) {
+            $context->buildViolation('Cette valeur n\'est pas valide.')
+                ->atPath('address')
+                ->addViolation();
+        }
     }
 }

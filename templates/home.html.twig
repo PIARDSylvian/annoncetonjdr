@@ -4,6 +4,19 @@
 
 {% block stylesheets %}
 <link href="{{ asset('build/party_form.css') }}" rel="stylesheet" />
+<style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -11,22 +24,14 @@ annonce ton jdr home
 
 {{ form_start(form) }}
     {{ form_row(form.partyName) }}
+    {{ form_row(form.online) }}
+    {{ form_row(form.address) }}
+    {{ form_row(form.lat) }}
+    {{ form_row(form.lng) }}
     {{ form_row(form.maxPlayer) }}
     {{ form_row(form.alreadySubscribed) }}
-    <label for="party_date" class="required">Date</label>
-    <div>
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <div class="input-group date" id="datetimepicker" data-target-input="nearest">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker" name="party[date]" required="required" value="{{ form.date.vars.value }}"/>
-                        <div class="input-group-append" data-target="#datetimepicker" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div id="party_date_container">
+    {{ form_row(form.date) }}
     </div>
     {{ form_row(form.minor) }}
     {{ form_row(form.gameName) }}
@@ -38,8 +43,12 @@ annonce ton jdr home
     {{ form_widget(form._token) }}
     <input type="submit" class="btn" value="Create"/>
 {{ form_end(form, {'render_rest': false}) }}
+<div id="map"></div>
 {% endblock %}
 
 {% block javascripts %}
 {{ encore_entry_script_tags('party_form') }}
+{# <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script> #}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBz_uO-S0aOksuAq1lTTKCVGDgzqxzHI3g&libraries=places"></script>
+
 {% endblock %}

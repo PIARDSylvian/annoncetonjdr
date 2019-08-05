@@ -3,6 +3,15 @@
 @import "~select2/src/scss/core";
 @import "~@ttskch/select2-bootstrap4-theme/src/layout";
 
-.select2 .select2-selection {
+.select2 .select2-selection,
+.bootstrap-datetimepicker-widget {
     background-color: #fff;
+}
+
+#party_date_container {
+    position: relative;
+}
+
+#party_date {
+    display: none;
 }

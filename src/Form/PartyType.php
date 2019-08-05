@@ -12,8 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,9 +31,13 @@ class PartyType extends AbstractType
     {
         $builder
             ->add('partyName')
+            ->add('online', CheckboxType::class, ['required' => false])
+            ->add('address')
+            ->add('lat', HiddenType::class)
+            ->add('lng', HiddenType::class)
             ->add('maxPlayer')
             ->add('alreadySubscribed', IntegerType::class, ['data' => 0])
-            ->add('date', DateTimeType::class, ['format'=>'dd-MM-yyyy H:m', 'data' => new \DateTime('now'),'widget' => 'single_text'] )
+            ->add('date', DateTimeType::class, ['format'=>'dd-MM-yyyy H:m','widget' => 'single_text'])
             ->add('minor', CheckboxType::class, ['required' => false])
             ->add('gameName', EntityType::class, [
                 'placeholder' => 'Select a game',
