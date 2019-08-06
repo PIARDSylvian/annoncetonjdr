@@ -7,34 +7,36 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-light bg-light">
-            <span class="navbar-brand mb-0 h1">Navbar</span>
-            {% if app.user %}
-                {{ app.user.pseudonym }}
-            {% else %}
-            <span>
-                <a class="btn btn-outline-success" href="{{path('app_login')}}">login</a>
-                <a class="btn btn-outline-secondary" href="{{path('app_register')}}">register</a>
-            </span>
-            {% endif %}
-        </nav>
-        {% for message in app.flashes('notice') %}
-            <div class="alert alert-success alert-dismissible fade show">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                {{ message }}
-            </div>
-        {% endfor %}
-        {% for message in app.flashes('danger') %}
-            <div class="alert alert-danger alert-dismissible fade show">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                {{ message }}
-            </div>
-        {% endfor %}
-        {% block body %}{% endblock %}
+        <div class="container">
+            <nav class="navbar navbar-light bg-light">
+                <span class="navbar-brand mb-0 h1">Navbar</span>
+                {% if app.user %}
+                    {{ app.user.pseudonym }}
+                {% else %}
+                <span>
+                    <a class="btn btn-outline-success" href="{{path('app_login')}}">login</a>
+                    <a class="btn btn-outline-secondary" href="{{path('app_register')}}">register</a>
+                </span>
+                {% endif %}
+            </nav>
+            {% for message in app.flashes('notice') %}
+                <div class="alert alert-success alert-dismissible fade show">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('danger') %}
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+            {% block body %}{% endblock %}
+        </div>
         {{ encore_entry_script_tags('app') }}
         {% block javascripts %}{% endblock %}
     </body>
