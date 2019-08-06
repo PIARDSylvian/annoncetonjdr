@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -116,6 +118,16 @@ class Party
      * @ORM\Column(type="boolean")
      */
     private $online;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User")
+     */
+    private $registeredPlayer;
+
+    public function __construct()
+    {
+        $this->registeredPlayer = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -324,5 +336,31 @@ class Party
                 ->atPath('address')
                 ->addViolation();
         }
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getRegisteredPlayer(): Collection
+    {
+        return $this->registeredPlayer;
+    }
+
+    public function addRegisteredPlayer(User $registeredPlayer): self
+    {
+        if (!$this->registeredPlayer->contains($registeredPlayer)) {
+            $this->registeredPlayer[] = $registeredPlayer;
+        }
+
+        return $this;
+    }
+
+    public function removeRegisteredPlayer(User $registeredPlayer): self
+    {
+        if ($this->registeredPlayer->contains($registeredPlayer)) {
+            $this->registeredPlayer->removeElement($registeredPlayer);
+        }
+
+        return $this;
     }
 }

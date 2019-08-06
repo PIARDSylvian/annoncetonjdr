@@ -1,0 +1,36 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}party - create / update{% endblock %}
+
+{% block stylesheets %}
+<link href="{{ asset('build/party_form.css') }}" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+    {{ form_row(form.partyName) }}
+    {{ form_row(form.online) }}
+    {{ form_row(form.address) }}
+    {{ form_row(form.lat) }}
+    {{ form_row(form.lng) }}
+    {{ form_row(form.maxPlayer) }}
+    {{ form_row(form.alreadySubscribed) }}
+    <div id="party_date_container">
+    {{ form_row(form.date) }}
+    </div>
+    {{ form_row(form.minor) }}
+    {{ form_row(form.gameName) }}
+    {{ form_row(form.gameEdition) }}
+    {{ form_row(form.nameScenario) }}
+    {{ form_row(form.scenarioEdition) }}
+    {{ form_row(form.openedCampaign) }}
+    {{ form_row(form.gameDescription) }}
+    {{ form_widget(form._token) }}
+    <input type="submit" class="btn" value="Create"/>
+{{ form_end(form, {'render_rest': false}) }}
+{% endblock %}
+
+{% block javascripts %}
+{{ encore_entry_script_tags('party_form') }}
+<script src="https://maps.googleapis.com/maps/api/js?&libraries=places"></script>
+{% endblock %}
