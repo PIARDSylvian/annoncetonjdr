@@ -10,11 +10,22 @@ use App\Form\PartyType;
 use App\Entity\Party;
 
 class PartyController extends AbstractController {
+
+    /**
+     * @Route("/party", name="app_party")
+     */
+    public function party(Request $request)
+    {
+        $repository = $this->getDoctrine()->getRepository(Party::class);
+        $allParty = $repository->findAll();
+
+        return $this->render('party/party.html.twig',array('allParty' => $allParty));
+    }
     
     /**
      * @Route("/party/create", name="app_party_create")
      */
-    public function party(Request $request)
+    public function create(Request $request)
     {
         $party = new Party();
         $form = $this->createForm(PartyType::class, $party);
