@@ -1,5 +1,4 @@
 var Encore = require('@symfony/webpack-encore');
-// var dotenv = require('dotenv');
 
 Encore
     // directory where compiled assets will be stored
@@ -41,17 +40,6 @@ Encore
 
     // uncomment if you're having problems with a jQuery plugin
     .autoProvidejQuery()
-
-    // define the environment variables
-    // .configureDefinePlugin(options => {
-    //     const env = dotenv.config();
-
-    //     if (env.error) {
-    //         throw env.error;
-    //     }
-
-    //     options['process.env'].APP_GOOGLE_MAPS_API_KEY = JSON.stringify(env.parsed.APP_GOOGLE_MAPS_API_KEY);
-    // })
 ;
 
 module.exports = Encore.getWebpackConfig();
