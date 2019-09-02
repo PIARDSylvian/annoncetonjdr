@@ -19,22 +19,28 @@ class PartyRepository extends ServiceEntityRepository
         parent::__construct($registry, Party::class);
     }
 
-    // /**
-    //  * @return Party[] Returns an array of Party objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    // SELECT id, ( 3959 * acos( cos( radians(37) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(-122) ) + sin( radians(37) ) * sin( radians( lat ) ) ) ) AS distance FROM markers HAVING distance < 25 ORDER BY distance LIMIT 0 , 20;
+
+    /**
+    * @return Party[] Returns an array of Party objects
+    */
+    public function search($value)
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+            ->select('p')
+            ->where('p.gameName = :gameName_id')
+            ->addSelect('( 6371 * acos( cos( radians(:lat) ) * cos( radians( p.lat ) ) * cos( radians( p.lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( p.lat ) ) ) ) AS distance')
+            ->having('distance <= :radius')
+            ->setParameter('lat', $value['lat'])
+            ->setParameter('lng', $value['lng'])
+            ->setParameter('radius', $value['radius'])
+            ->setParameter('gameName_id', '2')
+            ->orderBy('distance', 'ASC')
+            ->setMaxResults(20)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Party

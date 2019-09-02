@@ -32,6 +32,11 @@ $(function () {
         //     data.push(tag);}
     });
 
+    $('#party_gameName').on('select2:select', function (e) {
+        var data = e.params.data;
+        console.log(data);
+    });
+
     var input = document.getElementById('party_address');
     var options = {
         componentRestrictions: {country: 'fr'}

@@ -16,10 +16,28 @@ class PartyController extends AbstractController {
      */
     public function party(Request $request)
     {
-        $repository = $this->getDoctrine()->getRepository(Party::class);
-        $allParty = $repository->findAll();
+        $party = new Party();
+        $form = $this->createForm(PartyType::class, $party);
 
-        return $this->render('party/party.html.twig',array('allParty' => $allParty));
+        
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $repository = $this->getDoctrine()->getRepository(Party::class);
+            $search = $repository->search(['lat'=> '48.866667','lng'=> '2.333333','radius'=> '73']);
+    
+            $result=[];
+        
+            foreach( $search as $value ) {
+                $value[0]->distance = $value['distance'];
+                $result[] = $value[0];
+            }
+
+            return $this->render('party/party.html.twig',array('form' => $form->createView(), 'allParty' => $result));
+        }
+
+
+        return $this->render('party/party.html.twig',array('form' => $form->createView(), 'allParty' => null));
     }
     
     /**

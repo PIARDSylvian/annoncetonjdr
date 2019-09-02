@@ -23,42 +23,7 @@
 {% if party.address %}
 <p>{{party.address}}</p>
 <div id="map" class="iframe-container"></div>
-<style>
-    .iframe-container{
-        position: relative;
-        width: 100%;
-        padding-bottom: 56.25%; /* Ratio 16:9 ( 100%/16*9 = 56.25% ) */
-    }
-    .iframe-container > *{
-        display: block;
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-    }
-</style>
-<script>
-    function initMap() {
-        var myLatLng = {lat:{{party.lat}}, lng:{{party.lng}}};
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 12,
-            center: myLatLng,
-            disableDefaultUI: true
-        });
 
-        var marker = new google.maps.Marker({
-            position: myLatLng,
-            map: map,
-            title: '{{party.partyName}}'
-        });
-    }
-</script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"></script>
 {% else %}
 <p>partie en ligne</p>
 {% endif %}
@@ -74,4 +39,12 @@
 {% endblock %}
 
 {% block javascripts %}
+<script>
+var party = {
+    name:'{{party.partyName}}',
+    lat:{{party.lat}},
+    lng:{{party.lng}}
+};
+</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{google_key}}&callback=initMap"></script>
 {% endblock %}
