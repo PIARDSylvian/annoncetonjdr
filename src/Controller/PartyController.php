@@ -3,41 +3,41 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\PartyRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 use App\Form\PartyType;
+use App\Form\SearchType;
 use App\Entity\Party;
+use App\Entity\Search;
 
 class PartyController extends AbstractController {
 
     /**
      * @Route("/party", name="app_party")
      */
-    public function party(Request $request)
+    public function party(PaginatorInterface $paginator, PartyRepository $repository, Request $request)
     {
+        
         $party = new Party();
-        $form = $this->createForm(PartyType::class, $party);
-
+        $search = new Search();
+        $form = $this->createForm(SearchType::class, $search);
         
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+            $searchResult = $paginator->paginate($repository->searchQuery($search), $request->query->getInt('page', 1), 2, array('wrap-queries'=>true));
 
-            $repository = $this->getDoctrine()->getRepository(Party::class);
-            $search = $repository->search(['lat'=> '48.866667','lng'=> '2.333333','radius'=> '73']);
-    
-            $result=[];
-        
-            foreach( $search as $value ) {
+            $result = [];
+            foreach( $searchResult as $value ) {
                 $value[0]->distance = $value['distance'];
                 $result[] = $value[0];
             }
 
-            return $this->render('party/party.html.twig',array('form' => $form->createView(), 'allParty' => $result));
-        }
+            $searchResult->setItems($result);
 
 
-        return $this->render('party/party.html.twig',array('form' => $form->createView(), 'allParty' => null));
+        return $this->render('party/party.html.twig',array('form' => $form->createView(), 'allParty' => $searchResult));
     }
     
     /**

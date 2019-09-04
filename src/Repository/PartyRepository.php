@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Party;
+use App\Entity\Search;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -22,24 +23,21 @@ class PartyRepository extends ServiceEntityRepository
     // SELECT id, ( 3959 * acos( cos( radians(37) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(-122) ) + sin( radians(37) ) * sin( radians( lat ) ) ) ) AS distance FROM markers HAVING distance < 25 ORDER BY distance LIMIT 0 , 20;
 
     /**
-    * @return Party[] Returns an array of Party objects
+    * @return Party[] Query
     */
-    public function search($value)
+    public function searchQuery(Search $search)
     {
-        return $this->createQueryBuilder('p')
+        $query =  $this->createQueryBuilder('p')
             ->select('p')
-            ->where('p.gameName = :gameName_id')
             ->addSelect('( 6371 * acos( cos( radians(:lat) ) * cos( radians( p.lat ) ) * cos( radians( p.lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( p.lat ) ) ) ) AS distance')
             ->having('distance <= :radius')
-            ->setParameter('lat', $value['lat'])
-            ->setParameter('lng', $value['lng'])
-            ->setParameter('radius', $value['radius'])
-            ->setParameter('gameName_id', '2')
+            ->setParameter('lat', $search->getLat())
+            ->setParameter('lng', $search->getLng())
+            ->setParameter('radius', $search->getDistance())
             ->orderBy('distance', 'ASC')
-            ->setMaxResults(20)
-            ->getQuery()
-            ->getResult()
         ;
+
+        return $query->getQuery();
     }
 
     /*

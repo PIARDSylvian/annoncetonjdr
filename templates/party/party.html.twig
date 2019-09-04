@@ -3,39 +3,46 @@
 {% block title %}party - create / update{% endblock %}
 
 {% block stylesheets %}
+{{ encore_entry_link_tags('party_form') }}
 {% endblock %}
 
 {% block body %}
 
 {{ form_start(form) }}
-    {{ form_row(form.partyName) }}
-    {{ form_row(form.online) }}
+    {# {{ form_row(form.partyName) }}#}
     {{ form_row(form.address) }}
     {{ form_row(form.lat) }}
     {{ form_row(form.lng) }}
-    <div id="party_date_container">
+    {{ form_row(form.distance) }}
+    {# {{ form_row(form.gameName) }}
     {{ form_row(form.date) }}
-    </div>
-    {{ form_row(form.gameName) }}
-    {{ form_row(form.openedCampaign) }}
-    {{ form_widget(form._token) }}
-    <input type="submit" class="btn" value="Create"/>
+    {{ form_row(form.online) }}
+    {{ form_row(form.distance) }}
+    {{ form_row(form.results) }}
+    {{ form_widget(form._token) }} #}
+    <input type="submit" class="btn" value="Search"/>
 {{ form_end(form, {'render_rest': false}) }}
 
 <div id="map" class="iframe-container"></div>
 
-{{dump(allParty)}}
-
+{# {{dump(allParty)}} #}
 {% for party in allParty %}
-{{dump(party.gameName.id)}}
+    {# {{dump(party)}} #}
 {% endfor %}
+
+<div class="navigation">
+    {{ knp_pagination_render(allParty) }}
+</div>
 
 {% endblock %}
 
 
 {% block javascripts %}
+
 <script>
     var party ={% set count = 1 %}[{% for party in allParty %}{% if count == 1 %}{lat: {{party.lat}},lng: {{party.lng}},desc: "{{party.partyName}}{% endif %}{% if not loop.last and allParty[loop.index].lng == party.lng and allParty[loop.index].lat == party.lat %}<br />{{allParty[loop.index].partyName}}{% set count = count + 1 %}{% elseif count > 1 %}",length: "{{count}}"},{% set count = 1 %}{% else %}"},{% endif %}{% endfor %}];
 </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{google_key}}&callback=initMap"></script>
+
+{{ encore_entry_script_tags('party_form') }}
+<script src="https://maps.googleapis.com/maps/api/js?key={{google_key}}&libraries=places&callback=initMap"></script>
 {% endblock %}

@@ -100,21 +100,6 @@ class Party
     private $gameDescription;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $address;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $lat;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $lng;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $online;
@@ -123,6 +108,12 @@ class Party
      * @ORM\ManyToMany(targetEntity="App\Entity\User")
      */
     private $registeredPlayer;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Location", inversedBy="parties" ,cascade={"persist"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $address;
 
     public function __construct()
     {
@@ -278,42 +269,6 @@ class Party
         return $this;
     }
 
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(string $address): self
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    public function getLat(): ?float
-    {
-        return $this->lat;
-    }
-
-    public function setLat(float $lat): self
-    {
-        $this->lat = $lat;
-
-        return $this;
-    }
-
-    public function getLng(): ?float
-    {
-        return $this->lng;
-    }
-
-    public function setLng(float $lng): self
-    {
-        $this->lng = $lng;
-
-        return $this;
-    }
-
     public function getOnline(): ?bool
     {
         return $this->online;
@@ -360,6 +315,18 @@ class Party
         if ($this->registeredPlayer->contains($registeredPlayer)) {
             $this->registeredPlayer->removeElement($registeredPlayer);
         }
+
+        return $this;
+    }
+
+    public function getAddress(): ?Location
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Location $address): self
+    {
+        $this->address = $address;
 
         return $this;
     }

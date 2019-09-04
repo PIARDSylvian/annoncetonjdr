@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "beberlei/doctrineextensions": "^1.2",
+        "knplabs/knp-paginator-bundle": "^4.0",
         "sensio/framework-extra-bundle": "^5.2",
         "symfony/apache-pack": "^1.0",
         "symfony/asset": "*",
@@ -78,7 +79,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": true,
-            "require": "4.2.*"
+            "require": "4.3.*"
         }
     }
 }
