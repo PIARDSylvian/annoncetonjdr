@@ -110,8 +110,7 @@ class Party
     private $registeredPlayer;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Location", inversedBy="parties" ,cascade={"persist"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Location", inversedBy="parties", cascade={"persist"})
      */
     private $address;
 
@@ -288,7 +287,7 @@ class Party
     {
         if(!$this->getOnline() && is_null($this->getAddress())) {
             $context->buildViolation('Cette valeur n\'est pas valide.')
-                ->atPath('address')
+                ->atPath('address.address')
                 ->addViolation();
         }
     }

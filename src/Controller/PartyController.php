@@ -24,18 +24,21 @@ class PartyController extends AbstractController {
         $party = new Party();
         $search = new Search();
         $form = $this->createForm(SearchType::class, $search);
-        
+
         $form->handleRequest($request);
-            $searchResult = $paginator->paginate($repository->searchQuery($search), $request->query->getInt('page', 1), 2, array('wrap-queries'=>true));
+        if(!$form->isSubmitted()) {
+            $form->submit([]);
+        }
 
-            $result = [];
-            foreach( $searchResult as $value ) {
-                $value[0]->distance = $value['distance'];
-                $result[] = $value[0];
-            }
+        $searchResult = $paginator->paginate($repository->searchQuery($search), $request->query->getInt('page', 1), $request->query->getInt('nombres', 10), array('wrap-queries'=>true));
 
-            $searchResult->setItems($result);
+        $result = [];
+        foreach( $searchResult as $value ) {
+            $value[0]->distance = $value['distance'];
+            $result[] = $value[0];
+        }
 
+        $searchResult->setItems($result);
 
         return $this->render('party/party.html.twig',array('form' => $form->createView(), 'allParty' => $searchResult));
     }

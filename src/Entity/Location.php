@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,6 +32,16 @@ class Location
      * @ORM\Column(type="float")
      */
     private $lng;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Party", mappedBy="address")
+     */
+    private $parties;
+
+    public function __construct()
+    {
+        $this->parties = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -68,6 +80,37 @@ class Location
     public function setLng(float $lng): self
     {
         $this->lng = $lng;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Party[]
+     */
+    public function getParties(): Collection
+    {
+        return $this->parties;
+    }
+
+    public function addParty(Party $party): self
+    {
+        if (!$this->parties->contains($party)) {
+            $this->parties[] = $party;
+            $party->setAddress($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParty(Party $party): self
+    {
+        if ($this->parties->contains($party)) {
+            $this->parties->removeElement($party);
+            // set the owning side to null (unless already changed)
+            if ($party->getAddress() === $this) {
+                $party->setAddress(null);
+            }
+        }
 
         return $this;
     }

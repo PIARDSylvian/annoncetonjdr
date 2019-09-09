@@ -15,9 +15,9 @@ class LocationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('address', TextType::class,['constraints' => new NotBlank()])
-            ->add('lat', HiddenType::class, ['constraints' => new NotBlank()])
-            ->add('lng', HiddenType::class, ['constraints' => new NotBlank()])
+            ->add('address', TextType::class)
+            ->add('lat', HiddenType::class)
+            ->add('lng', HiddenType::class)
         ;
     }
 

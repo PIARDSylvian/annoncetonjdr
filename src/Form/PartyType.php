@@ -26,6 +26,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class PartyType extends AbstractType
 {
     private $entityManager;
+    private $locationRepository;
 
     public function __construct(EntityManagerInterface $entityManager, LocationRepository $locationRepository)
     {
@@ -38,7 +39,7 @@ class PartyType extends AbstractType
         $builder
             ->add('partyName')
             ->add('online', CheckboxType::class, ['required' => false])
-            ->add('address', LocationType::class, ['label' => false])
+            ->add('address', LocationType::class, ['label' => false, 'required' => false])
             ->add('maxPlayer')
             ->add('alreadySubscribed', IntegerType::class, ['data' => 0])
             ->add('date', DateTimeType::class, ['format'=>'dd-MM-yyyy H:m','widget' => 'single_text'])
@@ -67,12 +68,13 @@ class PartyType extends AbstractType
 
     public function postSubmit(FormEvent $event)
     {
-        $data = $event->getData();
-        $req = $this->locationRepository->findOneBy(['address' => $event->getData()->getAddress()->getAddress(), 'lat' => $event->getData()->getAddress()->getLat(), 'lng' => $event->getData()->getAddress()->getLng()]);
-
-        if($req) {
-            $data->setAddress($req);
-            $event->setData($data);
+        if ($event->getData()->getAddress() && !$event->getData()->getOnline()) {
+            $data = $event->getData();
+            $req = $this->locationRepository->findOneBy(['address' => $event->getData()->getAddress()->getAddress(), 'lat' => $event->getData()->getAddress()->getLat(), 'lng' => $event->getData()->getAddress()->getLng()]);
+            if($req) {
+                $data->setAddress($req);
+                $event->setData($data);
+            }
         }
     }
 
