@@ -3,18 +3,50 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\PartyRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Component\Pager\PaginatorInterface;
 
 use App\Form\PartyType;
+use App\Form\SearchType;
 use App\Entity\Party;
+use App\Entity\Search;
 
 class PartyController extends AbstractController {
+
+    /**
+     * @Route("/party", name="app_party")
+     */
+    public function party(PaginatorInterface $paginator, PartyRepository $repository, Request $request)
+    {
+        
+        $party = new Party();
+        $search = new Search();
+        $form = $this->createForm(SearchType::class, $search);
+
+        $form->handleRequest($request);
+        if(!$form->isSubmitted()) {
+            $form->submit([]);
+        }
+
+        $searchResult = $paginator->paginate($repository->searchQuery($search), $request->query->getInt('page', 1), $request->query->getInt('nombres', 10), array('wrap-queries'=>true));
+
+        $result = [];
+        foreach( $searchResult as $value ) {
+            $value[0]->distance = $value['distance'];
+            $result[] = $value[0];
+        }
+
+        $searchResult->setItems($result);
+
+        return $this->render('party/party.html.twig',array('form' => $form->createView(), 'allParty' => $searchResult));
+    }
     
     /**
      * @Route("/party/create", name="app_party_create")
      */
-    public function party(Request $request)
+    public function create(Request $request)
     {
         $party = new Party();
         $form = $this->createForm(PartyType::class, $party);

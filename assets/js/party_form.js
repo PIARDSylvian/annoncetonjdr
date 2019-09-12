@@ -25,14 +25,13 @@ $(function () {
         placeholder: "Select a game",
         allowClear: true,
         theme: 'bootstrap4',
-        
-        // insertTag: function (data, tag) {
-        // Insert the tag at the end of the results
-        //     console.log(tag);
-        //     data.push(tag);}
     });
 
-    var input = document.getElementById('party_address');
+    $('#party_gameName').on('select2:select', function (e) {
+        var data = e.params.data;
+    });
+
+    var input = document.querySelector('input[id$="_address"]');
     var options = {
         componentRestrictions: {country: 'fr'}
     };  
@@ -51,12 +50,12 @@ $(function () {
     });
 
     function updateTextFields(lat, lng) {
-        document.getElementById('party_lat').value = lat;
-        document.getElementById('party_lng').value = lng;
+        document.querySelector('[id$="_lat"]').value = lat;
+        document.querySelector('[id$="_lng"]').value = lng;
     }
 
     // Trigger search on blur
-    google.maps.event.addDomListener(document.getElementById("party_address"), 'blur', function() {
+    google.maps.event.addDomListener(input, 'blur', function() {
         if (jQuery('.pac-item:hover').length === 0 ) {
             google.maps.event.trigger(this, 'focus', {});
             google.maps.event.trigger(this, 'keydown', {

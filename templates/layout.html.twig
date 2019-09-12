@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title>Annonce ton jdr - {% block title %}{% endblock %}</title>
-        <link href="{{ asset('build/app.css') }}" rel="stylesheet" />
+        {{ encore_entry_link_tags('app') }}
         {% block stylesheets %}{% endblock %}
     </head>
     <body>

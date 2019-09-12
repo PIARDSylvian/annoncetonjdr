@@ -1,5 +1,4 @@
 #register
-
 First name: Prénom
 Name: Nom
 Pseudonym: Pseudonyme
@@ -15,6 +14,6 @@ Repeat Password: Répéter le mot de passe
 register_btn: S'enregistrer
 
 #party
-
 Max player: Nombre de participant
 already Subscribed : Déjà inscrit
+

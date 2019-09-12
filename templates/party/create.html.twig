@@ -3,7 +3,7 @@
 {% block title %}party - create / update{% endblock %}
 
 {% block stylesheets %}
-<link href="{{ asset('build/party_form.css') }}" rel="stylesheet" />
+{{ encore_entry_link_tags('party_form') }}
 {% endblock %}
 
 {% block body %}
@@ -11,8 +11,6 @@
     {{ form_row(form.partyName) }}
     {{ form_row(form.online) }}
     {{ form_row(form.address) }}
-    {{ form_row(form.lat) }}
-    {{ form_row(form.lng) }}
     {{ form_row(form.maxPlayer) }}
     {{ form_row(form.alreadySubscribed) }}
     <div id="party_date_container">
@@ -32,5 +30,5 @@
 
 {% block javascripts %}
 {{ encore_entry_script_tags('party_form') }}
-<script src="https://maps.googleapis.com/maps/api/js?&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{google_key}}&libraries=places"></script>
 {% endblock %}
