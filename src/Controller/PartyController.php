@@ -12,6 +12,8 @@ use App\Form\PartyType;
 use App\Form\SearchType;
 use App\Entity\Party;
 use App\Entity\Search;
+use App\Entity\Commentary;
+use App\Form\CommentaryType;
 
 class PartyController extends AbstractController {
 
@@ -68,12 +70,28 @@ class PartyController extends AbstractController {
     /**
      * @Route("/party/{id}", name="app_party_show", requirements={"id"="\d+"})
      */
-    public function show($id)
+    public function show($id, Request $request)
     {
         $repository = $this->getDoctrine()->getRepository(Party::class);
         $party = $repository->find($id);
 
-        return $this->render('party/show.html.twig', ['party' => $party]);
+        $commentary = new Commentary();
+        $form = $this->createForm(CommentaryType::class, $commentary);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $commentary->setOwner($this->getUser());
+            $commentary->setParty($party);
+            $commentary->setCreatedAt(new \DateTime('now'));
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($commentary);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_party_show', ['id' => $id]);
+        }
+
+        return $this->render('party/show.html.twig', ['party' => $party, 'form' => $form->createView()]);
     }
 
     /**

@@ -20,8 +20,8 @@
 <p>Campagne ouverte : {{party.openedCampaign ? 'Oui':'Non'}}</p>
 <p>Déscription : {{party.gameDescription}}</p>
 
-{% if party.address %}
-<p>{{party.address}}</p>
+{% if party.address.address %}
+<p>{{party.address.address}}</p>
 <div id="map" class="iframe-container"></div>
 
 {% else %}
@@ -36,14 +36,26 @@
     {% endif %}
 {% endif %}
 
+{% for commentary in party.commentaries %}
+<div style="border:solid 1px black; padding: 10px; margin-bottom: 20px;">
+    <p>{{commentary.owner.pseudonym}}</p>
+    <p>{{commentary.commentary}}</p>
+</div>
+{% endfor %}
+
+{{ form_start(form) }}
+    {{ form_row(form.commentary) }}
+    <input type="submit" class="btn" value="commenter"/>
+{{ form_end(form) }}
+
 {% endblock %}
 
 {% block javascripts %}
 <script>
 var party = {
     name:'{{party.partyName}}',
-    lat:{{party.lat}},
-    lng:{{party.lng}}
+    lat:{{party.address.lat}},
+    lng:{{party.address.lng}}
 };
 </script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key={{google_key}}&callback=initMap"></script>
