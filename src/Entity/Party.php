@@ -114,9 +114,15 @@ class Party
      */
     private $address;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Commentary", mappedBy="party", orphanRemoval=true)
+     */
+    private $commentaries;
+
     public function __construct()
     {
         $this->registeredPlayer = new ArrayCollection();
+        $this->commentaries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -326,6 +332,37 @@ class Party
     public function setAddress(?Location $address): self
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Commentary[]
+     */
+    public function getCommentaries(): Collection
+    {
+        return $this->commentaries;
+    }
+
+    public function addCommentary(commentary $commentary): self
+    {
+        if (!$this->commentaries->contains($commentary)) {
+            $this->commentaries[] = $commentary;
+            $commentary->setParty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentary(commentary $commentary): self
+    {
+        if ($this->commentaries->contains($commentary)) {
+            $this->commentaries->removeElement($commentary);
+            // set the owning side to null (unless already changed)
+            if ($commentary->getParty() === $this) {
+                $commentary->setParty(null);
+            }
+        }
 
         return $this;
     }
