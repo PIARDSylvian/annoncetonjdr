@@ -13,17 +13,25 @@ $(function () {
     dateTime.setHours(dateTime.getHours()+2);
     dateTime.setMinutes(dateTime.getMinutes()+1);
 
-    $('#party_date').datetimepicker({
+    let option= {
         format: 'DD-MM-YYYY HH:mm',
         extraFormats: [ 'DD-MM-YYYY HH:mm' ],
         inline: true,
         sideBySide: true,
         locale: 'fr',
-        minDate: dateTime,
         icons: {
             time: "fa fa-clock"
         },
-    });
+    };
+
+    if (!$('.date_container input').val()) {
+        let dateTime = new Date($.now());
+        dateTime.setHours(dateTime.getHours()+2);
+        dateTime.setMinutes(dateTime.getMinutes()+1);
+        option.minDate = dateTime
+    }
+
+    $('.date_container input').datetimepicker(option);
     
     $('#party_gameName').select2({
         tags: true,
