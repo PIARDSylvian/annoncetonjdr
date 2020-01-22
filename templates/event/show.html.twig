@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}party - show{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block body %}
+
+{% if app.user and app.user is same as(event.owner) %}
+    <a href="{{path('app_event_update', {id:event.id})}}"><input type="button" value="Modifier"></a>
+    <a href="{{path('app_event_delete', {id:event.id})}}"><input type="button" value="Supprimer"></a>
+{% endif %}
+
+<h1>{{event.name}}</h1>
+<p>annonce de {{ event.owner.pseudonym }}</p>
+<p>{{ event.dateStart.date }}</p>
+<p>{{ event.dateFinish.date }}</p>
+<p>Déscription : {{event.description}}</p>
+
+<p>{{event.address.address}}</p>
+<div id="map" class="iframe-container"></div>
+
+{% for commentary in event.commentaries %}
+<div style="border:solid 1px black; padding: 10px; margin-bottom: 20px;">
+    <p>{{commentary.owner.pseudonym}}</p>
+    <p>{{commentary.commentary}}</p>
+</div>
+{% endfor %}
+
+{% if app.user %}
+{{ form_start(form) }}
+    {{ form_row(form.commentary) }}
+    <input type="submit" class="btn" value="commenter"/>
+{{ form_end(form) }}
+{% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+var party = [{
+    lat:{{event.address.lat}},
+    lng:{{event.address.lng}},
+    address:'{{event.address.address}}'
+}];
+</script>
+{% endblock %}

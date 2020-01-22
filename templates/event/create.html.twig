@@ -8,25 +8,19 @@
 
 {% block body %}
 {{ form_start(form) }}
-    {{ form_row(form.partyName) }}
-    {{ form_row(form.online) }}
+    {{ form_row(form.name) }}
     <div class="form-group">
         <label for="select2-address">Address{{ form_errors(form.address.address) }}</label>
         <select class="custom-select" id="select2-address"></select>
     </div>
     {{ form_widget(form.address, { 'attr': {'class': 'd-none'} }) }}
-    {{ form_row(form.maxPlayer) }}
-    {{ form_row(form.alreadySubscribed) }}
     <div class="date_container">
-    {{ form_row(form.date) }}
+    {{ form_row(form.dateStart) }}
     </div>
-    {{ form_row(form.minor) }}
-    {{ form_row(form.gameName) }}
-    {{ form_row(form.gameEdition) }}
-    {{ form_row(form.nameScenario) }}
-    {{ form_row(form.scenarioEdition) }}
-    {{ form_row(form.openedCampaign) }}
-    {{ form_row(form.gameDescription) }}
+    <div class="date_container">
+    {{ form_row(form.dateFinish) }}
+    </div>
+    {{ form_row(form.description) }}
     {{ form_widget(form._token) }}
     <input type="submit" class="btn" value="Create"/>
 {{ form_end(form, {'render_rest': false}) }}

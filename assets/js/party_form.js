@@ -13,17 +13,25 @@ $(function () {
     dateTime.setHours(dateTime.getHours()+2);
     dateTime.setMinutes(dateTime.getMinutes()+1);
 
-    $('#party_date').datetimepicker({
+    let option= {
         format: 'DD-MM-YYYY HH:mm',
         extraFormats: [ 'DD-MM-YYYY HH:mm' ],
         inline: true,
         sideBySide: true,
         locale: 'fr',
-        minDate: dateTime,
         icons: {
             time: "fa fa-clock"
         },
-    });
+    };
+
+    if (!$('.date_container input').val()) {
+        let dateTime = new Date($.now());
+        dateTime.setHours(dateTime.getHours()+2);
+        dateTime.setMinutes(dateTime.getMinutes()+1);
+        option.minDate = dateTime
+    }
+
+    $('.date_container input').datetimepicker(option);
     
     $('#party_gameName').select2({
         tags: true,
@@ -36,8 +44,8 @@ $(function () {
         var data = e.params.data;
     });
 
-    if($('#party_address_address').val()) {
-        var newOption = new Option($('#party_address_address').val(), 1, false, false);
+    if($('[id$="_address_address"]').attr('value')) {
+        var newOption = new Option($('[id$="_address_address"]').attr('value'), 1, false, false);
         $('#select2-address').append(newOption).trigger('change');
     }
 
@@ -83,7 +91,7 @@ $(function () {
     });
 
     $('#select2-address').on('select2:clear', function (e) {
-        $('#party_address_address').attr('value', '');
+        $('[id$="_address_address"]').attr('value', '');
         $('[id$="_lat"]').val(null);
         $('[id$="_lng"]').val(null);
     });
@@ -113,7 +121,7 @@ $(function () {
 
     function updateTextFields(val, lat, lng) {
         if (val) {
-            $('#party_address_address').attr('value', val);
+            $('[id$="_address_address"]').attr('value', val);
             $('[id$="_lat"]').val(lat);
             $('[id$="_lng"]').val(lng);
         }

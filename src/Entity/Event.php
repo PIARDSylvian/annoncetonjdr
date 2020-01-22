@@ -2,7 +2,11 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
@@ -17,29 +21,36 @@ class Event
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\user")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
     private $owner;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $name;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Location", inversedBy="events")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Location", inversedBy="events",cascade={"persist"})
+     * @Assert\Valid
      */
     private $address;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank()
+     * @Assert\Range(
+     *      min = "+2 hours"
+     * )
      */
     private $dateStart;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\NotBlank()
+     * @Assert\Expression("this.getDateStart() < value")
      */
     private $dateFinish;
 
@@ -47,6 +58,16 @@ class Event
      * @ORM\Column(type="text", nullable=true)
      */
     private $description;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Commentary", mappedBy="event", cascade={"remove"})
+     */
+    private $Commentaries;
+
+    public function __construct()
+    {
+        $this->Commentaries = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -121,6 +142,49 @@ class Event
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if(is_null($this->getAddress())) {
+            $context->buildViolation('Cette valeur n\'est pas valide.')
+                ->atPath('address.address')
+                ->addViolation();
+        }
+    }
+
+    /**
+     * @return Collection|Commentary[]
+     */
+    public function getCommentaries(): Collection
+    {
+        return $this->Commentaries;
+    }
+
+    public function addCommentary(Commentary $commentary): self
+    {
+        if (!$this->Commentaries->contains($commentary)) {
+            $this->Commentaries[] = $commentary;
+            $commentary->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentary(Commentary $commentary): self
+    {
+        if ($this->Commentaries->contains($commentary)) {
+            $this->Commentaries->removeElement($commentary);
+            // set the owning side to null (unless already changed)
+            if ($commentary->getEvent() === $this) {
+                $commentary->setEvent(null);
+            }
+        }
 
         return $this;
     }

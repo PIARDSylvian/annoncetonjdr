@@ -17,7 +17,7 @@ class Commentary
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\user")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(nullable=false)
      */
     private $owner;
@@ -39,9 +39,13 @@ class Commentary
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Party", inversedBy="commentaries")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $party;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="Commentaries")
+     */
+    private $event;
 
     public function getId(): ?int
     {
@@ -104,6 +108,18 @@ class Commentary
     public function setParty(?Party $party): self
     {
         $this->party = $party;
+
+        return $this;
+    }
+
+    public function getEvent(): ?Event
+    {
+        return $this->event;
+    }
+
+    public function setEvent(?Event $event): self
+    {
+        $this->event = $event;
 
         return $this;
     }
