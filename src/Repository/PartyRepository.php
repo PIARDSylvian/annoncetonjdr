@@ -3,9 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Party;
-use App\Entity\Search;
+// use App\Entity\Search;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @method Party|null find($id, $lockMode = null, $lockVersion = null)
@@ -15,63 +15,27 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class PartyRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Party::class);
     }
 
-    /**
-    * @return Party[] Query
-    */
-    public function searchQuery(Search $search)
+    // /**
+    //  * @return Party[] Returns an array of Party objects
+    //  */
+    /*
+    public function findByExampleField($value)
     {
-        if (!$search->getSearchLat() OR !$search->getSearchLng()) {
-            // Latitude & longitude de Paris
-            $search->setSearchLat('48.866667')->setSearchLng('2.333333');
-        }
-
-        if (!$search->getDistance()) {$search->setDistance('2000');}
-
-        $query =  $this->createQueryBuilder('p')
-            ->select('p');
-                if ($search->getOnline()) {
-                    $query->leftJoin('p.address', 'address');
-                }
-                else {
-                    $query->andWhere('p.online = :online')->setParameter('online', $search->getOnline());
-                    $query->innerJoin('p.address', 'address');
-                }
-                $query->addSelect('address')
-                ->addSelect('( 6371 * acos( cos( radians(:lat) ) * cos( radians( address.lat ) ) * cos( radians( address.lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( address.lat ) ) ) ) AS distance')
-                ->having('distance IS NULL or distance <= :radius')
-                    ->setParameter('lat', $search->getSearchLat())
-                    ->setParameter('lng', $search->getSearchLng())
-                    ->setParameter('radius', $search->getDistance())
-                ->orderBy('distance', 'ASC');
-
-                if ($search->getPartyName()) {
-                    $query->andWhere('p.partyName LIKE :partyName')->setParameter('partyName', '%'.$search->getPartyName().'%');
-                }
-
-                if ($search->getGameName()) {
-                    $query->andWhere('p.gameName = :gameName')->setParameter('gameName', $search->getGameName());
-                }
-
-                if ($search->getPeriod()) {
-                    $query->andWhere('p.date BETWEEN :from AND :to')
-                        ->setParameter('from', new \DateTime('now'))
-                        ->setParameter('to', new \DateTime($search->getPeriod()))
-                    ;
-                }
-                else {
-                    $query->andWhere('p.date >= :now')
-                        ->setParameter('now', new \DateTime('now'))
-                    ;
-                }
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.exampleField = :val')
+            ->setParameter('val', $value)
+            ->orderBy('p.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
         ;
-
-        return $query->getQuery();
     }
+    */
 
     /*
     public function findOneBySomeField($value): ?Party

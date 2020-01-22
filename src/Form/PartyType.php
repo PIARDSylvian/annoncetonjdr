@@ -42,7 +42,7 @@ class PartyType extends AbstractType
             ->add('address', LocationType::class, ['label' => false, 'required' => false])
             ->add('maxPlayer')
             ->add('alreadySubscribed', IntegerType::class, ['data' => 0])
-            ->add('date', DateTimeType::class, ['format'=>'dd-MM-yyyy H:m','widget' => 'single_text'])
+            ->add('date', DateTimeType::class, ['format'=>'dd-MM-yyyy H:m','widget' => 'single_text', 'html5'=>false])
             ->add('minor', CheckboxType::class, ['required' => false])
             ->add('gameName', EntityType::class, [
                 'placeholder' => 'Select a game',

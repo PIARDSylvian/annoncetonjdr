@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Location;
+use App\Entity\Search;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @method Location|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,10 +15,36 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class LocationRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Location::class);
     }
+
+    /**
+    * @return Party[] Query
+    */
+    public function searchQuery(Search $search)
+    {
+        if (!$search->getSearchLat() OR !$search->getSearchLng()) {
+            // Latitude & longitude de Paris
+            $search->setSearchLat('48.866667')->setSearchLng('2.333333');
+        }
+
+        $query = $this->createQueryBuilder('l')
+            ->addSelect('( 6371 * acos( cos( radians(:lat) ) * cos( radians( l.lat ) ) * cos( radians( l.lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( l.lat ) ) ) ) AS distance')
+                ->setParameter('lat', 48.866667)
+                ->setParameter('lng', 2.333333)
+            ->orderBy('distance', 'ASC')
+            ->leftJoin('l.parties', 'p WITH p.date >= ?1')
+                ->addSelect('p')
+                ->setParameter('1', new \DateTime('now'))
+            ->leftJoin('l.events', 'e WITH e.dateFinish >= ?1')
+                ->addSelect('e')
+                ->setParameter('1', new \DateTime('now'))
+            ;
+            
+            return $query->getQuery()->getResult();
+        }
 
     // /**
     //  * @return Location[] Returns an array of Location objects

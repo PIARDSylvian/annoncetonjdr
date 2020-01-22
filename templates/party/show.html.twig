@@ -1,4 +1,4 @@
-{% extends 'layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}party - show{% endblock %}
 
@@ -43,10 +43,12 @@
 </div>
 {% endfor %}
 
+{% if app.user %}
 {{ form_start(form) }}
     {{ form_row(form.commentary) }}
     <input type="submit" class="btn" value="commenter"/>
 {{ form_end(form) }}
+{% endif %}
 
 {% endblock %}
 
@@ -58,5 +60,4 @@ var party = {
     lng:{{party.address.lng}}
 };
 </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{google_key}}&callback=initMap"></script>
 {% endblock %}

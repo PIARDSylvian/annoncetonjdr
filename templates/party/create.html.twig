@@ -1,4 +1,4 @@
-{% extends 'layout.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}party - create / update{% endblock %}
 
@@ -10,7 +10,11 @@
 {{ form_start(form) }}
     {{ form_row(form.partyName) }}
     {{ form_row(form.online) }}
-    {{ form_row(form.address) }}
+    <div class="form-group">
+        <label for="select2-address">Address{{ form_errors(form.address.address) }}</label>
+        <select class="custom-select" id="select2-address"></select>
+    </div>
+    {{ form_widget(form.address, { 'attr': {'class': 'd-none'} }) }}
     {{ form_row(form.maxPlayer) }}
     {{ form_row(form.alreadySubscribed) }}
     <div id="party_date_container">
@@ -30,5 +34,4 @@
 
 {% block javascripts %}
 {{ encore_entry_script_tags('party_form') }}
-<script src="https://maps.googleapis.com/maps/api/js?key={{google_key}}&libraries=places"></script>
 {% endblock %}

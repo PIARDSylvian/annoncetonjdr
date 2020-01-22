@@ -9,9 +9,11 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use App\Entity\User;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SecurityController extends AbstractController
 {
@@ -20,6 +22,10 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
@@ -31,7 +37,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/forgotten_password", name="forgotten_password")
      */
-    public function forgottenPassword(Request $request, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer, TokenGeneratorInterface $tokenGenerator): Response
+    public function forgottenPassword(Request $request, UserPasswordEncoderInterface $encoder, MailerInterface $mailer, TokenGeneratorInterface $tokenGenerator): Response
     {
         if($this->getUser() != null) {
             return $this->redirectToRoute('home');
@@ -43,13 +49,14 @@ class SecurityController extends AbstractController
 
             if ($this->isCsrfTokenValid('forgotPassword', $submittedToken)) {
                 $entityManager = $this->getDoctrine()->getManager();
+
                 $user = $entityManager->getRepository(User::class)->findOneByEmail($email);
 
                 if ($user === null) {
                     $this->addFlash('danger', 'Email Inconnu');
                     $response = array( 
                         "code" => 200,
-                        "url" => $this->generateUrl('home')
+                        "url" => $this->generateUrl('forgotten_password')
                     );
                     return $url = new JsonResponse($response);
                 }
@@ -66,8 +73,9 @@ class SecurityController extends AbstractController
                     return new JsonResponse($response);
                 }
                 elseif ($userBddResponse == $userResponse) {
+
                     $token = $tokenGenerator->generateToken();
- 
+                    
                     try{
                         $user->setResetToken($token);
                         $entityManager->flush();
@@ -75,23 +83,27 @@ class SecurityController extends AbstractController
                         $this->addFlash('warning', $e->getMessage());
                         return $this->redirectToRoute('forgotten_password');
                     }
-        
+                    
                     $url = $this->generateUrl('reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
-        
-                    $message = (new \Swift_Message('Forgot Password'))
-                        ->setFrom('piard.sylvian@gmail.com')
-                        ->setTo($user->getEmail())
-                        ->setBody(
+
+                    $email = (new Email())
+                        ->from('piard.sylvian@gmail.com')
+                        ->to($user->getEmail())
+                        ->subject('Forgot Password reqest')
+                        ->text(
                             "blablabla voici le token pour reseter votre mot de passe : " . $url,
                             'text/html'
-                        );
-        
-                    $mailer->send($message);
+                        )
+                        ->html('<a href="'.$url.'">changer le mot de passe</a>')
+                    ;
+
+                    /** @var Symfony\Component\Mailer\SentMessage $sentEmail */
+                    $sentEmail = $mailer->send($email);
         
                     $this->addFlash('notice', 'Mail envoyé');
                     $response = array( 
                         "code" => 200,
-                        "url" => $this->generateUrl('home')
+                        "url" => $this->generateUrl('app_home')
                     );
                     return $url = new JsonResponse($response);
                 }
@@ -99,7 +111,7 @@ class SecurityController extends AbstractController
                     $this->addFlash('danger', 'Bad Data');
                     $response = array( 
                         "code" => 200,
-                        "url" => $this->generateUrl('home')
+                        "url" => $this->generateUrl('forgotten_password')
                     );
                     return $url = new JsonResponse($response);
                 }
@@ -129,7 +141,7 @@ class SecurityController extends AbstractController
 
         if ($request->isMethod('POST') && ! $this->isCsrfTokenValid('resetPassword', $submittedToken)) {
             $this->addFlash('danger', 'Invalid Csrf');
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('app_home');
         }
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -137,11 +149,10 @@ class SecurityController extends AbstractController
 
         if ($user === null) {
             $this->addFlash('danger', 'Token Inconnu');
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('app_home');
         }
 
         if ($request->isMethod('POST') && ($newPassword === $repeatPassword) && strlen($newPassword) >= 8 ) {
- 
  
             $user->setResetToken(null);
 
@@ -152,11 +163,19 @@ class SecurityController extends AbstractController
  
             $this->addFlash('notice', 'Mot de passe mis à jour');
  
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('app_home');
         }else {
  
             return $this->render('security/reset_password.html.twig');
         }
  
+    }
+
+    /**
+     * @Route("/logout", name="app_logout")
+     */
+    public function logout()
+    {
+        throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
 }

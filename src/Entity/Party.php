@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -59,7 +59,7 @@ class Party
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank()
      * @Assert\Range(
-     *      min = "now"
+     *      min = "+2 hours"
      * )
      */
     private $date;
@@ -71,6 +71,8 @@ class Party
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Game")
+     * @ORM\JoinColumn(name="game_name_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotBlank()
      */
     private $gameName;
 
