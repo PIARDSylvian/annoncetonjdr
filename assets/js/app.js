@@ -10,6 +10,9 @@ import '../scss/app.scss';
 import 'bootstrap';
 import L from 'leaflet';
 
+/*
+ * annoncetonjdr V3
+ */
 delete L.Icon.Default.prototype._getIconUrl;
 
 L.Icon.Default.mergeOptions({
