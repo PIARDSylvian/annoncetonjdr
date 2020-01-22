@@ -47,6 +47,11 @@ class Location
      */
     private $events;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Association", mappedBy="address", cascade={"persist", "remove"})
+     */
+    private $association;
+
     public function __construct()
     {
         $this->parties = new ArrayCollection();
@@ -151,6 +156,23 @@ class Location
             if ($event->getAddress() === $this) {
                 $event->setAddress(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getAssociation(): ?Association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(Association $association): self
+    {
+        $this->association = $association;
+
+        // set the owning side of the relation if necessary
+        if ($association->getAddress() !== $this) {
+            $association->setAddress($this);
         }
 
         return $this;

@@ -86,6 +86,11 @@ class User implements UserInterface
      */
     protected $resetToken;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Association", mappedBy="owner", cascade={"persist", "remove"})
+     */
+    private $association;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -244,6 +249,23 @@ class User implements UserInterface
     public function setResetToken(?string $resetToken): self
     {
         $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+    public function getAssociation(): ?Association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(Association $association): self
+    {
+        $this->association = $association;
+
+        // set the owning side of the relation if necessary
+        if ($association->getOwner() !== $this) {
+            $association->setOwner($this);
+        }
 
         return $this;
     }
