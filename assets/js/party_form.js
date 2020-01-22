@@ -8,13 +8,18 @@ require('tempusdominus-bootstrap-4');
 import 'select2';
 
 $(function () {
-    $('.date_container input').datetimepicker({
+
+    let dateTime = new Date($.now());
+    dateTime.setHours(dateTime.getHours()+2);
+    dateTime.setMinutes(dateTime.getMinutes()+1);
+
+    $('#party_date').datetimepicker({
         format: 'DD-MM-YYYY HH:mm',
         extraFormats: [ 'DD-MM-YYYY HH:mm' ],
         inline: true,
         sideBySide: true,
         locale: 'fr',
-        minDate: new Date($.now()),
+        minDate: dateTime,
         icons: {
             time: "fa fa-clock"
         },
