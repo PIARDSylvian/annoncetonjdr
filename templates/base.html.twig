@@ -10,8 +10,9 @@
         <div class="container">
             <nav class="navbar navbar-light bg-light">
                 <span class="navbar-brand mb-0 h1">Navbar</span>
-                <a class="btn btn-outline-secondary" href="{{path('app_party_create')}}">Crée une partie</a>
                 <a class="btn btn-outline-secondary" href="{{path('app_party')}}">rechercher une partie</a>
+                <a class="btn btn-outline-secondary" href="{{path('app_party_create')}}">Crée une partie</a>
+                <a class="btn btn-outline-secondary" href="{{path('app_event_create')}}">Crée un event</a>
                 {% if app.user %}
                     {{ app.user.pseudonym }}
                     <a class="btn btn-outline-secondary" href="{{path('app_logout')}}">logout</a>

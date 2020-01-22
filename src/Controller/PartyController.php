@@ -131,27 +131,4 @@ class PartyController extends AbstractController {
 
         return $this->redirectToRoute('app_party_show', ['id' => $id]);
     }
-
-    /**
-     * @Route("/event/create", name="app_event_create")
-     */
-    public function createEvent(Request $request)
-    {
-        $event = new Event();
-
-        $form = $this->createForm(EventType::class, $event);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $event->setOwner($this->getUser());
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($event);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('home');
-        }
-
-        return $this->render('party/create.html.twig',array('form' => $form->createView()));
-    }
 }
