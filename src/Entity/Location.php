@@ -2,9 +2,9 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\LocationRepository")
@@ -38,9 +38,15 @@ class Location
      */
     private $parties;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="address")
+     */
+    private $events;
+
     public function __construct()
     {
         $this->parties = new ArrayCollection();
+        // $this->events = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -109,6 +115,37 @@ class Location
             // set the owning side to null (unless already changed)
             if ($party->getAddress() === $this) {
                 $party->setAddress(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Event[]
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): self
+    {
+        if (!$this->events->contains($event)) {
+            $this->events[] = $event;
+            $event->setAddress($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): self
+    {
+        if ($this->events->contains($event)) {
+            $this->events->removeElement($event);
+            // set the owning side to null (unless already changed)
+            if ($event->getAddress() === $this) {
+                $event->setAddress(null);
             }
         }
 

@@ -3,11 +3,15 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @UniqueEntity(fields={"pseudonym"}, message="There is already an account with this pseudonym")
+ * 
  */
 class User implements UserInterface
 {
@@ -19,7 +23,7 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank()
      * @Assert\Email()
      */
@@ -47,7 +51,7 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=25, nullable=true)
      * @Assert\Length(max=25)
      */
-    private $name;
+    private $lastName;
 
     /**
      * @ORM\Column(type="date")
@@ -172,14 +176,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getName(): ?string
+    public function getLastName(): ?string
     {
-        return $this->name;
+        return $this->lastName;
     }
 
-    public function setName(?string $name): self
+    public function setLastName(?string $lastName): self
     {
-        $this->name = $name;
+        $this->lastName = $lastName;
 
         return $this;
     }
@@ -208,18 +212,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getResetToken(): ?string
-    {
-        return $this->resetToken;
-    }
-
-    public function setResetToken(?string $resetToken): self
-    {
-        $this->resetToken = $resetToken;
-
-        return $this;
-    }
-
     public function getSecretQ(): ?string
     {
         return $this->secretQ;
@@ -240,6 +232,18 @@ class User implements UserInterface
     public function setSecretR(string $secretR): self
     {
         $this->secretR = $secretR;
+
+        return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): self
+    {
+        $this->resetToken = $resetToken;
 
         return $this;
     }

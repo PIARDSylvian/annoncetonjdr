@@ -3,16 +3,16 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Repository\PartyRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Knp\Component\Pager\PaginatorInterface;
 
-use App\Form\PartyType;
-use App\Form\SearchType;
 use App\Entity\Party;
-use App\Entity\Search;
 use App\Entity\Commentary;
+use App\Entity\Event;
+use App\Repository\LocationRepository;
+use App\Form\PartyType;
+use App\Entity\Search;
+use App\Form\SearchType;
 use App\Form\CommentaryType;
 
 class PartyController extends AbstractController {
@@ -20,29 +20,34 @@ class PartyController extends AbstractController {
     /**
      * @Route("/party", name="app_party")
      */
-    public function party(PaginatorInterface $paginator, PartyRepository $repository, Request $request)
+    public function party(LocationRepository $repository, Request $request)
     {
         
-        $party = new Party();
+        // $party = new Party();
         $search = new Search();
         $form = $this->createForm(SearchType::class, $search);
 
+        $tokenProvider = $this->container->get('security.csrf.token_manager');
+        $token = $tokenProvider->getToken('search')->getValue();
+
         $form->handleRequest($request);
         if(!$form->isSubmitted()) {
-            $form->submit([]);
+            $form->submit(['page'=> 0, '_token' => $token]);
         }
 
-        $searchResult = $paginator->paginate($repository->searchQuery($search), $request->query->getInt('page', 1), $request->query->getInt('nombres', 10), array('wrap-queries'=>true));
+        $searchResult = $repository->searchQuery($search);
 
         $result = [];
+
         foreach( $searchResult as $value ) {
-            $value[0]->distance = $value['distance'];
-            $result[] = $value[0];
+
+            if (count($value[0]->getEvents()) || count($value[0]->getParties()) ) {
+                $value[0]->distance = $value['distance'];
+                $result[] = $value[0];
+            }
         }
 
-        $searchResult->setItems($result);
-
-        return $this->render('party/party.html.twig',array('form' => $form->createView(), 'allParty' => $searchResult));
+        return $this->render('party/party.html.twig',array('form' => $form->createView(), 'allParty' => $result));
     }
     
     /**
@@ -61,7 +66,7 @@ class PartyController extends AbstractController {
             $entityManager->persist($party);
             $entityManager->flush();
 
-            return $this->redirectToRoute('home');
+            return $this->redirectToRoute('app_home');
         }
 
         return $this->render('party/create.html.twig',array('form' => $form->createView()));
@@ -76,6 +81,7 @@ class PartyController extends AbstractController {
         $party = $repository->find($id);
 
         $commentary = new Commentary();
+
         $form = $this->createForm(CommentaryType::class, $commentary);
 
         $form->handleRequest($request);
@@ -124,5 +130,28 @@ class PartyController extends AbstractController {
         $entityManager->flush();
 
         return $this->redirectToRoute('app_party_show', ['id' => $id]);
+    }
+
+    /**
+     * @Route("/event/create", name="app_event_create")
+     */
+    public function createEvent(Request $request)
+    {
+        $event = new Event();
+
+        $form = $this->createForm(EventType::class, $event);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $event->setOwner($this->getUser());
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($event);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('party/create.html.twig',array('form' => $form->createView()));
     }
 }
