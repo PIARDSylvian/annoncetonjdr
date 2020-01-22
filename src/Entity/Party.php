@@ -113,11 +113,12 @@ class Party
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Location", inversedBy="parties", cascade={"persist"})
+     * @Assert\Valid
      */
     private $address;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Commentary", mappedBy="party", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Commentary", mappedBy="party", cascade={"remove"})
      */
     private $commentaries;
 

@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\LocationRepository")
@@ -20,16 +21,19 @@ class Location
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
      */
     private $address;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank()
      */
     private $lat;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank()
      */
     private $lng;
 
@@ -46,7 +50,7 @@ class Location
     public function __construct()
     {
         $this->parties = new ArrayCollection();
-        // $this->events = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     public function getId(): ?int

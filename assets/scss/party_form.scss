@@ -8,10 +8,10 @@
     background-color: #fff;
 }
 
-#party_date_container {
+.date_container {
     position: relative;
-}
 
-#party_date {
-    display: none;
+    input {
+        display: none;
+    }
 }

@@ -22,8 +22,6 @@ class PartyController extends AbstractController {
      */
     public function party(LocationRepository $repository, Request $request)
     {
-        
-        // $party = new Party();
         $search = new Search();
         $form = $this->createForm(SearchType::class, $search);
 
@@ -52,10 +50,14 @@ class PartyController extends AbstractController {
     
     /**
      * @Route("/party/create", name="app_party_create")
+     * @Route("/party/update/{id}", name="app_party_update", requirements={"id"="\d+"})
      */
-    public function create(Request $request)
+    public function create(Party $party = null, Request $request)
     {
-        $party = new Party();
+        if(!$party) {
+            $party = new Party();
+        }
+
         $form = $this->createForm(PartyType::class, $party);
 
         $form->handleRequest($request);
@@ -66,7 +68,7 @@ class PartyController extends AbstractController {
             $entityManager->persist($party);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
         }
 
         return $this->render('party/create.html.twig',array('form' => $form->createView()));
@@ -75,13 +77,9 @@ class PartyController extends AbstractController {
     /**
      * @Route("/party/{id}", name="app_party_show", requirements={"id"="\d+"})
      */
-    public function show($id, Request $request)
+    public function show(Party $party, Request $request)
     {
-        $repository = $this->getDoctrine()->getRepository(Party::class);
-        $party = $repository->find($id);
-
         $commentary = new Commentary();
-
         $form = $this->createForm(CommentaryType::class, $commentary);
 
         $form->handleRequest($request);
@@ -94,41 +92,51 @@ class PartyController extends AbstractController {
             $entityManager->persist($commentary);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_party_show', ['id' => $id]);
+            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
         }
 
         return $this->render('party/show.html.twig', ['party' => $party, 'form' => $form->createView()]);
     }
 
     /**
+     * @Route("/party/delete/{id}", name="app_party_delete", requirements={"id"="\d+"})
+     */
+    public function delete(Party $party)
+    {
+        if ($this->getUser() === $party->getOwner()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($party);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_home');
+    }
+
+    /**
      * @Route("/party/addPlayer/{id}", name="app_party_add", requirements={"id"="\d+"})
      */
-    public function addPlayer($id)
+    public function addPlayer(Party $party)
     {
-        $repository = $this->getDoctrine()->getRepository(Party::class);
-        $party = $repository->find($id);
-        
-        $party->addRegisteredPlayer($this->getUser());
+        if (count($party->getRegisteredPlayer()) < $party->getMaxPlayer() && ($this->getUser() != $party->getOwner())) {
+            $party->addRegisteredPlayer($this->getUser());
+    
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush();
+        }
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->flush();
-
-        return $this->redirectToRoute('app_party_show', ['id' => $id]);
+        return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
     }
 
     /**
      * @Route("/party/removePlayer/{id}", name="app_party_remove", requirements={"id"="\d+"})
      */
-    public function removePlayer($id)
+    public function removePlayer(Party $party)
     {
-        $repository = $this->getDoctrine()->getRepository(Party::class);
-        $party = $repository->find($id);
-
         $party->removeRegisteredPlayer($this->getUser());
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_party_show', ['id' => $id]);
+        return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
     }
 }

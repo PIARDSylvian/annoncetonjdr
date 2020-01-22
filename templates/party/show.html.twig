@@ -6,11 +6,15 @@
 {% endblock %}
 
 {% block body %}
+{% if app.user and app.user is same as(party.owner) %}
+    <a href="{{path('app_party_update', {id:party.id})}}"><input type="button" value="Modifier"></a>
+    <a href="{{path('app_party_delete', {id:party.id})}}"><input type="button" value="Supprimer"></a>
+{% endif %}
 
 <h1>{{party.partyName}}</h1>
 <p>annonce de {{ party.owner.pseudonym }}</p>
 <p>{{ party.date.date }}</p>
-<p>Déjà inscrit : {{party.alreadySubscribed}}</p>
+<p>Déjà inscrit : {{party.alreadySubscribed + party.registeredPlayer|length}}</p>
 <p>Place restante : {{party.maxPlayer - (party.alreadySubscribed + party.registeredPlayer|length)}}</p>
 <p>Accepte les mineur : {{party.minor ? 'Oui':'Non'}}</p>
 <p>Jeux éditée : {{party.gameEdition ? 'Oui':'Non'}}</p>
@@ -31,7 +35,7 @@
 {% if app.user and app.user != party.owner %}
     {% if app.user in party.registeredPlayer %}
     <a href="{{path('app_party_remove', {id:party.id})}}"><input type="button" value="se desincrire"></a>
-    {% else %}
+    {% elseif (party.maxPlayer - (party.alreadySubscribed + party.registeredPlayer|length)) > 0 %}
     <a href="{{path('app_party_add', {id:party.id})}}"><input type="button" value="s inscire"></a>
     {% endif %}
 {% endif %}
@@ -54,10 +58,10 @@
 
 {% block javascripts %}
 <script>
-var party = {
-    name:'{{party.partyName}}',
+var party = [{
     lat:{{party.address.lat}},
-    lng:{{party.address.lng}}
-};
+    lng:{{party.address.lng}},
+    address:'{{party.address.address}}'
+}];
 </script>
 {% endblock %}

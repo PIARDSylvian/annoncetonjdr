@@ -56,7 +56,7 @@
                     {% for event in location.events %}
                         {
                             name: "{{event.name}}",
-                            url: "{{url('app_party_show', {'id':event.id})}}"
+                            url: "{{url('app_event_show', {'id':event.id})}}"
                         },
                     {% endfor %}
                 ]
