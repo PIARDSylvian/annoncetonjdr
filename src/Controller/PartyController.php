@@ -27,9 +27,12 @@ class PartyController extends AbstractController {
         $search = new Search();
         $form = $this->createForm(SearchType::class, $search);
 
+        $tokenProvider = $this->container->get('security.csrf.token_manager');
+        $token = $tokenProvider->getToken('search')->getValue();
+
         $form->handleRequest($request);
         if(!$form->isSubmitted()) {
-            $form->submit(['page'=> 0]);
+            $form->submit(['page'=> 0, '_token' => $token]);
         }
 
         $searchResult = $repository->searchQuery($search);
