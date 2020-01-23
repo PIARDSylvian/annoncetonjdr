@@ -37,14 +37,13 @@ class PartyController extends AbstractController {
 
         $result = [];
 
+        
         foreach( $searchResult as $value ) {
-
-            if (count($value[0]->getEvents()) || count($value[0]->getParties()) ) {
+            if (count($value[0]->getEvents()) || count($value[0]->getParties()) || $value[0]->getAssociation()) {
                 $value[0]->distance = $value['distance'];
                 $result[] = $value[0];
             }
         }
-
         return $this->render('party/party.html.twig',array('form' => $form->createView(), 'allParty' => $result));
     }
     

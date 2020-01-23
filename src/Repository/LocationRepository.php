@@ -41,6 +41,8 @@ class LocationRepository extends ServiceEntityRepository
             ->leftJoin('l.events', 'e WITH e.dateFinish >= ?1')
                 ->addSelect('e')
                 ->setParameter('1', new \DateTime('now'))
+            ->leftJoin('l.association', 'a')
+                ->addSelect('a')
             ;
             
             return $query->getQuery()->getResult();

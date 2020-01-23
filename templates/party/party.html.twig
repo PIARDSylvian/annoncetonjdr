@@ -59,7 +59,13 @@
                             url: "{{url('app_event_show', {'id':event.id})}}"
                         },
                     {% endfor %}
-                ]
+                ],
+                {% if location.association %}
+                association: {
+                    name: "{{location.association.name}}",
+                    url: "{{url('app_association_show', {'id':location.association.id})}}"
+                }
+                {% endif %}
             },
         {% endfor %}
     ];
