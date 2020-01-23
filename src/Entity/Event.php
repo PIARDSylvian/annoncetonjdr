@@ -62,11 +62,11 @@ class Event
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Commentary", mappedBy="event", cascade={"remove"})
      */
-    private $Commentaries;
+    private $commentaries;
 
     public function __construct()
     {
-        $this->Commentaries = new ArrayCollection();
+        $this->commentaries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -163,23 +163,23 @@ class Event
      */
     public function getCommentaries(): Collection
     {
-        return $this->Commentaries;
+        return $this->commentaries;
     }
 
-    public function addCommentary(Commentary $commentary): self
+    public function addCommentary(commentary $commentary): self
     {
-        if (!$this->Commentaries->contains($commentary)) {
-            $this->Commentaries[] = $commentary;
+        if (!$this->commentaries->contains($commentary)) {
+            $this->commentaries[] = $commentary;
             $commentary->setEvent($this);
         }
 
         return $this;
     }
 
-    public function removeCommentary(Commentary $commentary): self
+    public function removeCommentary(commentary $commentary): self
     {
-        if ($this->Commentaries->contains($commentary)) {
-            $this->Commentaries->removeElement($commentary);
+        if ($this->commentaries->contains($commentary)) {
+            $this->commentaries->removeElement($commentary);
             // set the owning side to null (unless already changed)
             if ($commentary->getEvent() === $this) {
                 $commentary->setEvent(null);

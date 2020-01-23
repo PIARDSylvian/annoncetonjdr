@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -44,6 +46,16 @@ class Association
      * @ORM\Column(type="boolean")
      */
     private $pendding = true;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Commentary", mappedBy="association", cascade={"remove"})
+     */
+    private $commentaries;
+
+    public function __construct()
+    {
+        $this->commentaries = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -106,6 +118,37 @@ class Association
     public function setPendding(bool $pendding): self
     {
         $this->pendding = $pendding;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Commentary[]
+     */
+    public function getCommentaries(): Collection
+    {
+        return $this->commentaries;
+    }
+
+    public function addCommentary(commentary $commentary): self
+    {
+        if (!$this->commentaries->contains($commentary)) {
+            $this->commentaries[] = $commentary;
+            $commentary->setAssociation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentary(commentary $commentary): self
+    {
+        if ($this->commentaries->contains($commentary)) {
+            $this->commentaries->removeElement($commentary);
+            // set the owning side to null (unless already changed)
+            if ($commentary->getAssociation() === $this) {
+                $commentary->setAssociation(null);
+            }
+        }
 
         return $this;
     }
