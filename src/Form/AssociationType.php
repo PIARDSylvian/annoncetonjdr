@@ -2,12 +2,11 @@
 
 namespace App\Form;
 
-use App\Entity\Event;
+use App\Entity\Association;
 use App\Entity\Location;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -15,7 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use App\Repository\LocationRepository;
 
-class EventType extends AbstractType
+class AssociationType extends AbstractType
 {
     private $entityManager;
     private $locationRepository;
@@ -31,8 +30,6 @@ class EventType extends AbstractType
         $builder
             ->add('name')
             ->add('address', LocationType::class, ['label' => false, 'required' => false])
-            ->add('dateStart', DateTimeType::class, ['format'=>'dd-MM-yyyy H:m','widget' => 'single_text', 'html5'=>false])
-            ->add('dateFinish', DateTimeType::class, ['format'=>'dd-MM-yyyy H:m','widget' => 'single_text', 'html5'=>false])
             ->add('description', TextareaType::class, ['required' => false])
             ->addEventListener(
                 FormEvents::POST_SUBMIT,
@@ -69,7 +66,7 @@ class EventType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => Event::class,
+            'data_class' => Association::class,
         ));
     }
 }

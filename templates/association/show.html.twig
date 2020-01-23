@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}association - show{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
+
+{% block body %}
+
+{% if app.user and app.user is same as(association.owner) %}
+    <a href="{{path('app_association_update', {id:association.id})}}"><input type="button" value="Modifier"></a>
+    {# <a href="{{path('app_association_delete', {id:association.id})}}"><input type="button" value="Supprimer"></a> #}
+{% endif %}
+
+<h1>{{association.name}}</h1>
+<p>association de {{ association.owner.pseudonym }}</p>
+<p>Déscription : {{ association.description }}</p>
+
+<p>{{association.address.address}}</p>
+<div id="map" class="iframe-container"></div>
+
+{# {% for commentary in event.commentaries %}
+<div style="border:solid 1px black; padding: 10px; margin-bottom: 20px;">
+    <p>{{commentary.owner.pseudonym}}</p>
+    <p>{{commentary.commentary}}</p>
+</div>
+{% endfor %} #}
+
+{# {% if app.user %}
+{{ form_start(form) }}
+    {{ form_row(form.commentary) }}
+    <input type="submit" class="btn" value="commenter"/>
+{{ form_end(form) }}
+{% endif %} #}
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+var party = [{
+    lat:{{association.address.lat}},
+    lng:{{association.address.lng}},
+    address:'{{association.address.address}}'
+}];
+</script>
+{% endblock %}

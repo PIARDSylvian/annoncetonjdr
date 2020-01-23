@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AssociationRepository")
@@ -17,14 +19,14 @@ class Association
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="association", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="association")
      * @ORM\JoinColumn(nullable=false)
      */
     private $owner;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Location", inversedBy="association", cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity="App\Entity\Location", inversedBy="association", cascade={"persist"})
+     * @Assert\Valid
      */
     private $address;
 
@@ -39,9 +41,9 @@ class Association
     private $description;
 
     /**
-     * @ORM\Column(type="boolean", options={"default":true})
+     * @ORM\Column(type="boolean")
      */
-    private $pendding;
+    private $pendding = true;
 
     public function getId(): ?int
     {
@@ -106,5 +108,17 @@ class Association
         $this->pendding = $pendding;
 
         return $this;
+    }
+
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if(is_null($this->getAddress())) {
+            $context->buildViolation('Cette valeur n\'est pas valide.')
+                ->atPath('address.address')
+                ->addViolation();
+        }
     }
 }
