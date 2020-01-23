@@ -29,7 +29,6 @@ console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
 
 $(function() {
     function initmap() {
-
         var map = L.map('map').setView([46.866667, 2.333333], 5);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -37,16 +36,22 @@ $(function() {
         }).addTo(map);
 
         $.each(party, function(i, item) {
-            let popup = item.address;
+            let popup = item.address + '<br>';
             if(item.parties && item.parties.length > 0) {
+                popup += '<br>parties :'
                 $.each( item.parties, function(idx, part){
                         popup +='<br><a href="' + part.url + '">' + part.partyName + '</a>';
                 });
             };
             if(item.events && item.events.length > 0) {
+                popup += '<br>events :'
                 $.each( item.events, function(idx, event){
                         popup += '<br><a href="' + event.url + '">' + event.name + '</a>';
                 });
+            };
+            if(item.association) {
+                popup += '<br>association :'
+                popup += '<br><a href="' + item.association.url + '">' + item.association.name + '</a>';
             };
             L.marker([item.lat, item.lng]).addTo(map)
             .bindPopup(popup);

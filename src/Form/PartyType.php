@@ -63,7 +63,20 @@ class PartyType extends AbstractType
                 FormEvents::POST_SUBMIT,
                 [$this, 'postSubmit']
             )
+            ->addEventListener(
+                FormEvents::PRE_SET_DATA,
+                [$this, 'preSetData']
+            )
         ;
+    }
+
+    public function preSetData(FormEvent $event)
+    {
+        $form = $event->getForm();
+        $data = $event->getData();
+        if ( $data->getAddress() instanceof Location ) {
+            $form->add('address', LocationType::class, ['disabled' => true]);
+        }
     }
 
     public function postSubmit(FormEvent $event)

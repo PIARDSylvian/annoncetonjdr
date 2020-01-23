@@ -43,9 +43,14 @@ class Commentary
     private $party;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="Commentaries")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="commentaries")
      */
     private $event;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Association", inversedBy="commentaries")
+     */
+    private $association;
 
     public function getId(): ?int
     {
@@ -120,6 +125,18 @@ class Commentary
     public function setEvent(?Event $event): self
     {
         $this->event = $event;
+
+        return $this;
+    }
+
+    public function getAssociation(): ?Association
+    {
+        return $this->association;
+    }
+
+    public function setAssociation(?Association $association): self
+    {
+        $this->association = $association;
 
         return $this;
     }

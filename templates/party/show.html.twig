@@ -40,8 +40,15 @@
     {% endif %}
 {% endif %}
 
+{% if app.user and app.user is same as(party.owner) %}
+    <a href="{{path('app_party_delete_all_com', {id:party.id})}}"><input type="button" value="Supprimer Tout"></a>
+{% endif %}
+
 {% for commentary in party.commentaries %}
 <div style="border:solid 1px black; padding: 10px; margin-bottom: 20px;">
+    {% if app.user and (app.user is same as(party.owner) or  app.user is same as(commentary.owner)) %}
+        <a href="{{path('app_party_delete_com', {id:party.id,comment_id:commentary.id})}}"><input type="button" value="Supprimer"></a>
+    {% endif %}
     <p>{{commentary.owner.pseudonym}}</p>
     <p>{{commentary.commentary}}</p>
 </div>

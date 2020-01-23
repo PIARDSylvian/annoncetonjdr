@@ -5,6 +5,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 
 use App\Entity\Party;
 use App\Entity\Commentary;
@@ -37,14 +38,13 @@ class PartyController extends AbstractController {
 
         $result = [];
 
+        
         foreach( $searchResult as $value ) {
-
-            if (count($value[0]->getEvents()) || count($value[0]->getParties()) ) {
+            if (count($value[0]->getEvents()) || count($value[0]->getParties()) || $value[0]->getAssociation()) {
                 $value[0]->distance = $value['distance'];
                 $result[] = $value[0];
             }
         }
-
         return $this->render('party/party.html.twig',array('form' => $form->createView(), 'allParty' => $result));
     }
     
@@ -110,6 +110,36 @@ class PartyController extends AbstractController {
         }
 
         return $this->redirectToRoute('app_home');
+    }
+
+    /**
+     * @Route("/party/delete/{id}/com/{comment_id}", name="app_party_delete_com", requirements={"id"="\d+", "cid"="\d+"})
+     * @Entity("commentary", expr="repository.find(comment_id)")
+     */
+    public function deleteCom(Party $party, Commentary $commentary)
+    {
+        if ($this->getUser() === $party->getOwner() || $this->getUser() === $commentary->getOwner()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($commentary);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+    }
+
+    /**
+     * @Route("/party/delete-all-com/{id}", name="app_party_delete_all_com", requirements={"id"="\d+"})
+     */
+    public function deleteAllCom(Party $party)
+    {
+        if ($this->getUser() === $party->getOwner()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            foreach ($party->getCommentaries() as $commentary) {
+                $entityManager->remove($commentary);
+            }
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
     }
 
     /**
