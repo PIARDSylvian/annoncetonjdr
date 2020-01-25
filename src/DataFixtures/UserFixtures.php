@@ -18,6 +18,24 @@ class UserFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
+        //user admin
+        $user = new User();
+        $user->setEmail('piard.sylvian+admin@gmail.com');
+        
+        $user->setPassword($this->passwordEncoder->encodePassword(
+            $user,
+            'admin123'
+        ));
+        $user->setFirstName('admin');
+        $user->setLastName('admin');
+        $user->setBirthDate(new \DateTime('now'));
+        $user->setPseudonym('admin');
+        $user->setSecretQ('sq1');
+        $user->setSecretR('sq1');
+        $user->setRoles(['ROLE_ADMIN']);
+        $manager->persist($user);
+
+        //user
         for ($i = 1; $i <= 5; $i++) {
             $user = new User();
             $user->setEmail('piard.sylvian+'.$i.'@gmail.com');

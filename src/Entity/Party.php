@@ -65,9 +65,9 @@ class Party
     private $date;
 
     /**
-     * @ORM\Column(type="boolean", options={"default" : true})
+     * @ORM\Column(type="boolean")
      */
-    private $minor;
+    private $minor = true;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Game")
