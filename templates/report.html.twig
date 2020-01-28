@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ReportController!{% endblock %}
+
+{% block body %}
+{{ form_start(form) }}
+{{ form_row(form.reason) }}
+<input type="submit" class="btn" value="Envoyer"/>
+{{ form_end(form) }}
+{% endblock %}
