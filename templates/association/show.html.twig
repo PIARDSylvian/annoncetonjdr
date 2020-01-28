@@ -10,6 +10,8 @@
 {% if app.user and app.user is same as(association.owner) %}
     <a href="{{path('app_association_update', {id:association.id})}}"><input type="button" value="Modifier"></a>
     <a href="{{path('app_association_delete', {id:association.id})}}"><input type="button" value="Supprimer"></a>
+{% else %}
+    <a href="{{path('app_report_association', {id:association.id})}}"><input type="button" value="Signaler"></a>
 {% endif %}
 
 <h1>{{association.name}}</h1>
@@ -28,6 +30,7 @@
     {% if app.user and (app.user is same as(association.owner) or  app.user is same as(commentary.owner)) %}
         <a href="{{path('app_association_delete_com', {id:association.id,comment_id:commentary.id})}}"><input type="button" value="Supprimer"></a>
     {% endif %}
+    <a href="{{path('app_report_commentary', {id:commentary.id})}}"><input type="button" value="Signaler"></a>
     <p>{{commentary.owner.pseudonym}}</p>
     <p>{{commentary.commentary}}</p>
 </div>

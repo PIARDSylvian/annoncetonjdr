@@ -9,6 +9,8 @@
 {% if app.user and app.user is same as(party.owner) %}
     <a href="{{path('app_party_update', {id:party.id})}}"><input type="button" value="Modifier"></a>
     <a href="{{path('app_party_delete', {id:party.id})}}"><input type="button" value="Supprimer"></a>
+{% else %}
+    <a href="{{path('app_report_party', {id:party.id})}}"><input type="button" value="Signaler"></a>
 {% endif %}
 
 <h1>{{party.partyName}}</h1>
@@ -49,6 +51,7 @@
     {% if app.user and (app.user is same as(party.owner) or  app.user is same as(commentary.owner)) %}
         <a href="{{path('app_party_delete_com', {id:party.id,comment_id:commentary.id})}}"><input type="button" value="Supprimer"></a>
     {% endif %}
+    <a href="{{path('app_report_commentary', {id:commentary.id})}}"><input type="button" value="Signaler"></a>
     <p>{{commentary.owner.pseudonym}}</p>
     <p>{{commentary.commentary}}</p>
 </div>
