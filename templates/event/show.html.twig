@@ -32,7 +32,9 @@
     {% if app.user and (app.user is same as(event.owner) or  app.user is same as(commentary.owner)) %}
         <a href="{{path('app_event_delete_com', {id:event.id,comment_id:commentary.id})}}"><input type="button" value="Supprimer"></a>
     {% endif %}
+    {% if app.user and (app.user is not same as(commentary.owner)) %}
     <a href="{{path('app_report_commentary', {id:commentary.id})}}"><input type="button" value="Signaler"></a>
+    {% endif %}
     <p>{{commentary.owner.pseudonym}}</p>
     <p>{{commentary.commentary}}</p>
 </div>

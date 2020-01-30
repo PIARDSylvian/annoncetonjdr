@@ -36,34 +36,34 @@ class Report
     private $reason;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\Column(type="boolean")
      */
-    private $user;
+    private $solved = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Party")
-     */
-    private $party;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Event")
-     */
-    private $event;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Association")
-     */
-    private $association;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Commentary")
+     * @ORM\ManyToOne(targetEntity="App\Entity\commentary", inversedBy="reports")
      */
     private $commentary;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Association", inversedBy="reports")
      */
-    private $solved = false;
+    private $association;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="reports")
+     */
+    private $event;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Party", inversedBy="reports")
+     */
+    private $party;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="reports")
+     */
+    private $user;
 
     public function getId(): ?int
     {
@@ -118,38 +118,26 @@ class Report
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getSolved(): ?bool
     {
-        return $this->user;
+        return $this->solved;
     }
 
-    public function setUser(?User $user): self
+    public function setSolved(bool $solved): self
     {
-        $this->user = $user;
+        $this->solved = $solved;
 
         return $this;
     }
 
-    public function getParty(): ?Party
+    public function getCommentary(): ?commentary
     {
-        return $this->party;
+        return $this->commentary;
     }
 
-    public function setParty(?Party $party): self
+    public function setCommentary(?commentary $commentary): self
     {
-        $this->party = $party;
-
-        return $this;
-    }
-
-    public function getEvent(): ?Event
-    {
-        return $this->event;
-    }
-
-    public function setEvent(?Event $event): self
-    {
-        $this->event = $event;
+        $this->commentary = $commentary;
 
         return $this;
     }
@@ -166,27 +154,48 @@ class Report
         return $this;
     }
 
-    public function getCommentary(): ?Commentary
+    public function getEvent(): ?Event
     {
-        return $this->commentary;
+        return $this->event;
     }
 
-    public function setCommentary(?Commentary $commentary): self
+    public function setEvent(?Event $event): self
     {
-        $this->commentary = $commentary;
+        $this->event = $event;
 
         return $this;
     }
 
-    public function getSolved(): ?bool
+    public function getParty(): ?Party
     {
-        return $this->solved;
+        return $this->party;
     }
 
-    public function setSolved(bool $solved): self
+    public function setParty(?Party $party): self
     {
-        $this->solved = $solved;
+        $this->party = $party;
 
         return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * toString
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getReason();
     }
 }
