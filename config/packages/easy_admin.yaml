@@ -1,7 +1,22 @@
 easy_admin:
+    site_name: 'Annonce ton JDR <em><strong>Admin</strong></em>'
+    user:
+        display_avatar: false
+        name_property_path: 'pseudonym'
+    list:
+        actions: ['show']
     entities:
         User:
             class: App\Entity\User
+            list:
+                title: 'List %%entity_label%%'
+                fields: ['email', 'pseudonym', 'association', 'roles', 'reports','id']
+                actions: ['-edit']
+            show:
+                title: '%%entity_label%% (#%%entity_id%%)'
+                fields: ['email', 'pseudonym', 'association','roles', 'reports','id']
+            search:
+                    fields: ['email', 'pseudonym', 'association.name', 'roles']
         Game:
             class: App\Entity\Game
         Party:
@@ -15,11 +30,9 @@ easy_admin:
         OpenReport:
             class: App\Entity\Report
             list:
+                fields: ['reported']
                 dql_filter: 'entity.solved = false'
         ClosedReport:
             class: App\Entity\Report
             list:
                 dql_filter: 'entity.solved = true'
-    user:
-        display_avatar: false
-        name_property_path: 'pseudonym'

@@ -190,6 +190,29 @@ class Report
         return $this;
     }
 
+    public function getReported()
+    {
+        if($this->user !== null) {
+            return $this->getUser();
+        }
+
+        if($this->party !== null) {
+            return $this->party;
+        }
+
+        if($this->event !== null) {
+            return $this->event;
+        }
+
+        if($this->association !== null) {
+            return $this->association;
+        }
+
+        if($this->commentary !== null) {
+            return $this->commentary;
+        }
+    }
+
     /**
      * toString
      * @return string
