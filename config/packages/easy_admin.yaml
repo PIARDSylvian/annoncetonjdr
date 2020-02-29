@@ -11,12 +11,15 @@ easy_admin:
             list:
                 title: 'List %%entity_label%%'
                 fields: ['email', 'pseudonym', 'association', 'roles', 'reports','id']
-                actions: ['-edit']
+                actions:
+                    - '-edit'
+                    - { name: 'Add', icon: 'plus-square', css_class: 'btn btn-primary', template: 'admin/admin_action.html.twig'}
+                    - { name: 'Remove', icon: 'minus-square', css_class: 'btn btn btn-danger' }
             show:
                 title: '%%entity_label%% (#%%entity_id%%)'
                 fields: ['email', 'pseudonym', 'association','roles', 'reports','id']
             search:
-                    fields: ['email', 'pseudonym', 'association.name', 'roles']
+                fields: ['email', 'pseudonym', 'association.name', 'roles']
         Game:
             class: App\Entity\Game
         Party:
@@ -32,7 +35,7 @@ easy_admin:
             list:
                 fields: ['reported']
                 dql_filter: 'entity.solved = false'
-        ClosedReport:
+        Report:
             class: App\Entity\Report
-            list:
-                dql_filter: 'entity.solved = true'
+            search:
+                fields: ['owner.pseudonym','party.partyName','event.name','association.name']

@@ -6,18 +6,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
+
 /**
  * @IsGranted("ROLE_ADMIN")
  */
-class AdminController extends AbstractController
+class AdminController extends EasyAdminController
 {
     /**
-     * @Route("/admin2", name="admin")
+     * @Route("/admin/user/setAdmin", name="bla")
      */
-    public function index()
+    public function blaAction()
     {
-        return $this->render('admin/index.html.twig', [
-            'controller_name' => 'AdminController',
-        ]);
+        dump('aaaa');
+        die;
     }
 }
