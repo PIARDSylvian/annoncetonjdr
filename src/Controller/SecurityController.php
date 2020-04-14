@@ -121,7 +121,7 @@ class SecurityController extends AbstractController
                 $this->addFlash('danger', 'Invalid Token');
                 $response = array( 
                     "code" => 200,
-                    "url" => $this->generateUrl('home')
+                    "url" => $this->generateUrl('app_home')
                 );
                 return $url = new JsonResponse($response);
             }
