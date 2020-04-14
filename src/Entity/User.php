@@ -98,6 +98,11 @@ class User implements UserInterface
      */
     private $reports;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $confirmToken;
+
     public function __construct()
     {
         $this->reports = new ArrayCollection();
@@ -318,6 +323,18 @@ class User implements UserInterface
                 $report->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getConfirmToken(): ?string
+    {
+        return $this->confirmToken;
+    }
+
+    public function setConfirmToken(?string $confirmToken): self
+    {
+        $this->confirmToken = $confirmToken;
 
         return $this;
     }
