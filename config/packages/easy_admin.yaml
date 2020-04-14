@@ -1,5 +1,10 @@
 easy_admin:
     site_name: 'Annonce ton JDR <em><strong>Admin</strong></em>'
+    disabled_actions: ['edit', 'new']
+    formats:
+        date:     'd/m/Y'
+        time:     'H:i'
+        datetime: 'd/m/Y H:i:s'
     user:
         display_avatar: false
         name_property_path: 'pseudonym'
@@ -10,16 +15,15 @@ easy_admin:
             class: App\Entity\User
             list:
                 title: 'List %%entity_label%%'
-                fields: ['email', 'pseudonym', 'association', 'roles', 'reports','id']
+                fields: ['pseudonym', 'email', 'association', 'reports']
                 actions:
-                    - '-edit'
-                    - { name: 'Add', icon: 'plus-square', css_class: 'btn btn-primary', template: 'admin/admin_action.html.twig'}
-                    - { name: 'Remove', icon: 'minus-square', css_class: 'btn btn btn-danger' }
+                    - { name: 'add_Admin', type: 'route', icon: 'plus-square', css_class: 'btn btn-primary', template: 'admin/admin_add_action.html.twig'}
+                    - { name: 'remove_Admin', type: 'route', icon: 'minus-square', css_class: 'btn btn btn-danger', template: 'admin/admin_remove_action.html.twig' }
             show:
                 title: '%%entity_label%% (#%%entity_id%%)'
-                fields: ['email', 'pseudonym', 'association','roles', 'reports','id']
+                fields: ['pseudonym', 'email', 'association','secretR', 'reports']
             search:
-                fields: ['email', 'pseudonym', 'association.name', 'roles']
+                fields: ['pseudonym', 'email', 'association.name', 'roles']
         Game:
             class: App\Entity\Game
         Party:
@@ -28,14 +32,21 @@ easy_admin:
             class: App\Entity\Event
         Association:
             class: App\Entity\Association
+            show:
+                actions:
+                    - { name: 'accept_Admin', type: 'route', css_class: 'btn btn-primary'}
         Commentary:
             class: App\Entity\Commentary
         OpenReport:
             class: App\Entity\Report
             list:
-                fields: ['reported']
+                fields: ['owner', 'date']
                 dql_filter: 'entity.solved = false'
-        Report:
+            show:
+                actions:
+                    - { name: 'closed_Admin', type: 'route', icon: 'plus-square', css_class: 'btn btn-primary'}
+        ClosedReport:
             class: App\Entity\Report
-            search:
-                fields: ['owner.pseudonym','party.partyName','event.name','association.name']
+            list:
+                fields: ['owner', 'date']
+                dql_filter: 'entity.solved = true'

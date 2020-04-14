@@ -106,18 +106,6 @@ class Report
         return $this;
     }
 
-    public function getResolve(): ?bool
-    {
-        return $this->resolve;
-    }
-
-    public function setResolve(bool $resolve): self
-    {
-        $this->resolve = $resolve;
-
-        return $this;
-    }
-
     public function getSolved(): ?bool
     {
         return $this->solved;

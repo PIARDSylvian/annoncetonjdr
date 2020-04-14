@@ -1,0 +1,3 @@
+{% if 'ROLE_ADMIN' not in item.roles %}
+{{ include('@EasyAdmin/default/action.html.twig') }}
+{% endif %}

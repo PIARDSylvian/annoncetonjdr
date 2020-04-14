@@ -1,8 +1,0 @@
-{% set adminrole = "USER_ADMIN" %}
-
-{# {{dump(if adminrole in item.roles)}} #}
-{{dump(if adminrole in item.roles|keys )}}
-
-{{dump(item.roles)}}
-
-{{ include('@EasyAdmin/default/action.html.twig') }}
