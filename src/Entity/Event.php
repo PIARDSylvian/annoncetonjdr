@@ -64,9 +64,15 @@ class Event
      */
     private $commentaries;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Report", mappedBy="event", cascade={"remove"})
+     */
+    private $reports;
+
     public function __construct()
     {
         $this->commentaries = new ArrayCollection();
+        $this->reports = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -183,6 +189,46 @@ class Event
             // set the owning side to null (unless already changed)
             if ($commentary->getEvent() === $this) {
                 $commentary->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * toString
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
+    /**
+     * @return Collection|Report[]
+     */
+    public function getReports(): Collection
+    {
+        return $this->reports;
+    }
+
+    public function addReport(Report $report): self
+    {
+        if (!$this->reports->contains($report)) {
+            $this->reports[] = $report;
+            $report->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReport(Report $report): self
+    {
+        if ($this->reports->contains($report)) {
+            $this->reports->removeElement($report);
+            // set the owning side to null (unless already changed)
+            if ($report->getEvent() === $this) {
+                $report->setEvent(null);
             }
         }
 

@@ -68,7 +68,7 @@ class EventController extends AbstractController {
      */
     public function delete(Event $event)
     {
-        if ($this->getUser() === $association->getOwner()) {
+        if ($this->getUser() === $event->getOwner()) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($event);
             $entityManager->flush();

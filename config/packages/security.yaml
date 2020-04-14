@@ -19,7 +19,6 @@ security:
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
-
             remember_me:
                 secret:   '%kernel.secret%'
                 lifetime: 604800 # 1 week in seconds
@@ -39,5 +38,10 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: '^/event/\d+', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: '^/party/\d+', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: '^/association/\d+', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/event, roles: ROLE_USER }
+        - { path: ^/party, roles: ROLE_USER }
+        - { path: ^/association, roles: ROLE_USER }

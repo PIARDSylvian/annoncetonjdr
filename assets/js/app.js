@@ -29,10 +29,18 @@ console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
 
 $(function() {
     function initmap() {
-        var map = L.map('map').setView([46.866667, 2.333333], 5);
+        let zoom = 16;
+
+        if(party.length > 1) {
+            zoom = 5;
+        }
+
+        var map = L.map('map').setView([party[0].lat, party[0].lng], zoom);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            minZoom: 2
+ 
         }).addTo(map);
 
         $.each(party, function(i, item) {

@@ -26,10 +26,9 @@
 <p>Campagne ouverte : {{party.openedCampaign ? 'Oui':'Non'}}</p>
 <p>Déscription : {{party.gameDescription}}</p>
 
-{% if party.address.address %}
+{% if party.address %}
 <p>{{party.address.address}}</p>
 <div id="map" class="iframe-container"></div>
-
 {% else %}
 <p>partie en ligne</p>
 {% endif %}
@@ -51,7 +50,9 @@
     {% if app.user and (app.user is same as(party.owner) or  app.user is same as(commentary.owner)) %}
         <a href="{{path('app_party_delete_com', {id:party.id,comment_id:commentary.id})}}"><input type="button" value="Supprimer"></a>
     {% endif %}
+    {% if app.user and (app.user is not same as(commentary.owner)) %}
     <a href="{{path('app_report_commentary', {id:commentary.id})}}"><input type="button" value="Signaler"></a>
+    {% endif %}
     <p>{{commentary.owner.pseudonym}}</p>
     <p>{{commentary.commentary}}</p>
 </div>
@@ -67,6 +68,7 @@
 {% endblock %}
 
 {% block javascripts %}
+{% if party.address %}
 <script>
 var party = [{
     lat:{{party.address.lat}},
@@ -74,4 +76,5 @@ var party = [{
     address:'{{party.address.address}}'
 }];
 </script>
+{% endif %}
 {% endblock %}

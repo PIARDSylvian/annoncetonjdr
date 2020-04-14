@@ -48,7 +48,9 @@ class Party
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Range(
      *      min = 1,
-     *      minMessage = "il doit y avoir au moin un participant"
+     *      minMessage = "il doit y avoir au moin un participant",
+     *      max = 2000,
+     *      maxMessage = "ne doit pas avoir plus de 2000 participant"
      * )
      * @Assert\NotBlank()
      */
@@ -65,9 +67,9 @@ class Party
     private $date;
 
     /**
-     * @ORM\Column(type="boolean", options={"default" : true})
+     * @ORM\Column(type="boolean")
      */
-    private $minor;
+    private $minor = true;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Game")
@@ -122,10 +124,16 @@ class Party
      */
     private $commentaries;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Report", mappedBy="party", cascade={"remove"})
+     */
+    private $reports;
+
     public function __construct()
     {
         $this->registeredPlayer = new ArrayCollection();
         $this->commentaries = new ArrayCollection();
+        $this->reports = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -364,6 +372,46 @@ class Party
             // set the owning side to null (unless already changed)
             if ($commentary->getParty() === $this) {
                 $commentary->setParty(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * toString
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getPartyName();
+    }
+
+    /**
+     * @return Collection|Report[]
+     */
+    public function getReports(): Collection
+    {
+        return $this->reports;
+    }
+
+    public function addReport(Report $report): self
+    {
+        if (!$this->reports->contains($report)) {
+            $this->reports[] = $report;
+            $report->setParty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReport(Report $report): self
+    {
+        if ($this->reports->contains($report)) {
+            $this->reports->removeElement($report);
+            // set the owning side to null (unless already changed)
+            if ($report->getParty() === $this) {
+                $report->setParty(null);
             }
         }
 
