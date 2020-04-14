@@ -85,7 +85,7 @@ class AdminController extends EasyAdminController
         
         $id = $request->query->get('id');
         $entity = $repository->find($id);
-        $entity->setPendding(true);
+        $entity->setPendding(false);
         $em->flush();
 
         return $this->redirectToRoute('easyadmin', array(
