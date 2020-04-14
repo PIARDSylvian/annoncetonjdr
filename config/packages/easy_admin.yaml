@@ -15,7 +15,6 @@ easy_admin:
             disabled_actions: ['edit', 'new']
             class: App\Entity\User
             list:
-                title: 'List %%entity_label%%'
                 fields: ['pseudonym', 'email', 'association', 'reports']
             show:
                 title: '%%entity_label%% (#%%entity_id%%)'
@@ -27,21 +26,40 @@ easy_admin:
                 fields: ['pseudonym', 'email', 'association.name', 'roles']
         Game:
             class: App\Entity\Game
+            list:
+                fields: ['name','image_url']
+            show:
+                fields: ['name','image_url']
         Party:
             disabled_actions: ['edit', 'new']
             class: App\Entity\Party
+            list:
+                fields: ['partyName','owner', 'date', 'gameName', 'reports']
+            show:
+                fields: ['partyName','owner', 'date', 'alreadySubscribed', 'maxPlayer', 'minor', 'gameName', 'gameEdition', 'nameScenario', 'scenarioEdition', 'openedCampaign', 'gameDescription', 'online', 'registeredPlayer', 'address', 'commentaries', 'reports']
         Event:
             disabled_actions: ['edit', 'new']
             class: App\Entity\Event
+            list:
+                fields: ['name','owner', 'dateStart', 'dateFinish', 'address', 'reports']
+            show:
+                fields: ['name','owner', 'dateStart', 'dateFinish', 'address', 'description', 'commentaries', 'reports']
         Association:
             disabled_actions: ['edit', 'new']
             class: App\Entity\Association
+            list:
+                fields: ['name','owner', 'address', 'pendding', 'reports']
             show:
+                fields: ['name','owner', 'address', 'description', 'pendding', 'commentaries', 'reports']
                 actions:
-                    - { name: 'accept_Admin', type: 'route', css_class: 'btn btn-primary'}
+                    - { name: 'accept_Admin', type: 'route', css_class: 'btn btn-primary', template: 'admin/admin_accept_action.html.twig'}
         Commentary:
             disabled_actions: ['edit', 'new']
             class: App\Entity\Commentary
+            list:
+                fields: ['owner','createdAt', 'reports']
+            show:
+                fields: ['owner', 'createdAt', 'updatedAt', 'commentary', 'party', 'event', 'association', 'reports']
         OpenReport:
             disabled_actions: ['edit', 'new']
             class: App\Entity\Report
@@ -49,6 +67,7 @@ easy_admin:
                 fields: ['owner', 'date']
                 dql_filter: 'entity.solved = false'
             show:
+                fields: ['owner','date', 'reason', 'solved', 'commentary', 'association', 'event', 'party', 'user']
                 actions:
                     - { name: 'closed_Admin', type: 'route', icon: 'plus-square', css_class: 'btn btn-primary'}
         ClosedReport:
@@ -57,3 +76,5 @@ easy_admin:
             list:
                 fields: ['owner', 'date']
                 dql_filter: 'entity.solved = true'
+            show:
+                fields: ['owner','date', 'reason', 'solved', 'commentary', 'association', 'event', 'party', 'user']
