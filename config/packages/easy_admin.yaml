@@ -1,6 +1,6 @@
 easy_admin:
     site_name: 'Annonce ton JDR <em><strong>Admin</strong></em>'
-    disabled_actions: ['edit', 'new']
+    
     formats:
         date:     'd/m/Y'
         time:     'H:i'
@@ -12,6 +12,7 @@ easy_admin:
         actions: ['show']
     entities:
         User:
+            disabled_actions: ['edit', 'new']
             class: App\Entity\User
             list:
                 title: 'List %%entity_label%%'
@@ -27,17 +28,22 @@ easy_admin:
         Game:
             class: App\Entity\Game
         Party:
+            disabled_actions: ['edit', 'new']
             class: App\Entity\Party
         Event:
+            disabled_actions: ['edit', 'new']
             class: App\Entity\Event
         Association:
+            disabled_actions: ['edit', 'new']
             class: App\Entity\Association
             show:
                 actions:
                     - { name: 'accept_Admin', type: 'route', css_class: 'btn btn-primary'}
         Commentary:
+            disabled_actions: ['edit', 'new']
             class: App\Entity\Commentary
         OpenReport:
+            disabled_actions: ['edit', 'new']
             class: App\Entity\Report
             list:
                 fields: ['owner', 'date']
@@ -46,6 +52,7 @@ easy_admin:
                 actions:
                     - { name: 'closed_Admin', type: 'route', icon: 'plus-square', css_class: 'btn btn-primary'}
         ClosedReport:
+            disabled_actions: ['edit', 'new']
             class: App\Entity\Report
             list:
                 fields: ['owner', 'date']

@@ -48,7 +48,9 @@ class Party
      * @ORM\JoinColumn(nullable=false)
      * @Assert\Range(
      *      min = 1,
-     *      minMessage = "il doit y avoir au moin un participant"
+     *      minMessage = "il doit y avoir au moin un participant",
+     *      max = 2000,
+     *      maxMessage = "ne doit pas avoir plus de 2000 participant"
      * )
      * @Assert\NotBlank()
      */
