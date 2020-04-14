@@ -207,6 +207,6 @@ class Report
      */
     public function __toString()
     {
-        return $this->getReason();
+        return $this->getReported()->__toString();
     }
 }
