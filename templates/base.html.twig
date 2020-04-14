@@ -30,6 +30,7 @@
             </nav>
             {% for message in app.flashes('notice') %}
                 <div class="alert alert-success alert-dismissible fade show">
+                    <img src="{{ asset('build/poney-licorne.jpg') }}" alt="poney-licorne">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -38,6 +39,7 @@
             {% endfor %}
             {% for message in app.flashes('danger') %}
                 <div class="alert alert-danger alert-dismissible fade show">
+                    <img class="rotating" src="{{ asset('build/poney-licorne.jpg') }}" alt="poney-licorne">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
