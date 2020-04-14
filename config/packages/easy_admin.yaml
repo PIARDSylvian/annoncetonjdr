@@ -16,9 +16,6 @@ easy_admin:
             list:
                 title: 'List %%entity_label%%'
                 fields: ['pseudonym', 'email', 'association', 'reports']
-                actions:
-                    - { name: 'add_Admin', type: 'route', icon: 'plus-square', css_class: 'btn btn-primary', template: 'admin/admin_add_action.html.twig'}
-                    - { name: 'remove_Admin', type: 'route', icon: 'minus-square', css_class: 'btn btn btn-danger', template: 'admin/admin_remove_action.html.twig' }
             show:
                 title: '%%entity_label%% (#%%entity_id%%)'
                 fields: ['pseudonym', 'email', 'association','secretR', 'reports']
