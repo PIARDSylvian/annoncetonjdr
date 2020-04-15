@@ -9,8 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
-use App\Security\LoginFormAuthenticator;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -21,7 +19,7 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, LoginFormAuthenticator $authenticator, GuardAuthenticatorHandler $guardHandler, MailerInterface $mailer, TokenGeneratorInterface $tokenGenerator): Response
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer, TokenGeneratorInterface $tokenGenerator): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -56,7 +54,7 @@ class RegistrationController extends AbstractController
             $email = (new Email())
                 ->from('piard.sylvian@gmail.com')
                 ->to($user->getEmail())
-                ->subject('confirmation d\'instription')
+                ->subject('confirmation email')
                 ->text(
                     "blablabla voici le lien pour confirmer votre inscription : " . $url,
                     'text/html'

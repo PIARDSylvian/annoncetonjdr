@@ -89,9 +89,9 @@ class SecurityController extends AbstractController
                     $email = (new Email())
                         ->from('piard.sylvian@gmail.com')
                         ->to($user->getEmail())
-                        ->subject('Forgot Password reqest')
+                        ->subject('Change Password request')
                         ->text(
-                            "blablabla voici le token pour reseter votre mot de passe : " . $url,
+                            "blablabla voici le token pour changer votre mot de passe : " . $url,
                             'text/html'
                         )
                         ->html('<a href="'.$url.'">changer le mot de passe</a>')

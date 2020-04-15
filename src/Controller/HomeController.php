@@ -34,7 +34,7 @@ class HomeController extends AbstractController {
         $user->setConfirmToken(null);
         $entityManager->flush();
 
-        $this->addFlash('notice', 'Inscription Validé !');
+        $this->addFlash('notice', 'Mail Validé !');
 
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->get('security.token_storage')->setToken($token);
