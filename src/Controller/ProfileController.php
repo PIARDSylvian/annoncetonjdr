@@ -153,4 +153,45 @@ class ProfileController extends AbstractController
             'passwordForm' => $form->createView(),
         ]);
     }
+
+    /**
+     * @Route("/profile/party", name="app_profile_party")
+     */
+    public function profilParty(Request $request): Response
+    {
+        $repository = $this->getDoctrine()->getRepository(Party::class);
+        $parties = $repository->findByOwner($this->getUser());
+
+        foreach ($parties as $partie) {
+            dump($partie);
+        }
+
+        $subcribes = $repository->findByRegisteredPlayer($this->getUser());
+
+        foreach ($subcribes as $subcribe) {
+           dump($subcribe);
+        }
+
+        die;
+
+        return $this->render('profile/profile.html.twig', [
+            'profileForm' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/profile/event", name="app_profile_event")
+     */
+    public function profilEvent(Request $request): Response
+    {
+        $repository = $this->getDoctrine()->getRepository(Event::class);
+        $events = $repository->findByOwner($this->getuser());
+
+        dump($events);
+        die;
+
+        return $this->render('profile/profile.html.twig', [
+            'profileForm' => $form->createView(),
+        ]);
+    }
 }

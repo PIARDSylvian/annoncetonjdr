@@ -16,8 +16,8 @@
 <h1>{{party.partyName}}</h1>
 <p>annonce de {{ party.owner.pseudonym }}</p>
 <p>{{ party.date.date }}</p>
-<p>Déjà inscrit : {{party.alreadySubscribed + party.registeredPlayer|length}}</p>
-<p>Place restante : {{party.maxPlayer - (party.alreadySubscribed + party.registeredPlayer|length)}}</p>
+<p>Déjà inscrit : {{party.alreadySubscribed + party.registeredPlayers|length}}</p>
+<p>Place restante : {{party.maxPlayer - (party.alreadySubscribed + party.registeredPlayers|length)}}</p>
 <p>Accepte les mineur : {{party.minor ? 'Oui':'Non'}}</p>
 <p>Jeux éditée : {{party.gameEdition ? 'Oui':'Non'}}</p>
 <p>Nom du jeux : {{party.gameName.name}}</p>
@@ -34,9 +34,9 @@
 {% endif %}
 
 {% if app.user and app.user != party.owner %}
-    {% if app.user in party.registeredPlayer %}
+    {% if app.user in party.registeredPlayers %}
     <a href="{{path('app_party_remove', {id:party.id})}}"><input type="button" value="se desincrire"></a>
-    {% elseif (party.maxPlayer - (party.alreadySubscribed + party.registeredPlayer|length)) > 0 %}
+    {% elseif (party.maxPlayer - (party.alreadySubscribed + party.registeredPlayers|length)) > 0 %}
     <a href="{{path('app_party_add', {id:party.id})}}"><input type="button" value="s inscire"></a>
     {% endif %}
 {% endif %}
