@@ -20,7 +20,7 @@ class Report
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $owner;
 
@@ -52,6 +52,7 @@ class Report
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="reports")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $event;
 

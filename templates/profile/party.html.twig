@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes parties{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Mes parties crée ({{ paginationParties.getTotalItemCount }})</h2>
+        </div>
+        {% for party in paginationParties %}
+            {# {{dump(party)}} #}
+            <div class="col-md-4 card-container">
+                <div class="card-flip">
+                    <div class="card front">
+                        <div class="card-header">
+                            <h5 class="card-title">{{party.partyName}}</h5>
+                        </div>
+                        {% if party.gameName.imageUrl %}
+                            <img src="{{party.gameName.imageUrl}}" alt="{{party.gameName.Name}}" class="card-img-top img-fluid">
+                        {% else %}
+                            <img src="https://cdn.pixabay.com/photo/2014/12/14/18/33/cube-568105_960_720.jpg" alt="{{party.gameName.Name}}" class="img-fluid">
+                        {% endif %}
+                        <div class="card-body">
+                            <p class="card-text">{% if party.gameDescription %}{{party.gameDescription}}{% else %}Aucune description{% endif %}</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <p class="card-text"><small class="text-muted">{{party.date.date|date('Y-m-d H:i:s')}}</small></p>
+                        </div>
+                    </div>
+                    <div class="card back">
+                        <div class="card-header">
+                            Détails
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Place restante : <span class="badge badge-pill badge-secondary">{{party.maxPlayer - (party.alreadySubscribed + party.registeredPlayers|length)}}</span></li>
+                            <li class="list-group-item">Adresse : {{party.address.address}}</li>
+                            <li class="list-group-item">commentaires : <span class="badge badge-pill badge-secondary">{{party.commentaries|length}}</span></li>
+                        </ul>
+                        <div class="card-body"></div>
+                        <div class="card-footer text-center">
+                            <a href="{{path('app_party_show', {id:party.id})}}" class="btn btn-primary">Voir plus</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="col-md-12 text-center">
+            {{ knp_pagination_render(paginationParties) }}
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Mes inscriptions ({{ paginationSubcribes.getTotalItemCount }})</h2>
+        </div>
+        {% for party in paginationSubcribes %}
+            {# {{dump(party)}} #}
+            <div class="col-md-4 card-container">
+                <div class="card-flip">
+                    <div class="card front">
+                        <div class="card-header">
+                            <h5 class="card-title">{{party.partyName}}</h5>
+                        </div>
+                        {% if party.gameName.imageUrl %}
+                            <img src="{{party.gameName.imageUrl}}" alt="{{party.gameName.Name}}" class="card-img-top img-fluid">
+                        {% else %}
+                            <img src="https://cdn.pixabay.com/photo/2014/12/14/18/33/cube-568105_960_720.jpg" alt="{{party.gameName.Name}}" class="img-fluid">
+                        {% endif %}
+                        <div class="card-body">
+                            <p class="card-text">{% if party.gameDescription %}{{party.gameDescription}}{% else %}Aucune description{% endif %}</p>
+                        </div>
+                        <div class="card-footer text-center">
+                            <p class="card-text"><small class="text-muted">{{party.date.date|date('Y-m-d H:i:s')}}</small></p>
+                        </div>
+                    </div>
+                    <div class="card back">
+                        <div class="card-header">
+                            Détails
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">Place restante : <span class="badge badge-pill badge-secondary">{{party.maxPlayer - (party.alreadySubscribed + party.registeredPlayers|length)}}</span></li>
+                            <li class="list-group-item">Adresse : {{party.address.address}}</li>
+                            <li class="list-group-item">commentaires : <span class="badge badge-pill badge-secondary">{{party.commentaries|length}}</span></li>
+                        </ul>
+                        <div class="card-body"></div>
+                        <div class="card-footer text-center">
+                            <a href="{{path('app_party_show', {id:party.id})}}" class="btn btn-primary">Voir plus</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        <div class="col-md-12 text-center">
+            {{ knp_pagination_render(paginationSubcribes) }}
+        </div>
+    </div>
+{% endblock %}

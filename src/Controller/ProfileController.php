@@ -18,6 +18,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 
 class ProfileController extends AbstractController
@@ -116,32 +117,11 @@ class ProfileController extends AbstractController
             if ($passwordEncoder->isPasswordValid($user, $formPassword)) {
                 $entityManager = $this->getDoctrine()->getManager();
 
-                //remove all partie
-                $repository = $this->getDoctrine()->getRepository(Party::class);
-                $parties = $repository->findByOwner($user);
-                foreach ($parties as $party) {
-                    $entityManager->remove($party);
-                }
-
-                //remove all events
-                $repository = $this->getDoctrine()->getRepository(Event::class);
-                $events = $repository->findByOwner($user);
-                foreach ($events as $event) {
-                    $entityManager->remove($event);
-                }
-
-                //remove all com;
-                $repository = $this->getDoctrine()->getRepository(Commentary::class);
-                $commentaries = $repository->findByOwner($user);
-                foreach ($commentaries as $commentary) {
-                    $entityManager->remove($commentary);
-                }
-
                 //remove user
                 $user = $this->getUser();
                 $entityManager->remove($user);
-
                 $entityManager->flush();
+
                 $session = $this->get('session');
                 $session = new Session();
                 $session->invalidate();
@@ -157,25 +137,41 @@ class ProfileController extends AbstractController
     /**
      * @Route("/profile/party", name="app_profile_party")
      */
-    public function profilParty(Request $request): Response
+    public function profilParty(Request $request, PaginatorInterface $paginator): Response
     {
         $repository = $this->getDoctrine()->getRepository(Party::class);
-        $parties = $repository->findByOwner($this->getUser());
 
-        foreach ($parties as $partie) {
-            dump($partie);
-        }
+        $partyQB = $repository->findByOwnerQueryBuilder($this->getUser());
+        $paginationParties = $paginator->paginate(
+            $partyQB,
+            $request->query->getInt('pageParty', 1),
+            3,
+            [
+                'pageParameterName' => 'pageParty',
+                'sortFieldParameterName' => 'sortParty',
+                'sortDirectionParameterName' => 'directionParty',
+            ]
+        );
 
-        $subcribes = $repository->findByRegisteredPlayer($this->getUser());
+        $registeredPlayerQB = $repository->findByRegisteredPlayerQueryBuilder($this->getUser());
+        $paginationSubcribes = $paginator->paginate(
+            $registeredPlayerQB,
+            $request->query->getInt('pageRegistered', 1),
+            3,
+            [
+                'pageParameterName' => 'pageRegistered',
+                'sortFieldParameterName' => 'sortRegistered',
+                'sortDirectionParameterName' => 'directionRegistered',
+            ]
 
-        foreach ($subcribes as $subcribe) {
-           dump($subcribe);
-        }
+        );
 
-        die;
+        $paginationParties->setCustomParameters(['align' => 'center']);
+        $paginationSubcribes->setCustomParameters(['align' => 'center']);
 
-        return $this->render('profile/profile.html.twig', [
-            'profileForm' => $form->createView(),
+        return $this->render('profile/party.html.twig', [
+            'paginationParties' => $paginationParties,
+            'paginationSubcribes' => $paginationSubcribes
         ]);
     }
 
@@ -186,6 +182,8 @@ class ProfileController extends AbstractController
     {
         $repository = $this->getDoctrine()->getRepository(Event::class);
         $events = $repository->findByOwner($this->getuser());
+
+        // todo ajouter pagination
 
         dump($events);
         die;

@@ -50,13 +50,21 @@ class PartyRepository extends ServiceEntityRepository
     }
     */
 
-    public function findByRegisteredPlayer($registeredPlayer)
+    public function findByOwnerQueryBuilder($owner)
+    {
+        return $this->createQueryBuilder("p")
+            ->where(":user = p.owner")
+            ->setParameter('user', $owner)
+            ->orderBy('p.date', 'DESC')
+        ;
+    }
+
+    public function findByRegisteredPlayerQueryBuilder($registeredPlayer)
     {
         return $this->createQueryBuilder("p")
             ->where(":user MEMBER OF p.registeredPlayers")
             ->setParameter('user', $registeredPlayer)
-            ->getQuery()
-            ->getResult()
+            ->orderBy('p.date', 'DESC')
         ;
     }
 }
