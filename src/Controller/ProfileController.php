@@ -178,18 +178,26 @@ class ProfileController extends AbstractController
     /**
      * @Route("/profile/event", name="app_profile_event")
      */
-    public function profilEvent(Request $request): Response
-    {
+    public function profilEvent(Request $request, PaginatorInterface $paginator): Response
+    {   
         $repository = $this->getDoctrine()->getRepository(Event::class);
-        $events = $repository->findByOwner($this->getuser());
 
-        // todo ajouter pagination
+        $partyQB = $repository->findByOwnerQueryBuilder($this->getUser());
+        $paginationEvents = $paginator->paginate(
+            $partyQB,
+            $request->query->getInt('pageEvent', 1),
+            3,
+            [
+                'pageParameterName' => 'pageEvent',
+                'sortFieldParameterName' => 'sortEvent',
+                'sortDirectionParameterName' => 'directionEvent',
+            ]
+        );
 
-        dump($events);
-        die;
+        $paginationEvents->setCustomParameters(['align' => 'center']);
 
-        return $this->render('profile/profile.html.twig', [
-            'profileForm' => $form->createView(),
+        return $this->render('profile/event.html.twig', [
+            'paginationEvents' => $paginationEvents
         ]);
     }
 }
