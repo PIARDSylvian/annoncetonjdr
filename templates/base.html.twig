@@ -29,6 +29,9 @@
                             <a class="dropdown-item" href="{{path('app_profile_event')}}">Mes evenements</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{path('app_profile')}}">Mon profil<i class="fas fa-user-cog"></i></a>
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <a class="dropdown-item" href="{{path('easyadmin')}}">Gestion site<i class="fas fa-users-cog"></i></a>
+                            {% endif %}
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{path('app_logout')}}">logout<i class="fas fa-sign-out-alt"></i></a>
                         </div>
