@@ -22,7 +22,7 @@ class Party
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $owner;
 
@@ -111,7 +111,7 @@ class Party
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User")
      */
-    private $registeredPlayer;
+    private $registeredPlayers;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Location", inversedBy="parties", cascade={"persist"})
@@ -131,7 +131,7 @@ class Party
 
     public function __construct()
     {
-        $this->registeredPlayer = new ArrayCollection();
+        $this->registeredPlayers = new ArrayCollection();
         $this->commentaries = new ArrayCollection();
         $this->reports = new ArrayCollection();
     }
@@ -312,24 +312,24 @@ class Party
     /**
      * @return Collection|User[]
      */
-    public function getRegisteredPlayer(): Collection
+    public function getRegisteredPlayers(): Collection
     {
-        return $this->registeredPlayer;
+        return $this->registeredPlayers;
     }
 
-    public function addRegisteredPlayer(User $registeredPlayer): self
+    public function addRegisteredPlayers(User $registeredPlayer): self
     {
-        if (!$this->registeredPlayer->contains($registeredPlayer)) {
-            $this->registeredPlayer[] = $registeredPlayer;
+        if (!$this->registeredPlayers->contains($registeredPlayer)) {
+            $this->registeredPlayers[] = $registeredPlayer;
         }
 
         return $this;
     }
 
-    public function removeRegisteredPlayer(User $registeredPlayer): self
+    public function removeRegisteredPlayers(User $registeredPlayer): self
     {
-        if ($this->registeredPlayer->contains($registeredPlayer)) {
-            $this->registeredPlayer->removeElement($registeredPlayer);
+        if ($this->registeredPlayers->contains($registeredPlayer)) {
+            $this->registeredPlayers->removeElement($registeredPlayer);
         }
 
         return $this;

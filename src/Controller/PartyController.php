@@ -113,8 +113,8 @@ class PartyController extends AbstractController {
      */
     public function addPlayer(Party $party)
     {
-        if (count($party->getRegisteredPlayer()) < $party->getMaxPlayer() && ($this->getUser() != $party->getOwner())) {
-            $party->addRegisteredPlayer($this->getUser());
+        if (count($party->getRegisteredPlayers()) < $party->getMaxPlayer() && ($this->getUser() != $party->getOwner())) {
+            $party->addRegisteredPlayers($this->getUser());
     
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
@@ -128,7 +128,7 @@ class PartyController extends AbstractController {
      */
     public function removePlayer(Party $party)
     {
-        $party->removeRegisteredPlayer($this->getUser());
+        $party->removeRegisteredPlayers($this->getUser());
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();

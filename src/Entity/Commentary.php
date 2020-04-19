@@ -20,7 +20,7 @@ class Commentary
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $owner;
 
@@ -46,6 +46,7 @@ class Commentary
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="commentaries")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $event;
 

@@ -6,6 +6,7 @@ use App\Entity\Party;
 // use App\Entity\Search;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * @method Party|null find($id, $lockMode = null, $lockVersion = null)
@@ -48,4 +49,22 @@ class PartyRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findByOwnerQueryBuilder($owner)
+    {
+        return $this->createQueryBuilder("p")
+            ->where(":user = p.owner")
+            ->setParameter('user', $owner)
+            ->orderBy('p.date', 'DESC')
+        ;
+    }
+
+    public function findByRegisteredPlayerQueryBuilder($registeredPlayer)
+    {
+        return $this->createQueryBuilder("p")
+            ->where(":user MEMBER OF p.registeredPlayers")
+            ->setParameter('user', $registeredPlayer)
+            ->orderBy('p.date', 'DESC')
+        ;
+    }
 }

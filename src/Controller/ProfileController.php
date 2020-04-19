@@ -18,6 +18,7 @@ use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 
 class ProfileController extends AbstractController
@@ -116,32 +117,11 @@ class ProfileController extends AbstractController
             if ($passwordEncoder->isPasswordValid($user, $formPassword)) {
                 $entityManager = $this->getDoctrine()->getManager();
 
-                //remove all partie
-                $repository = $this->getDoctrine()->getRepository(Party::class);
-                $parties = $repository->findByOwner($user);
-                foreach ($parties as $party) {
-                    $entityManager->remove($party);
-                }
-
-                //remove all events
-                $repository = $this->getDoctrine()->getRepository(Event::class);
-                $events = $repository->findByOwner($user);
-                foreach ($events as $event) {
-                    $entityManager->remove($event);
-                }
-
-                //remove all com;
-                $repository = $this->getDoctrine()->getRepository(Commentary::class);
-                $commentaries = $repository->findByOwner($user);
-                foreach ($commentaries as $commentary) {
-                    $entityManager->remove($commentary);
-                }
-
                 //remove user
                 $user = $this->getUser();
                 $entityManager->remove($user);
-
                 $entityManager->flush();
+
                 $session = $this->get('session');
                 $session = new Session();
                 $session->invalidate();
@@ -151,6 +131,73 @@ class ProfileController extends AbstractController
         }
         return $this->render('profile/remove.html.twig', [
             'passwordForm' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/profile/party", name="app_profile_party")
+     */
+    public function profilParty(Request $request, PaginatorInterface $paginator): Response
+    {
+        $repository = $this->getDoctrine()->getRepository(Party::class);
+
+        $partyQB = $repository->findByOwnerQueryBuilder($this->getUser());
+        $paginationParties = $paginator->paginate(
+            $partyQB,
+            $request->query->getInt('pageParty', 1),
+            3,
+            [
+                'pageParameterName' => 'pageParty',
+                'sortFieldParameterName' => 'sortParty',
+                'sortDirectionParameterName' => 'directionParty',
+            ]
+        );
+
+        $registeredPlayerQB = $repository->findByRegisteredPlayerQueryBuilder($this->getUser());
+        $paginationSubcribes = $paginator->paginate(
+            $registeredPlayerQB,
+            $request->query->getInt('pageRegistered', 1),
+            3,
+            [
+                'pageParameterName' => 'pageRegistered',
+                'sortFieldParameterName' => 'sortRegistered',
+                'sortDirectionParameterName' => 'directionRegistered',
+            ]
+
+        );
+
+        $paginationParties->setCustomParameters(['align' => 'center']);
+        $paginationSubcribes->setCustomParameters(['align' => 'center']);
+
+        return $this->render('profile/party.html.twig', [
+            'paginationParties' => $paginationParties,
+            'paginationSubcribes' => $paginationSubcribes
+        ]);
+    }
+
+    /**
+     * @Route("/profile/event", name="app_profile_event")
+     */
+    public function profilEvent(Request $request, PaginatorInterface $paginator): Response
+    {   
+        $repository = $this->getDoctrine()->getRepository(Event::class);
+
+        $partyQB = $repository->findByOwnerQueryBuilder($this->getUser());
+        $paginationEvents = $paginator->paginate(
+            $partyQB,
+            $request->query->getInt('pageEvent', 1),
+            3,
+            [
+                'pageParameterName' => 'pageEvent',
+                'sortFieldParameterName' => 'sortEvent',
+                'sortDirectionParameterName' => 'directionEvent',
+            ]
+        );
+
+        $paginationEvents->setCustomParameters(['align' => 'center']);
+
+        return $this->render('profile/event.html.twig', [
+            'paginationEvents' => $paginationEvents
         ]);
     }
 }
