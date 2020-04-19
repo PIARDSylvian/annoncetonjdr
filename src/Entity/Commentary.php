@@ -46,6 +46,7 @@ class Commentary
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="commentaries")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $event;
 
