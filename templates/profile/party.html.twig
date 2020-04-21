@@ -8,7 +8,6 @@
             <h2>Mes parties crée ({{ paginationParties.getTotalItemCount }})</h2>
         </div>
         {% for party in paginationParties %}
-            {# {{dump(party)}} #}
             <div class="col-md-4 card-container">
                 <div class="card-flip">
                     <div class="card front">
@@ -44,7 +43,7 @@
                 </div>
             </div>
         {% endfor %}
-        <div class="col-md-12 text-center">
+        <div class="col-md-12">
             {{ knp_pagination_render(paginationParties) }}
         </div>
     </div>
@@ -54,7 +53,6 @@
             <h2>Mes inscriptions ({{ paginationSubcribes.getTotalItemCount }})</h2>
         </div>
         {% for party in paginationSubcribes %}
-            {# {{dump(party)}} #}
             <div class="col-md-4 card-container">
                 <div class="card-flip">
                     <div class="card front">
@@ -90,7 +88,7 @@
                 </div>
             </div>
         {% endfor %}
-        <div class="col-md-12 text-center">
+        <div class="col-md-12">
             {{ knp_pagination_render(paginationSubcribes) }}
         </div>
     </div>

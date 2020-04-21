@@ -25,7 +25,7 @@
     <a href="{{path('app_association_delete_all_com', {id:association.id})}}"><input type="button" value="Supprimer Tout"></a>
 {% endif %}
 
-{% for commentary in association.commentaries %}
+{% for commentary in commentaries %}
 <div style="border:solid 1px black; padding: 10px; margin-bottom: 20px;">
     {% if app.user and (app.user is same as(association.owner) or  app.user is same as(commentary.owner)) %}
         <a href="{{path('app_association_delete_com', {id:association.id,comment_id:commentary.id})}}"><input type="button" value="Supprimer"></a>
@@ -37,6 +37,7 @@
     <p>{{commentary.commentary}}</p>
 </div>
 {% endfor %}
+{{ knp_pagination_render(commentaries) }}
 
 {% if app.user %}
 {{ form_start(form) }}
