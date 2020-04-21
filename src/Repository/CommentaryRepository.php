@@ -47,4 +47,31 @@ class CommentaryRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findByPartyQueryBuilder($party)
+    {
+        return $this->createQueryBuilder("e")
+            ->where(":party = e.party")
+            ->setParameter('party', $party)
+            ->orderBy('e.createdAt', 'DESC')
+        ;
+    }
+
+    public function findByEventQueryBuilder($event)
+    {
+        return $this->createQueryBuilder("e")
+            ->where(":event = e.event")
+            ->setParameter('event', $event)
+            ->orderBy('e.createdAt', 'DESC')
+        ;
+    }
+
+    public function findByAssocQueryBuilder($assoc)
+    {
+        return $this->createQueryBuilder("e")
+            ->where(":assoc = e.association")
+            ->setParameter('assoc', $assoc)
+            ->orderBy('e.createdAt', 'DESC')
+        ;
+    }
 }

@@ -11,6 +11,7 @@ use App\Entity\Commentary;
 use App\Entity\Event;
 use App\Form\PartyType;
 use App\Form\CommentaryType;
+use Knp\Component\Pager\PaginatorInterface;
 
 class PartyController extends AbstractController {
     
@@ -43,10 +44,22 @@ class PartyController extends AbstractController {
     /**
      * @Route("/party/{id}", name="app_party_show", requirements={"id"="\d+"})
      */
-    public function show(Party $party, Request $request)
+    public function show(Party $party, Request $request, PaginatorInterface $paginator)
     {
+        $repository = $this->getDoctrine()->getRepository(Commentary::class);
+
+        $partyQB = $repository->findByPartyQueryBuilder($party);
+        $commentaries = $paginator->paginate(
+            $partyQB,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        $commentaries->setCustomParameters(['align' => 'center']);
+
         $commentary = new Commentary();
         $form = $this->createForm(CommentaryType::class, $commentary);
+
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -61,7 +74,7 @@ class PartyController extends AbstractController {
             return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
         }
 
-        return $this->render('party/show.html.twig', ['party' => $party, 'form' => $form->createView()]);
+        return $this->render('party/show.html.twig', ['party' => $party, 'form' => $form->createView(),'commentaries' => $commentaries]);
     }
 
     /**

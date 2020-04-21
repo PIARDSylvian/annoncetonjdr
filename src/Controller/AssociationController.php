@@ -10,6 +10,7 @@ use App\Form\AssociationType;
 use App\Entity\Commentary;
 use App\Form\CommentaryType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
+use Knp\Component\Pager\PaginatorInterface;
 
 class AssociationController extends AbstractController {
     
@@ -42,8 +43,19 @@ class AssociationController extends AbstractController {
     /**
      * @Route("/association/{id}", name="app_association_show", requirements={"id"="\d+"})
      */
-    public function show(Association $association, Request $request)
+    public function show(Association $association, Request $request, PaginatorInterface $paginator)
     {
+        $repository = $this->getDoctrine()->getRepository(Commentary::class);
+
+        $partyQB = $repository->findByAssocQueryBuilder($association);
+        $commentaries = $paginator->paginate(
+            $partyQB,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        $commentaries->setCustomParameters(['align' => 'center']);
+
         $commentary = new Commentary();
         $form = $this->createForm(CommentaryType::class, $commentary);
 
@@ -64,7 +76,7 @@ class AssociationController extends AbstractController {
             $this->addFlash('danger', 'association en attente de validation');
         }
 
-        return $this->render('association/show.html.twig', ['association' => $association, 'form' => $form->createView()]);
+        return $this->render('association/show.html.twig', ['association' => $association, 'form' => $form->createView(), 'commentaries' => $commentaries]);
     }
 
     /**
