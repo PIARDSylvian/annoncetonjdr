@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\AssociationRepository")
@@ -17,6 +18,7 @@ class Association
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("card")
      */
     private $id;
 
@@ -34,6 +36,7 @@ class Association
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("card")
      */
     private $name;
 

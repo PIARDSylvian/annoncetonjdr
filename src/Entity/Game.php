@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\GameRepository")
@@ -13,16 +14,19 @@ class Game
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("card")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
+     * @Groups("card")
      */
     private $Name;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("card")
      */
     private $imageUrl;
 

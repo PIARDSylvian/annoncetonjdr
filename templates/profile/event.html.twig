@@ -30,6 +30,7 @@
                         <li class="list-group-item">Adresse : {{event.address.address}}</li>
                         <li class="list-group-item">commentaires : <span class="badge badge-pill badge-secondary">{{event.commentaries|length}}</span></li>
                     </ul>
+                    <div className="card-body"></div>
                     <div class="card-footer text-center">
                         <a href="{{path('app_event_show', {id:event.id})}}" class="btn btn-primary">Voir plus</a>
                     </div>
