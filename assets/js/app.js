@@ -8,11 +8,13 @@
 // any CSS you require will output into a single css file (app.css in this case)
 import '../scss/app.scss';
 import 'bootstrap';
-import L from 'leaflet';
+import '@fortawesome/fontawesome-free/js/all.js';
+import L, { divIcon } from 'leaflet';
 
 global.moment = require('moment');
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import { renderToStaticMarkup } from "react-dom/server";
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
 import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
@@ -78,6 +80,46 @@ $(function() {
 	 * OpenStreetMap 
 	 */
 	class OpenStreetMap extends React.Component {
+
+		/**
+		 * icon
+		 */
+		selectAndCreateIcon(type) {
+			let iconClass;
+			let color = 'blue';
+			let shrink = 'shrink-10';
+			let up = 'up-3';
+			switch(type) {
+				case 'start':
+					iconClass = 'fa-map-pin';
+					color = 'red';
+					shrink = 'shrink-8';
+					up = 'up-2';
+					break;
+				case 'parties':
+					iconClass = 'fa-dice';
+					break;
+				case 'events':
+					iconClass = 'fa-calendar';
+					break;
+				case 'association':
+					iconClass = 'fa-users';
+					break;
+				default:
+					up = 'up-2';
+					iconClass = 'fa-circle';
+			}
+			const iconMarkup = renderToStaticMarkup(
+				<div className="fa-4x">
+					<span className="fa-layers fa-fw">
+						<i className={`fas fa-map-marker ${color}`}></i>
+						<i className={`fa-inverse fas ${iconClass}`} data-fa-transform={`${shrink} ${up}`}></i>
+					</span>
+				</div>
+			);
+
+			return divIcon({ html: iconMarkup, popupAnchor: [30, -10], iconAnchor: [0, 20] });
+		}
 		render() {
 			const center = [this.props.items[0].lat, this.props.items[0].lng];
 			const markers = [];
@@ -92,10 +134,24 @@ $(function() {
 			if (maxDistance > 10) { zoom = 11 }
 
 			for (const [index, value] of this.props.items.entries()) {
+				let customMarkerIcon;
+
+				if (index == 0) {
+					customMarkerIcon = this.selectAndCreateIcon('start');
+				} else if (value.parties.length > 0 && value.events.length == 0 && value.association == null) {
+					customMarkerIcon = this.selectAndCreateIcon('parties');
+				} else if (value.events.length > 0 && value.parties.length == 0 && value.association == null) {
+					customMarkerIcon = this.selectAndCreateIcon('events');
+				} else if (value.association != null && value.parties.length == 0 && value.events.length == 0) {
+					customMarkerIcon = this.selectAndCreateIcon('association');
+				} else {
+					customMarkerIcon = this.selectAndCreateIcon();
+				}
+
 				markers.push(
-					<Marker key={index} position={[value.lat,value.lng] }>
+					<Marker key={index} position={[value.lat,value.lng]} icon={customMarkerIcon}>
 						<Popup>
-							<PopupContent items ={value}/>
+							<PopupContent items={value}/>
 						</Popup>
 					</Marker>
 				);
@@ -320,7 +376,7 @@ $(function() {
 		static getDerivedStateFromProps(nextProps, prevState){
 			if(nextProps.resetStep!==prevState.resetStep){
 				if (nextProps.resetStep == true){
-					nextProps.clickHandler(true);	
+					nextProps.clickHandler(true);
 				}
 				return { resetStep: nextProps.resetStep, stop: false };
 			}
@@ -363,6 +419,9 @@ $(function() {
 			const ouputItems = [];
 
 			for (const [idx, l] of items.entries()) {
+				if (idx == 0 && l.distance == 0 && l.parties.length == 0 && l.events.length == 0 && l.association == null && items.length > 1) {
+					ouputItems.push(l)
+				}
 				if (l.parties.length > countItems) {
 					l = { ...l, parties: l.parties.slice(0, countItems) };
 					countItems = 0;
@@ -521,7 +580,7 @@ $(function() {
 				if (filters.association) {
 					l = { ...l, association: null };
 				}
-				if (l.parties.length > 0 || l.events.length > 0  || l.association != null) {
+				if (l.parties.length > 0 || l.events.length > 0  || l.association != null ||l.distance == 0) {
 					filteredItems.push(l);
 				}
 			}
@@ -654,7 +713,11 @@ $(function() {
 					let step = null;
 					if (resetStep) {
 						items = result;
-						step = result.length;
+						if (result[0].distance == 0) {
+							step = (result.length - 1);
+						} else {
+							step = result.length;
+						}
 					} else {
 						items = this.state.items.concat(result);
 						step = this.state.step + result.length;

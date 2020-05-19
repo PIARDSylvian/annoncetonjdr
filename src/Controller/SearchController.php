@@ -48,11 +48,16 @@ class SearchController extends AbstractController {
             $location = (new Location())->setLat($lat)->setLng($lng)->setAddress($address)->setDistance(0);
 
             $output = [];
-            foreach( $searchResult as $idx => $result ) {
-                $result[0]->setDistance($result['distance']);
-                $output[] = $result[0];
+            if ( count($searchResult) > 0 ) {
+                foreach( $searchResult as $idx => $result ) {
+                    if($step == 0 && $idx == 0 && $result[0]->getLat() != $location->getLat() && $result[0]->getLng() != $location->getLng() && $result[0]->getAddress() != $location->getAddress()) {
+                        $output[] = $location;
+                    }
+                    $result[0]->setDistance($result['distance']);
+                    $output[] = $result[0];
+                }
             }
-            
+
             $json = $serializer->serialize($output,'json',['groups'=>'card']);
             
             return JsonResponse::fromJsonString($json);

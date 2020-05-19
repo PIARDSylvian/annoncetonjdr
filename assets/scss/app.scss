@@ -1,11 +1,11 @@
 // Boostrap 4.1
 @import "~bootstrap/scss/bootstrap";
 
-// Fontawsome Free 5.4.2
-@import "~@fortawesome/fontawesome-free/scss/fontawesome";
-@import "~@fortawesome/fontawesome-free/scss/regular";
-@import "~@fortawesome/fontawesome-free/scss/solid";
-@import "~@fortawesome/fontawesome-free/scss/brands";
+// // Fontawsome Free 5.4.2
+// @import "~@fortawesome/fontawesome-free/scss/fontawesome";
+// @import "~@fortawesome/fontawesome-free/scss/regular";
+// @import "~@fortawesome/fontawesome-free/scss/solid";
+// @import "~@fortawesome/fontawesome-free/scss/brands";
 
 //leaflet
 @import "~leaflet/dist/leaflet";
@@ -15,6 +15,10 @@ body {
 
   .navbar {
     margin-bottom: 20px;
+  }
+
+  .dropdown-menu {
+    z-index: 10000;
   }
 }
 
@@ -28,6 +32,23 @@ body {
   border: 1px solid black;
   height: 400px;
   width: 100%;
+
+  .leaflet-div-icon {
+    background: transparent;
+    border: none;
+  }
+
+  .red {
+    color: orangered;
+  }
+
+  .blue {
+    color: royalblue;
+  }
+
+  .fa-inverse {
+    color: white;
+  }
 }
 
 /* Flip Cards */
