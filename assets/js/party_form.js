@@ -14,8 +14,9 @@ $(function () {
     dateTime.setMinutes(dateTime.getMinutes()+1);
 
     let option= {
-        format: 'DD-MM-YYYY HH:mm',
-        extraFormats: [ 'DD-MM-YYYY HH:mm' ],
+        format: 'YYYY-MM-DDTHH:mm',
+        extraFormats: [ 'YYYY-MM-DDTHH:mm:ss' ],
+        minDate: dateTime,
         inline: true,
         sideBySide: true,
         locale: 'fr',
@@ -24,11 +25,31 @@ $(function () {
         },
     };
 
-    if (!$('.date_container input').val()) {
-        let dateTime = new Date($.now());
-        dateTime.setHours(dateTime.getHours()+2);
-        dateTime.setMinutes(dateTime.getMinutes()+1);
-        option.minDate = dateTime
+    /* Party */
+    const party = $('.date_container #party_date');
+    if (party) {
+        if (party.val()) {
+            option.defaultDate = moment(party.val());
+        }
+        party.datetimepicker(option);
+    }
+
+    /* Event */
+    const eventStart = $('.date_container #event_dateStart');
+    const eventFinish = $('.date_container #event_dateFinish');
+    if (eventStart && eventFinish) {
+        if (eventStart.val() && eventFinish.val()) {
+            option.defaultDate = moment(eventStart.val());
+        }
+        eventStart.datetimepicker(option);
+        if (eventFinish.val()) {
+            option.defaultDate = moment(eventFinish.val());
+        }
+        eventFinish.datetimepicker(option);
+    }
+
+    if ($('.date_container #event_dateFinish') && $('.date_container #event_dateFinish').val()) {
+        option.defaultDate = moment($('.date_container input').val());
     }
 
     $('.date_container input').datetimepicker(option);

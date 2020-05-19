@@ -31,8 +31,8 @@ class EventType extends AbstractType
         $builder
             ->add('name')
             ->add('address', LocationType::class, ['label' => false, 'required' => false])
-            ->add('dateStart', DateTimeType::class, ['format'=>'dd-MM-yyyy H:m','widget' => 'single_text', 'html5'=>false])
-            ->add('dateFinish', DateTimeType::class, ['format'=>'dd-MM-yyyy H:m','widget' => 'single_text', 'html5'=>false])
+            ->add('dateStart', DateTimeType::class, ['widget' => 'single_text', 'html5'=>false])
+            ->add('dateFinish', DateTimeType::class, ['widget' => 'single_text', 'html5'=>false])
             ->add('description', TextareaType::class, ['required' => false])
             ->addEventListener(
                 FormEvents::POST_SUBMIT,

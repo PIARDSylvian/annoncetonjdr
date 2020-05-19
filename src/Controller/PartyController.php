@@ -21,12 +21,18 @@ class PartyController extends AbstractController {
      */
     public function create(Party $party = null, Request $request)
     {
-        if(!$party) {
-            $party = new Party();
+        if($party && $party->getDate() <= new \DateTime('now')) {
+            $this->addFlash('danger', 'Partie terminée');
+            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
         }
+        if($party && $party->getDate() <= new \DateTime('+2 hours')) {
+            $this->addFlash('danger', 'Modification non autorisé, 2h avant le début');
+            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+        } elseif (!$party) {
+            $party = new Party();
+        } 
 
         $form = $this->createForm(PartyType::class, $party);
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -126,6 +132,14 @@ class PartyController extends AbstractController {
      */
     public function addPlayer(Party $party)
     {
+        if($party && $party->getDate() <= new \DateTime('now')) {
+            $this->addFlash('danger', 'Partie terminée');
+            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+        }
+        if($party && $party->getDate() <= new \DateTime('+2 hours')) {
+            $this->addFlash('danger', 'Inscription non autorisé, 2h avant le début');
+            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+        }
         if (count($party->getRegisteredPlayers()) < $party->getMaxPlayer() && ($this->getUser() != $party->getOwner())) {
             $party->addRegisteredPlayers($this->getUser());
     
@@ -141,6 +155,10 @@ class PartyController extends AbstractController {
      */
     public function removePlayer(Party $party)
     {
+        if($party && $party->getDate() <= new \DateTime('now')) {
+            $this->addFlash('danger', 'Partie terminée');
+            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+        }
         $party->removeRegisteredPlayers($this->getUser());
 
         $entityManager = $this->getDoctrine()->getManager();
