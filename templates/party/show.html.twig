@@ -7,7 +7,9 @@
 
 {% block body %}
 {% if app.user and app.user is same as(party.owner) %}
-    <a href="{{path('app_party_update', {id:party.id})}}"><input type="button" value="Modifier"></a>
+    {% if "+2hours"|date('U') < party.date.date|date('U') %}
+        <a href="{{path('app_party_update', {id:party.id})}}"><input type="button" value="Modifier"></a>
+    {% endif %}
     <a href="{{path('app_party_delete', {id:party.id})}}"><input type="button" value="Supprimer"></a>
 {% elseif app.user %}
     <a href="{{path('app_report_party', {id:party.id})}}"><input type="button" value="Signaler"></a>
@@ -33,7 +35,7 @@
 <p>partie en ligne</p>
 {% endif %}
 
-{% if app.user and app.user != party.owner %}
+{% if app.user and app.user != party.owner and "+2hours"|date('U') < party.date.date|date('U') %}
     {% if app.user in party.registeredPlayers %}
     <a href="{{path('app_party_remove', {id:party.id})}}"><input type="button" value="se desincrire"></a>
     {% elseif (party.maxPlayer - (party.alreadySubscribed + party.registeredPlayers|length)) > 0 %}

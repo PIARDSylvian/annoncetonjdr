@@ -20,7 +20,14 @@ class EventController extends AbstractController {
      */
     public function create(Event $event = null, Request $request)
     {
-        if(!$event) {
+        if($event && $event->getDateFinish() <= new \DateTime('now')) {
+            $this->addFlash('danger', 'Evénement terminé');
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+        }
+        if($event && $event->getDateStart() <= new \DateTime('+2 hours')) {
+            $this->addFlash('danger', 'Modification non autorisé, 2h avant le début');
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+        } elseif (!$event) {
             $event = new Event();
         }
 
