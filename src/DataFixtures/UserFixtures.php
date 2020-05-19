@@ -28,7 +28,6 @@ class UserFixtures extends Fixture
         ));
         $user->setFirstName('admin');
         $user->setLastName('admin');
-        $user->setBirthDate(new \DateTime('now'));
         $user->setPseudonym('admin');
         $user->setSecretQ('sq1');
         $user->setSecretR('sq1');
@@ -45,7 +44,6 @@ class UserFixtures extends Fixture
             ));
             $user->setFirstName('firstName'.$i);
             $user->setLastName('lastName'.$i);
-            $user->setBirthDate(new \DateTime('now'));
             $user->setPseudonym('user'.$i);
             $user->setSecretQ('sq1');
             $user->setSecretR('sq1');
