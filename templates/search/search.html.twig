@@ -7,68 +7,21 @@
 {% endblock %}
 
 {% block body %}
-
-<div class="row">
-    <div class="col-md-12">
-        {{ form_start(form) }}
-            {{ form_row(form.search_lat) }}
-            {{ form_row(form.search_lng) }}
-            {{ form_row(form.page) }}
-            <input type="submit" class="btn" value="Search"/>
-        {{ form_end(form) }}
-    </div>
-</div>
-
 <div class="row">
     <div class="col-md-12">
         <div id="map"></div>
     </div>
 </div>
-
-{# {% for location in allParty %}
-    {% for part in location.parties %}
-        {{dump(part)}}
-    {% endfor %}
-    {% for event in location.events %}
-        {{dump(event)}}
-    {% endfor %}
-{% endfor %} #}
-
 {% endblock %}
 
 {% block javascripts %}
 <script>
-    var party = [
-        {% for location in allParty %}
-            {
-                lat: {{location.lat}},
-                lng: {{location.lng}},
-                address: "{{location.address}}",
-                parties: [
-                    {% for part in location.parties %}
-                        {
-                            partyName: "{{part.partyName}}",
-                            url: "{{url('app_party_show', {'id':part.id})}}"
-                        },
-                    {% endfor %}
-                ],
-                events: [
-                    {% for event in location.events %}
-                        {
-                            name: "{{event.name}}",
-                            url: "{{url('app_event_show', {'id':event.id})}}"
-                        },
-                    {% endfor %}
-                ],
-                {% if location.association %}
-                association: {
-                    name: "{{location.association.name}}",
-                    url: "{{url('app_association_show', {'id':location.association.id})}}"
-                }
-                {% endif %}
-            },
-        {% endfor %}
-    ];
+    const ROUTES = {
+        APP_PARTY_SHOW : "{{ url('app_party_show', {id: 0})|slice(0,-1) }}",
+        APP_EVENT_SHOW : "{{ url('app_event_show', {id: 0})|slice(0,-1) }}",
+        APP_ASSOCIATION_SHOW : "{{ url('app_association_show', {id: 0})|slice(0,-1) }}",
+    };
+    const GAMES = [ {% for game in allGames %} { value: '{{game.id}}', label : '{{game.Name}}', img : '{{ game.imageUrl?? "https://cdn.pixabay.com/photo/2014/12/14/18/33/cube-568105_960_720.jpg" }}' }, {% endfor %}  ];
 </script>
-{{ encore_entry_script_tags('party_form') }}
+{{ encore_entry_script_tags('search') }}
 {% endblock %}

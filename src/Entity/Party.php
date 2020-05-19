@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PartyRepository")
@@ -17,6 +18,7 @@ class Party
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("card")
      */
     private $id;
 
@@ -30,6 +32,7 @@ class Party
      * @ORM\Column(type="string", length=50)
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank()
+     * @Groups("card")
      */
     private $partyName;
 
@@ -39,6 +42,7 @@ class Party
      * @Assert\Range(
      *      min = 0
      * )
+     * @Groups("card")
      */
     private $alreadySubscribed;
 
@@ -53,12 +57,14 @@ class Party
      *      maxMessage = "ne doit pas avoir plus de 2000 participant"
      * )
      * @Assert\NotBlank()
+     * @Groups("card")
      */
     private $maxPlayer;
 
     /**
      * @ORM\Column(type="datetime")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("card")
      * @Assert\NotBlank()
      * @Assert\Range(
      *      min = "+2 hours"
@@ -68,6 +74,7 @@ class Party
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups("card")
      */
     private $minor = true;
 
@@ -75,6 +82,7 @@ class Party
      * @ORM\ManyToOne(targetEntity="App\Entity\Game")
      * @ORM\JoinColumn(name="game_name_id", referencedColumnName="id", nullable=false)
      * @Assert\NotBlank()
+     * @Groups("card")
      */
     private $gameName;
 
@@ -95,11 +103,13 @@ class Party
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups("card")
      */
     private $openedCampaign;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("card")
      */
     private $gameDescription;
 
@@ -110,6 +120,7 @@ class Party
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User")
+     * @Groups("card")
      */
     private $registeredPlayers;
 
@@ -121,6 +132,7 @@ class Party
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Commentary", mappedBy="party", cascade={"remove"})
+     * @Groups("card")
      */
     private $commentaries;
 

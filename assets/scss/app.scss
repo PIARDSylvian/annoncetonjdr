@@ -1,71 +1,86 @@
 // Boostrap 4.1
 @import "~bootstrap/scss/bootstrap";
 
-// Fontawsome Free 5.4.2
-@import "~@fortawesome/fontawesome-free/scss/fontawesome";
-@import "~@fortawesome/fontawesome-free/scss/regular";
-@import "~@fortawesome/fontawesome-free/scss/solid";
-@import "~@fortawesome/fontawesome-free/scss/brands";
+// // Fontawsome Free 5.4.2
+// @import "~@fortawesome/fontawesome-free/scss/fontawesome";
+// @import "~@fortawesome/fontawesome-free/scss/regular";
+// @import "~@fortawesome/fontawesome-free/scss/solid";
+// @import "~@fortawesome/fontawesome-free/scss/brands";
 
 //leaflet
 @import "~leaflet/dist/leaflet";
 
 body {
-    background-color: lightgray;
+  background-color: lightgray;
 
-    .navbar {
-        margin-bottom: 20px;
-    }
+  .navbar {
+    margin-bottom: 20px;
+  }
+
+  .dropdown-menu {
+    z-index: 10000;
+  }
 }
 
 .navbar .dropdown .dropdown-item .fas {
-    float: right;
-    line-height: inherit;
+  float: right;
+  line-height: inherit;
 }
 
-#map {
-    position: relative;
-    border: 1px solid black;
-    height: 400px;  /* or as desired */
-    width: 100%;  /* This means "100% of the width of its container", the .col-md-8 */
+.leaflet-container {
+  position: relative;
+  border: 1px solid black;
+  height: 400px;
+  width: 100%;
+
+  .leaflet-div-icon {
+    background: transparent;
+    border: none;
+  }
+
+  .red {
+    color: orangered;
+  }
+
+  .blue {
+    color: royalblue;
+  }
+
+  .fa-inverse {
+    color: white;
+  }
 }
 
-/* Visit https://nicolaskadis.info/posts/pure-css-flip-cards-using-bootstrap-4-and-css-grid-no-js for an explanation */
+/* Flip Cards */
+.card-container {
+  display: grid;
+  perspective: 700px;
+}
+  
+.card-flip {
+  display: grid;
+  grid-template: 1fr / 1fr;
+  grid-template-areas: "frontAndBack";
+  transform-style: preserve-3d;
+  transition: all 0.7s ease;
+}
+  
+.card-flip div {
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
 
-/* for demo purposes */
-.card {
-    margin: 10px 10px;
-  }
+.front {
+  grid-area: frontAndBack;
+}
+
+.back {
+  grid-area: frontAndBack;
+  transform: rotateY(-180deg);
+}
   
-  /* Flip Cards CSS */
-  .card-container {
-    display: grid;
-    perspective: 700px;
-  }
-  
-  .card-flip {
-    display: grid;
-    grid-template: 1fr / 1fr;
-    grid-template-areas: "frontAndBack";
-    transform-style: preserve-3d;
-    transition: all 0.7s ease;
-  }
-  
-  .card-flip div {
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-  }
-  
-  .front {
-    grid-area: frontAndBack;
-  }
-  
-  .back {
-    grid-area: frontAndBack;
-    transform: rotateY(-180deg);
-  }
-  
-  .card-container:hover .card-flip {
-    transform: rotateY(180deg);
-  }
-  
+.card-container:hover .card-flip {
+  transform: rotateY(180deg);
+}
+
+/* End flip card */

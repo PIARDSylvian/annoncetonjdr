@@ -10,7 +10,7 @@
 {% if app.user and app.user is same as(event.owner) %}
     <a href="{{path('app_event_update', {id:event.id})}}"><input type="button" value="Modifier"></a>
     <a href="{{path('app_event_delete', {id:event.id})}}"><input type="button" value="Supprimer"></a>
-{% else %}
+{% elseif app.user %}
     <a href="{{path('app_report_event', {id:event.id})}}"><input type="button" value="Signaler"></a>
 {% endif %}
 
@@ -58,4 +58,5 @@ var party = [{
     address:'{{event.address.address}}'
 }];
 </script>
+{{ encore_entry_script_tags('map') }}
 {% endblock %}

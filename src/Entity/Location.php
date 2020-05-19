@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\LocationRepository")
@@ -22,35 +23,46 @@ class Location
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
+     * @Groups("card")
      */
     private $address;
 
     /**
      * @ORM\Column(type="float")
      * @Assert\NotBlank()
+     * @Groups("card")
      */
     private $lat;
 
     /**
      * @ORM\Column(type="float")
      * @Assert\NotBlank()
+     * @Groups("card")
      */
     private $lng;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Party", mappedBy="address")
+     * @Groups("card")
      */
     private $parties;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="address")
+     * @Groups("card")
      */
     private $events;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Association", mappedBy="address", cascade={"persist", "remove"})
+     * @Groups("card")
      */
     private $association;
+
+    /**
+     * @Groups("card")
+     */
+    private $distance;
 
     public function __construct()
     {
@@ -174,6 +186,18 @@ class Location
         if ($association->getAddress() !== $this) {
             $association->setAddress($this);
         }
+
+        return $this;
+    }
+
+    public function getDistance(): ?float
+    {
+        return $this->distance;
+    }
+
+    public function setDistance(float $distance): self
+    {
+        $this->distance = $distance;
 
         return $this;
     }

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
@@ -17,6 +18,7 @@ class Event
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("card")
      */
     private $id;
 
@@ -29,6 +31,7 @@ class Event
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank()
+     * @Groups("card")
      */
     private $name;
 
@@ -44,6 +47,7 @@ class Event
      * @Assert\Range(
      *      min = "+2 hours"
      * )
+     * @Groups("card")
      */
     private $dateStart;
 
@@ -51,16 +55,19 @@ class Event
      * @ORM\Column(type="datetime")
      * @Assert\NotBlank()
      * @Assert\Expression("this.getDateStart() < value")
+     * @Groups("card")
      */
     private $dateFinish;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("card")
      */
     private $description;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Commentary", mappedBy="event", cascade={"remove"})
+     * @Groups("card")
      */
     private $commentaries;
 
