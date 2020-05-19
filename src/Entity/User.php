@@ -56,12 +56,6 @@ class User implements UserInterface
     private $lastName;
 
     /**
-     * @ORM\Column(type="date")
-     * @Assert\NotBlank()
-     */
-    private $birthDate;
-
-    /**
      * @ORM\Column(type="string", length=25, unique=true)
      * @Assert\Length(max=25)
      * @Assert\NotBlank()
@@ -206,18 +200,6 @@ class User implements UserInterface
     public function setLastName(?string $lastName): self
     {
         $this->lastName = $lastName;
-
-        return $this;
-    }
-
-    public function getBirthDate(): ?\DateTimeInterface
-    {
-        return $this->birthDate;
-    }
-
-    public function setBirthDate(\DateTimeInterface $birthDate): self
-    {
-        $this->birthDate = $birthDate;
 
         return $this;
     }

@@ -26,9 +26,6 @@ class RegistrationFormType extends AbstractType
             ->add('lastName', TextType::class, array(
                 'required' => false
             ))
-            ->add('birthDate', BirthdayType::class, array(
-                'widget' => 'single_text'
-            ))
             ->add('pseudonym', TextType::class)
             ->add('email', EmailType::class)
             ->add('secretQ', ChoiceType::class, [

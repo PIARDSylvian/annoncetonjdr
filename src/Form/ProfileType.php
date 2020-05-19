@@ -26,9 +26,6 @@ class ProfileFormType extends AbstractType
             ->add('lastName', TextType::class, array(
                 'required' => false
             ))
-            ->add('birthDate', BirthdayType::class, array(
-                'widget' => 'single_text'
-            ))
             ->add('pseudonym', TextType::class)
             ->add('email', EmailType::class, ['help' => 'Si modifié, vous deverez valider votre email, vous serez deconnecter.'])
             ->add('secretQ', ChoiceType::class, [
