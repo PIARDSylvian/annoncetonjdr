@@ -15,11 +15,11 @@
                         <h5 class="card-title">{{event.name}}</h5>
                     </div>
                     <div class="card-body">
-                        <p class="card-text">{% if event.description %}{{event.description}}{% else %}Aucune description{% endif %}</p>
+                        <p class="card-text">{% if event.description %}{{event.description|u.truncate(150, '...')}}{% else %}Aucune description{% endif %}</p>
                     </div>
                     <div class="card-footer text-center">
-                        <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{event.dateStart.date|date('Y-m-d H:i:s')}}</small></p>
-                        <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{event.dateFinish.date|date('Y-m-d H:i:s')}}</small></p>
+                        <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{event.dateStart.date|date('d-m-Y H:i')}}</small></p>
+                        <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{event.dateFinish.date|date('d-m-Y H:i')}}</small></p>
                     </div>
                 </div>
                 <div class="card back">

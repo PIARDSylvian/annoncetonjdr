@@ -20,10 +20,10 @@
                             <img src="https://cdn.pixabay.com/photo/2014/12/14/18/33/cube-568105_960_720.jpg" alt="{{party.gameName.Name}}" class="img-fluid">
                         {% endif %}
                         <div class="card-body">
-                            <p class="card-text">{% if party.gameDescription %}{{party.gameDescription}}{% else %}Aucune description{% endif %}</p>
+                            <p class="card-text">{% if party.gameDescription %}{{party.gameDescription|u.truncate(150, '...')}}{% else %}Aucune description{% endif %}</p>
                         </div>
                         <div class="card-footer text-center">
-                            <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{party.date.date|date('Y-m-d H:i:s')}}</small></p>
+                            <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{party.date.date|date('d-m-Y H:i')}}</small></p>
                         </div>
                     </div>
                     <div class="card back">
@@ -65,10 +65,10 @@
                             <img src="https://cdn.pixabay.com/photo/2014/12/14/18/33/cube-568105_960_720.jpg" alt="{{party.gameName.Name}}" class="img-fluid">
                         {% endif %}
                         <div class="card-body">
-                            <p class="card-text">{% if party.gameDescription %}{{party.gameDescription}}{% else %}Aucune description{% endif %}</p>
+                            <p class="card-text">{% if party.gameDescription %}{{party.gameDescription|u.truncate(150, '...')}}{% else %}Aucune description{% endif %}</p>
                         </div>
                         <div class="card-footer text-center">
-                            <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{party.date.date|date('Y-m-d H:i:s')}}</small></p>
+                            <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{party.date.date|date('d-m-Y H:i')}}</small></p>
                         </div>
                     </div>
                     <div class="card back">
