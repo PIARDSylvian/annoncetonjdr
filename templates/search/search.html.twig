@@ -16,11 +16,12 @@
 
 {% block javascripts %}
 <script>
-const ROUTES = {
-    APP_PARTY_SHOW : "{{ url('app_party_show', {id: 0})|slice(0,-1) }}",
-    APP_EVENT_SHOW : "{{ url('app_event_show', {id: 0})|slice(0,-1) }}",
-    APP_ASSOCIATION_SHOW : "{{ url('app_association_show', {id: 0})|slice(0,-1) }}",
-};
-const GAMES = [ {% for game in allGames %} { value: '{{game.id}}', label : '{{game.Name}}', img : '{{ game.imageUrl?? "https://cdn.pixabay.com/photo/2014/12/14/18/33/cube-568105_960_720.jpg" }}' }, {% endfor %}  ];
+    const ROUTES = {
+        APP_PARTY_SHOW : "{{ url('app_party_show', {id: 0})|slice(0,-1) }}",
+        APP_EVENT_SHOW : "{{ url('app_event_show', {id: 0})|slice(0,-1) }}",
+        APP_ASSOCIATION_SHOW : "{{ url('app_association_show', {id: 0})|slice(0,-1) }}",
+    };
+    const GAMES = [ {% for game in allGames %} { value: '{{game.id}}', label : '{{game.Name}}', img : '{{ game.imageUrl?? "https://cdn.pixabay.com/photo/2014/12/14/18/33/cube-568105_960_720.jpg" }}' }, {% endfor %}  ];
 </script>
+{{ encore_entry_script_tags('search') }}
 {% endblock %}
