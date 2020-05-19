@@ -29,7 +29,7 @@ class Event
     private $owner;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank()
      * @Groups("card")
      */
