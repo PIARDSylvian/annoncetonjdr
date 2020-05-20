@@ -42,11 +42,13 @@ class Report
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Commentary", inversedBy="reports")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $commentary;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Association", inversedBy="reports")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $association;
 
@@ -58,11 +60,13 @@ class Report
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Party", inversedBy="reports")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $party;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="reports")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $user;
 
