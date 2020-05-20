@@ -17,6 +17,18 @@ use App\Entity\Association;
  */
 class AdminController extends EasyAdminController
 {
+    public function removeUserEntity($entity)
+    {
+        if ($entity == $this->getUser()) {
+            $this->addFlash('error', 'Vous ne pouvez vous supprimer vous même');
+            return $this->redirectToRoute('easyadmin', ['action' => 'list', 'entity' => $this->entity['name']]);
+        } elseif (in_array('ROLE_ADMIN', $entity->getRoles()) && !in_array('ROLE_SUPER_ADMIN', $this->getUser()->getRoles())) {
+            $this->addFlash('error', 'Vous ne pouvez pas supprimer un admin.');
+            return $this->redirectToRoute('easyadmin', ['action' => 'list', 'entity' => $this->entity['name']]);
+        }
+
+        parent::removeEntity($entity);
+    }
     /**
      * @Route("/admin/user/addAdmin", name="add_Admin")
      */
@@ -46,6 +58,15 @@ class AdminController extends EasyAdminController
 
         $id = $request->query->get('id');
         $entity = $repository->find($id);
+
+        if ($entity == $this->getUser()) {
+            $this->addFlash('error', 'Vous ne pouvez vous enlever les droits vous même');
+            return $this->redirectToRoute('easyadmin', ['action' => 'show', 'entity' => $request->query->get('entity'), 'id' => $entity->getId()]);
+        } elseif (in_array('ROLE_ADMIN', $entity->getRoles()) && !in_array('ROLE_SUPER_ADMIN', $this->getUser()->getRoles())) {
+            $this->addFlash('error', 'Vous ne pouvez vous enlever les droits d\' un admin.');
+            return $this->redirectToRoute('easyadmin', ['action' => 'show', 'entity' => $request->query->get('entity'), 'id' => $entity->getId()]);
+        }
+        
 
         $entity->setRoles([]);
         $em->flush();
