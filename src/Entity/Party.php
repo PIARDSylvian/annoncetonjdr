@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PartyRepository")
@@ -17,12 +18,13 @@ class Party
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups("card")
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $owner;
 
@@ -30,6 +32,7 @@ class Party
      * @ORM\Column(type="string", length=50)
      * @ORM\JoinColumn(nullable=false)
      * @Assert\NotBlank()
+     * @Groups("card")
      */
     private $partyName;
 
@@ -39,6 +42,7 @@ class Party
      * @Assert\Range(
      *      min = 0
      * )
+     * @Groups("card")
      */
     private $alreadySubscribed;
 
@@ -53,12 +57,14 @@ class Party
      *      maxMessage = "ne doit pas avoir plus de 2000 participant"
      * )
      * @Assert\NotBlank()
+     * @Groups("card")
      */
     private $maxPlayer;
 
     /**
      * @ORM\Column(type="datetime")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("card")
      * @Assert\NotBlank()
      * @Assert\Range(
      *      min = "+2 hours"
@@ -68,6 +74,7 @@ class Party
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups("card")
      */
     private $minor = true;
 
@@ -75,6 +82,7 @@ class Party
      * @ORM\ManyToOne(targetEntity="App\Entity\Game")
      * @ORM\JoinColumn(name="game_name_id", referencedColumnName="id", nullable=false)
      * @Assert\NotBlank()
+     * @Groups("card")
      */
     private $gameName;
 
@@ -95,11 +103,13 @@ class Party
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups("card")
      */
     private $openedCampaign;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("card")
      */
     private $gameDescription;
 
@@ -110,8 +120,9 @@ class Party
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\User")
+     * @Groups("card")
      */
-    private $registeredPlayer;
+    private $registeredPlayers;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Location", inversedBy="parties", cascade={"persist"})
@@ -121,6 +132,7 @@ class Party
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Commentary", mappedBy="party", cascade={"remove"})
+     * @Groups("card")
      */
     private $commentaries;
 
@@ -129,9 +141,14 @@ class Party
      */
     private $reports;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Note", cascade={"persist", "remove"})
+     */
+    private $note;
+
     public function __construct()
     {
-        $this->registeredPlayer = new ArrayCollection();
+        $this->registeredPlayers = new ArrayCollection();
         $this->commentaries = new ArrayCollection();
         $this->reports = new ArrayCollection();
     }
@@ -312,24 +329,24 @@ class Party
     /**
      * @return Collection|User[]
      */
-    public function getRegisteredPlayer(): Collection
+    public function getRegisteredPlayers(): Collection
     {
-        return $this->registeredPlayer;
+        return $this->registeredPlayers;
     }
 
-    public function addRegisteredPlayer(User $registeredPlayer): self
+    public function addRegisteredPlayers(User $registeredPlayer): self
     {
-        if (!$this->registeredPlayer->contains($registeredPlayer)) {
-            $this->registeredPlayer[] = $registeredPlayer;
+        if (!$this->registeredPlayers->contains($registeredPlayer)) {
+            $this->registeredPlayers[] = $registeredPlayer;
         }
 
         return $this;
     }
 
-    public function removeRegisteredPlayer(User $registeredPlayer): self
+    public function removeRegisteredPlayers(User $registeredPlayer): self
     {
-        if ($this->registeredPlayer->contains($registeredPlayer)) {
-            $this->registeredPlayer->removeElement($registeredPlayer);
+        if ($this->registeredPlayers->contains($registeredPlayer)) {
+            $this->registeredPlayers->removeElement($registeredPlayer);
         }
 
         return $this;
@@ -414,6 +431,18 @@ class Party
                 $report->setParty(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNote(): ?Note
+    {
+        return $this->note;
+    }
+
+    public function setNote(?Note $note): self
+    {
+        $this->note = $note;
 
         return $this;
     }

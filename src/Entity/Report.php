@@ -20,7 +20,7 @@ class Report
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $owner;
 
@@ -41,27 +41,32 @@ class Report
     private $solved = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\commentary", inversedBy="reports")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Commentary", inversedBy="reports")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $commentary;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Association", inversedBy="reports")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $association;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="reports")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $event;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Party", inversedBy="reports")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $party;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="reports")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $user;
 

@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+    <div class="justify-content-center">
+        {% form_theme profileForm 'bootstrap_4_horizontal_layout.html.twig' %}
+        {{ form_start(profileForm) }}
+            {{ form_row(profileForm.firstName) }}
+            {{ form_row(profileForm.lastName) }}
+            {{ form_row(profileForm.pseudonym) }}
+            {{ form_row(profileForm.email) }}
+            {{ form_row(profileForm.secretQ) }}
+            {{ form_row(profileForm.secretR) }}
+            <div class="text-center">
+                <button type="submit">{% trans %}update{% endtrans %}</button>
+            </div>
+        {{ form_end(profileForm) }}
+    </div>
+    <hr>
+    <div class="text-center">
+        <p><a class="btn btn-primary" href="{{path('app_profile_change_password')}}">change password</a> un mail vous sera envoyé pour changer votre mot de passe, vous serez deconnecter. </p>
+    </div>
+    <hr>
+    <div class="text-center">
+        <a class="btn btn-danger" href="{{path('app_profile_remove')}}">supprimer mon compte</a>
+    </div>
+{% endblock %}

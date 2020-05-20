@@ -15,6 +15,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
+            user_checker: App\Security\UserChecker
             anonymous: lazy
             guard:
                 authenticators:
@@ -42,6 +43,7 @@ security:
         - { path: '^/event/\d+', roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: '^/party/\d+', roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: '^/association/\d+', roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/profile, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/event, roles: ROLE_USER }
         - { path: ^/party, roles: ROLE_USER }
         - { path: ^/association, roles: ROLE_USER }

@@ -10,6 +10,7 @@ use App\Form\EventType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use App\Entity\Commentary;
 use App\Form\CommentaryType;
+use Knp\Component\Pager\PaginatorInterface;
 
 class EventController extends AbstractController {
 
@@ -19,7 +20,14 @@ class EventController extends AbstractController {
      */
     public function create(Event $event = null, Request $request)
     {
-        if(!$event) {
+        if($event && $event->getDateFinish() <= new \DateTime('now')) {
+            $this->addFlash('danger', 'Evénement terminé');
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+        }
+        if($event && $event->getDateStart() <= new \DateTime('+2 hours')) {
+            $this->addFlash('danger', 'Modification non autorisé, 2h avant le début');
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+        } elseif (!$event) {
             $event = new Event();
         }
 
@@ -42,8 +50,19 @@ class EventController extends AbstractController {
     /**
      * @Route("/event/{id}", name="app_event_show", requirements={"id"="\d+"})
      */
-    public function show(Event $event,Request $request)
+    public function show(Event $event, Request $request, PaginatorInterface $paginator)
     {
+        $repository = $this->getDoctrine()->getRepository(Commentary::class);
+
+        $partyQB = $repository->findByEventQueryBuilder($event);
+        $commentaries = $paginator->paginate(
+            $partyQB,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        $commentaries->setCustomParameters(['align' => 'center']);
+
         $commentary = new Commentary();
         $form = $this->createForm(CommentaryType::class, $commentary);
         
@@ -60,7 +79,7 @@ class EventController extends AbstractController {
             return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
         }
         
-        return $this->render('event/show.html.twig', ['event' => $event, 'form' => $form->createView()]);
+        return $this->render('event/show.html.twig', ['event' => $event, 'form' => $form->createView(),'commentaries' => $commentaries]);
     }
 
     /**

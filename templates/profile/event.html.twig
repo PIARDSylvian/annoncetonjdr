@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes parties{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Mes evenements crée ({{ paginationEvents.getTotalItemCount }})</h2>
+        </div>
+        {% for event in paginationEvents %}
+        <div class="col-md-4 card-container">
+            <div class="card-flip">
+                <div class="card front">
+                    <div class="card-header">
+                        <h5 class="card-title">{{event.name}}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{% if event.description %}{{event.description|u.truncate(150, '...')}}{% else %}Aucune description{% endif %}</p>
+                    </div>
+                    <div class="card-footer text-center">
+                        <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{event.dateStart.date|date('d-m-Y H:i')}}</small></p>
+                        <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{event.dateFinish.date|date('d-m-Y H:i')}}</small></p>
+                    </div>
+                </div>
+                <div class="card back">
+                    <div class="card-header">
+                        Détails
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Adresse : {{event.address.address}}</li>
+                        <li class="list-group-item">commentaires : <span class="badge badge-pill badge-secondary">{{event.commentaries|length}}</span></li>
+                    </ul>
+                    <div className="card-body"></div>
+                    <div class="card-footer text-center">
+                        <a href="{{path('app_event_show', {id:event.id})}}" class="btn btn-primary">Voir plus</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="col-md-12">
+            {{ knp_pagination_render(paginationEvents) }}
+        </div>
+    </div>
+{% endblock %}

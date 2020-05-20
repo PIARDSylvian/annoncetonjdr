@@ -7,17 +7,19 @@
 
 {% block body %}
 {% if app.user and app.user is same as(party.owner) %}
-    <a href="{{path('app_party_update', {id:party.id})}}"><input type="button" value="Modifier"></a>
+    {% if "+2hours"|date('U') < party.date.date|date('U') %}
+        <a href="{{path('app_party_update', {id:party.id})}}"><input type="button" value="Modifier"></a>
+    {% endif %}
     <a href="{{path('app_party_delete', {id:party.id})}}"><input type="button" value="Supprimer"></a>
-{% else %}
+{% elseif app.user %}
     <a href="{{path('app_report_party', {id:party.id})}}"><input type="button" value="Signaler"></a>
 {% endif %}
 
 <h1>{{party.partyName}}</h1>
 <p>annonce de {{ party.owner.pseudonym }}</p>
 <p>{{ party.date.date }}</p>
-<p>Déjà inscrit : {{party.alreadySubscribed + party.registeredPlayer|length}}</p>
-<p>Place restante : {{party.maxPlayer - (party.alreadySubscribed + party.registeredPlayer|length)}}</p>
+<p>Déjà inscrit : {{party.alreadySubscribed + party.registeredPlayers|length}}</p>
+<p>Place restante : {{party.maxPlayer - (party.alreadySubscribed + party.registeredPlayers|length)}}</p>
 <p>Accepte les mineur : {{party.minor ? 'Oui':'Non'}}</p>
 <p>Jeux éditée : {{party.gameEdition ? 'Oui':'Non'}}</p>
 <p>Nom du jeux : {{party.gameName.name}}</p>
@@ -33,10 +35,23 @@
 <p>partie en ligne</p>
 {% endif %}
 
-{% if app.user and app.user != party.owner %}
-    {% if app.user in party.registeredPlayer %}
+{% if app.user and "now"|date('U') > party.date.date|date('U') %}
+    {% if (not party.note or app.user not in party.note.notePlayers) and app.user in party.registeredPlayers %}
+        {{ form_start(noteForm) }}
+            {{ form_row(noteForm.ambiance) }}
+            <input type="submit" class="btn" value="noter"/>
+        {{ form_end(noteForm) }}
+    {% elseif party.note %}
+        <p>note d' ambiance : {{party.note.ambiance}}</p>
+    {% else %}
+        <p>pas de note</p>
+    {% endif %}
+{% endif %}
+
+{% if app.user and app.user != party.owner and "+2hours"|date('U') < party.date.date|date('U') %}
+    {% if app.user in party.registeredPlayers %}
     <a href="{{path('app_party_remove', {id:party.id})}}"><input type="button" value="se desincrire"></a>
-    {% elseif (party.maxPlayer - (party.alreadySubscribed + party.registeredPlayer|length)) > 0 %}
+    {% elseif (party.maxPlayer - (party.alreadySubscribed + party.registeredPlayers|length)) > 0 %}
     <a href="{{path('app_party_add', {id:party.id})}}"><input type="button" value="s inscire"></a>
     {% endif %}
 {% endif %}
@@ -45,7 +60,7 @@
     <a href="{{path('app_party_delete_all_com', {id:party.id})}}"><input type="button" value="Supprimer Tout"></a>
 {% endif %}
 
-{% for commentary in party.commentaries %}
+{% for commentary in commentaries %}
 <div style="border:solid 1px black; padding: 10px; margin-bottom: 20px;">
     {% if app.user and (app.user is same as(party.owner) or  app.user is same as(commentary.owner)) %}
         <a href="{{path('app_party_delete_com', {id:party.id,comment_id:commentary.id})}}"><input type="button" value="Supprimer"></a>
@@ -57,6 +72,7 @@
     <p>{{commentary.commentary}}</p>
 </div>
 {% endfor %}
+{{ knp_pagination_render(commentaries) }}
 
 {% if app.user %}
 {{ form_start(form) }}
@@ -77,4 +93,5 @@ var party = [{
 }];
 </script>
 {% endif %}
+{{ encore_entry_script_tags('map') }}
 {% endblock %}

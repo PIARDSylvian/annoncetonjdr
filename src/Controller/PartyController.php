@@ -9,8 +9,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use App\Entity\Party;
 use App\Entity\Commentary;
 use App\Entity\Event;
+use App\Entity\Note;
 use App\Form\PartyType;
 use App\Form\CommentaryType;
+use App\Form\NoteType;
+use Knp\Component\Pager\PaginatorInterface;
 
 class PartyController extends AbstractController {
     
@@ -20,12 +23,18 @@ class PartyController extends AbstractController {
      */
     public function create(Party $party = null, Request $request)
     {
-        if(!$party) {
-            $party = new Party();
+        if($party && $party->getDate() <= new \DateTime('now')) {
+            $this->addFlash('danger', 'Partie terminée');
+            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
         }
+        if($party && $party->getDate() <= new \DateTime('+2 hours')) {
+            $this->addFlash('danger', 'Modification non autorisé, 2h avant le début');
+            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+        } elseif (!$party) {
+            $party = new Party();
+        } 
 
         $form = $this->createForm(PartyType::class, $party);
-
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -43,10 +52,26 @@ class PartyController extends AbstractController {
     /**
      * @Route("/party/{id}", name="app_party_show", requirements={"id"="\d+"})
      */
-    public function show(Party $party, Request $request)
+    public function show(Party $party, Request $request, PaginatorInterface $paginator)
     {
+        $repository = $this->getDoctrine()->getRepository(Commentary::class);
+
+        $partyQB = $repository->findByPartyQueryBuilder($party);
+        $commentaries = $paginator->paginate(
+            $partyQB,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        $commentaries->setCustomParameters(['align' => 'center']);
+
         $commentary = new Commentary();
         $form = $this->createForm(CommentaryType::class, $commentary);
+
+        $note = new Note();
+        $noteForm = $this->createForm(NoteType::class, $note,[
+            'action' => $this->generateUrl('app_party_note', ['id' => $party->getId()] ),
+        ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -61,7 +86,7 @@ class PartyController extends AbstractController {
             return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
         }
 
-        return $this->render('party/show.html.twig', ['party' => $party, 'form' => $form->createView()]);
+        return $this->render('party/show.html.twig', ['party' => $party,'noteForm' => $noteForm->createView(),'form' => $form->createView(),'commentaries' => $commentaries]);
     }
 
     /**
@@ -113,8 +138,16 @@ class PartyController extends AbstractController {
      */
     public function addPlayer(Party $party)
     {
-        if (count($party->getRegisteredPlayer()) < $party->getMaxPlayer() && ($this->getUser() != $party->getOwner())) {
-            $party->addRegisteredPlayer($this->getUser());
+        if($party && $party->getDate() <= new \DateTime('now')) {
+            $this->addFlash('danger', 'Partie terminée');
+            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+        }
+        if($party && $party->getDate() <= new \DateTime('+2 hours')) {
+            $this->addFlash('danger', 'Inscription non autorisé, 2h avant le début');
+            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+        }
+        if (count($party->getRegisteredPlayers()) < $party->getMaxPlayer() && ($this->getUser() != $party->getOwner())) {
+            $party->addRegisteredPlayers($this->getUser());
     
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
@@ -128,11 +161,50 @@ class PartyController extends AbstractController {
      */
     public function removePlayer(Party $party)
     {
-        $party->removeRegisteredPlayer($this->getUser());
+        if($party && $party->getDate() <= new \DateTime('now')) {
+            $this->addFlash('danger', 'Partie terminée');
+            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+        }
+        $party->removeRegisteredPlayers($this->getUser());
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
 
+        return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+    }
+
+    /**
+     * @Route("/party/note/{id}", name="app_party_note", requirements={"id"="\d+"})
+     */
+    public function note(Party $party, Request $request)
+    {
+        if($party && $party->getDate() > new \DateTime('now')) {
+            $this->addFlash('danger', 'Partie non terminée');
+        } elseif ($party && !$party->getRegisteredPlayers()->contains($this->getUser())) {
+            $this->addFlash('danger', 'Non inscrit');
+        } elseif ($party && $party->getNote()->getNotePlayers()->contains($this->getUser())) {
+            $this->addFlash('danger', 'Déjà voté');
+        } elseif ($party)  {
+            $note = New Note();
+            $form = $this->createForm(NoteType::class, $note);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $partyNote = $party->getNote();
+
+                if (!$partyNote) {
+                    $party->setNote($note);
+                } else {
+                    $partyNote->setAmbiance($partyNote->getAmbiance() + $note->getAmbiance());
+                    $party->setNote($partyNote);
+                }
+                
+                $partyNote->addNotePlayer($this->getUser());
+
+                $entityManager->flush();
+                $this->addFlash('notice', 'Partie noté');
+            }
+        }
         return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
     }
 }

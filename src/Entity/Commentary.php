@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentaryRepository")
@@ -20,7 +21,7 @@ class Commentary
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $owner;
 
@@ -46,6 +47,7 @@ class Commentary
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Event", inversedBy="commentaries")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $event;
 

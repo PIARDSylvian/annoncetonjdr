@@ -36,7 +36,7 @@ easy_admin:
             list:
                 fields: ['partyName','owner', 'date', 'gameName', 'reports']
             show:
-                fields: ['partyName','owner', 'date', 'alreadySubscribed', 'maxPlayer', 'minor', 'gameName', 'gameEdition', 'nameScenario', 'scenarioEdition', 'openedCampaign', 'gameDescription', 'online', 'registeredPlayer', 'address', 'commentaries', 'reports']
+                fields: ['partyName','owner', 'date', 'alreadySubscribed', 'maxPlayer', 'minor', 'gameName', 'gameEdition', 'nameScenario', 'scenarioEdition', 'openedCampaign', 'gameDescription', 'online', 'registeredPlayers', 'address', 'commentaries', 'reports']
         Event:
             disabled_actions: ['edit', 'new']
             class: App\Entity\Event

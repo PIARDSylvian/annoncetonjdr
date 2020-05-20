@@ -8,9 +8,11 @@
 {% block body %}
 
 {% if app.user and app.user is same as(event.owner) %}
-    <a href="{{path('app_event_update', {id:event.id})}}"><input type="button" value="Modifier"></a>
+    {% if "+2hours"|date('U') < event.dateStart.date|date('U') %}
+        <a href="{{path('app_event_update', {id:event.id})}}"><input type="button" value="Modifier"></a>
+    {% endif %}
     <a href="{{path('app_event_delete', {id:event.id})}}"><input type="button" value="Supprimer"></a>
-{% else %}
+{% elseif app.user %}
     <a href="{{path('app_report_event', {id:event.id})}}"><input type="button" value="Signaler"></a>
 {% endif %}
 
@@ -27,7 +29,7 @@
     <a href="{{path('app_event_delete_all_com', {id:event.id})}}"><input type="button" value="Supprimer Tout"></a>
 {% endif %}
 
-{% for commentary in event.commentaries %}
+{% for commentary in commentaries %}
 <div style="border:solid 1px black; padding: 10px; margin-bottom: 20px;">
     {% if app.user and (app.user is same as(event.owner) or  app.user is same as(commentary.owner)) %}
         <a href="{{path('app_event_delete_com', {id:event.id,comment_id:commentary.id})}}"><input type="button" value="Supprimer"></a>
@@ -39,6 +41,7 @@
     <p>{{commentary.commentary}}</p>
 </div>
 {% endfor %}
+{{ knp_pagination_render(commentaries) }}
 
 {% if app.user %}
 {{ form_start(form) }}
@@ -57,4 +60,5 @@ var party = [{
     address:'{{event.address.address}}'
 }];
 </script>
+{{ encore_entry_script_tags('map') }}
 {% endblock %}

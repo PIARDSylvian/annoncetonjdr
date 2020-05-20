@@ -1,7 +1,6 @@
 /*
  * annoncetonjdr V3
  */
-var $ = require('jquery');
 $(function() {
     $('form').on('submit', function(event){
         event.preventDefault();

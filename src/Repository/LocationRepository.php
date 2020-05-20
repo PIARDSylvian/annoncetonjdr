@@ -6,6 +6,7 @@ use App\Entity\Location;
 use App\Entity\Search;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @method Location|null find($id, $lockMode = null, $lockVersion = null)
@@ -25,15 +26,10 @@ class LocationRepository extends ServiceEntityRepository
     */
     public function searchQuery(Search $search)
     {
-        if (!$search->getSearchLat() OR !$search->getSearchLng()) {
-            // Latitude & longitude de Paris
-            $search->setSearchLat('48.866667')->setSearchLng('2.333333');
-        }
-
         $query = $this->createQueryBuilder('l')
             ->addSelect('( 6371 * acos( cos( radians(:lat) ) * cos( radians( l.lat ) ) * cos( radians( l.lng ) - radians(:lng) ) + sin( radians(:lat) ) * sin( radians( l.lat ) ) ) ) AS distance')
-                ->setParameter('lat', 48.866667)
-                ->setParameter('lng', 2.333333)
+                ->setParameter('lat', $search->getSearchLat())
+                ->setParameter('lng', $search->getSearchLng())
             ->orderBy('distance', 'ASC')
             ->leftJoin('l.parties', 'p WITH p.date >= ?1')
                 ->addSelect('p')
@@ -43,10 +39,14 @@ class LocationRepository extends ServiceEntityRepository
                 ->setParameter('1', new \DateTime('now'))
             ->leftJoin('l.association', 'a')
                 ->addSelect('a')
-            ;
-            
-            return $query->getQuery()->getResult();
-        }
+            ->andWhere( 'p.id IS NOT NULL OR e.id IS NOT NULL OR a.id IS NOT NULL' )
+        ;
+
+        $query->setFirstResult($search->getPage())->setMaxResults(50);
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+
+        return $paginator;
+    }
 
     // /**
     //  * @return Location[] Returns an array of Location objects

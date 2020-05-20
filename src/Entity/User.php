@@ -39,7 +39,7 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Assert\Length(min=8, max=20)
+     * @Assert\Length(min=8, max=255)
      */
     private $password;
 
@@ -54,12 +54,6 @@ class User implements UserInterface
      * @Assert\Length(max=25)
      */
     private $lastName;
-
-    /**
-     * @ORM\Column(type="date")
-     * @Assert\NotBlank()
-     */
-    private $birthDate;
 
     /**
      * @ORM\Column(type="string", length=25, unique=true)
@@ -97,6 +91,11 @@ class User implements UserInterface
      * @ORM\OneToMany(targetEntity="App\Entity\Report", mappedBy="user", cascade={"remove"})
      */
     private $reports;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $confirmToken;
 
     public function __construct()
     {
@@ -205,18 +204,6 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getBirthDate(): ?\DateTimeInterface
-    {
-        return $this->birthDate;
-    }
-
-    public function setBirthDate(\DateTimeInterface $birthDate): self
-    {
-        $this->birthDate = $birthDate;
-
-        return $this;
-    }
-
     public function getPseudonym(): ?string
     {
         return $this->pseudonym;
@@ -318,6 +305,18 @@ class User implements UserInterface
                 $report->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getConfirmToken(): ?string
+    {
+        return $this->confirmToken;
+    }
+
+    public function setConfirmToken(?string $confirmToken): self
+    {
+        $this->confirmToken = $confirmToken;
 
         return $this;
     }
