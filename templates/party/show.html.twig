@@ -35,6 +35,19 @@
 <p>partie en ligne</p>
 {% endif %}
 
+{% if app.user and "now"|date('U') > party.date.date|date('U') %}
+    {% if (not party.note or app.user not in party.note.notePlayers) and app.user in party.registeredPlayers %}
+        {{ form_start(noteForm) }}
+            {{ form_row(noteForm.ambiance) }}
+            <input type="submit" class="btn" value="noter"/>
+        {{ form_end(noteForm) }}
+    {% elseif party.note %}
+        <p>note d' ambiance : {{party.note.ambiance}}</p>
+    {% else %}
+        <p>pas de note</p>
+    {% endif %}
+{% endif %}
+
 {% if app.user and app.user != party.owner and "+2hours"|date('U') < party.date.date|date('U') %}
     {% if app.user in party.registeredPlayers %}
     <a href="{{path('app_party_remove', {id:party.id})}}"><input type="button" value="se desincrire"></a>

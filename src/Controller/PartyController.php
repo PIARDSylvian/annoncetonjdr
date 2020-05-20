@@ -9,8 +9,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use App\Entity\Party;
 use App\Entity\Commentary;
 use App\Entity\Event;
+use App\Entity\Note;
 use App\Form\PartyType;
 use App\Form\CommentaryType;
+use App\Form\NoteType;
 use Knp\Component\Pager\PaginatorInterface;
 
 class PartyController extends AbstractController {
@@ -66,6 +68,10 @@ class PartyController extends AbstractController {
         $commentary = new Commentary();
         $form = $this->createForm(CommentaryType::class, $commentary);
 
+        $note = new Note();
+        $noteForm = $this->createForm(NoteType::class, $note,[
+            'action' => $this->generateUrl('app_party_note', ['id' => $party->getId()] ),
+        ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -80,7 +86,7 @@ class PartyController extends AbstractController {
             return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
         }
 
-        return $this->render('party/show.html.twig', ['party' => $party, 'form' => $form->createView(),'commentaries' => $commentaries]);
+        return $this->render('party/show.html.twig', ['party' => $party,'noteForm' => $noteForm->createView(),'form' => $form->createView(),'commentaries' => $commentaries]);
     }
 
     /**
@@ -164,6 +170,41 @@ class PartyController extends AbstractController {
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
 
+        return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+    }
+
+    /**
+     * @Route("/party/note/{id}", name="app_party_note", requirements={"id"="\d+"})
+     */
+    public function note(Party $party, Request $request)
+    {
+        if($party && $party->getDate() > new \DateTime('now')) {
+            $this->addFlash('danger', 'Partie non terminée');
+        } elseif ($party && !$party->getRegisteredPlayers()->contains($this->getUser())) {
+            $this->addFlash('danger', 'Non inscrit');
+        } elseif ($party && $party->getNote()->getNotePlayers()->contains($this->getUser())) {
+            $this->addFlash('danger', 'Déjà voté');
+        } elseif ($party)  {
+            $note = New Note();
+            $form = $this->createForm(NoteType::class, $note);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $entityManager = $this->getDoctrine()->getManager();
+                $partyNote = $party->getNote();
+
+                if (!$partyNote) {
+                    $party->setNote($note);
+                } else {
+                    $partyNote->setAmbiance($partyNote->getAmbiance() + $note->getAmbiance());
+                    $party->setNote($partyNote);
+                }
+                
+                $partyNote->addNotePlayer($this->getUser());
+
+                $entityManager->flush();
+                $this->addFlash('notice', 'Partie noté');
+            }
+        }
         return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
     }
 }

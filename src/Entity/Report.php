@@ -41,7 +41,7 @@ class Report
     private $solved = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\commentary", inversedBy="reports")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Commentary", inversedBy="reports")
      */
     private $commentary;
 

@@ -141,6 +141,11 @@ class Party
      */
     private $reports;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Note", cascade={"persist", "remove"})
+     */
+    private $note;
+
     public function __construct()
     {
         $this->registeredPlayers = new ArrayCollection();
@@ -426,6 +431,18 @@ class Party
                 $report->setParty(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getNote(): ?Note
+    {
+        return $this->note;
+    }
+
+    public function setNote(?Note $note): self
+    {
+        $this->note = $note;
 
         return $this;
     }
