@@ -25,6 +25,9 @@ class AdminController extends EasyAdminController
         } elseif (in_array('ROLE_ADMIN', $entity->getRoles()) && !in_array('ROLE_SUPER_ADMIN', $this->getUser()->getRoles())) {
             $this->addFlash('error', 'Vous ne pouvez pas supprimer un admin.');
             return $this->redirectToRoute('easyadmin', ['action' => 'list', 'entity' => $this->entity['name']]);
+        } elseif (in_array('ROLE_SUPER_ADMIN', $entity->getRoles()) ) {
+            $this->addFlash('error', 'Vous ne pouvez pas supprimer un super admin.');
+            return $this->redirectToRoute('easyadmin', ['action' => 'list', 'entity' => $this->entity['name']]);
         }
 
         parent::removeEntity($entity);
@@ -39,6 +42,12 @@ class AdminController extends EasyAdminController
 
         $id = $request->query->get('id');
         $entity = $repository->find($id);
+
+        if (in_array('ROLE_SUPER_ADMIN', $entity->getRoles()) ) {
+            $this->addFlash('error', 'Vous ne pouvez pas redéfinir un super admin.');
+            return $this->redirectToRoute('easyadmin', ['action' => 'list', 'entity' => $request->query->get('entity')]);
+        }
+
         $entity->setRoles(['ROLE_ADMIN']);
         $em->flush();
 
@@ -60,10 +69,13 @@ class AdminController extends EasyAdminController
         $entity = $repository->find($id);
 
         if ($entity == $this->getUser()) {
-            $this->addFlash('error', 'Vous ne pouvez vous enlever les droits vous même');
+            $this->addFlash('error', 'Vous ne pouvez vous enlever vos propre droit');
             return $this->redirectToRoute('easyadmin', ['action' => 'show', 'entity' => $request->query->get('entity'), 'id' => $entity->getId()]);
         } elseif (in_array('ROLE_ADMIN', $entity->getRoles()) && !in_array('ROLE_SUPER_ADMIN', $this->getUser()->getRoles())) {
             $this->addFlash('error', 'Vous ne pouvez vous enlever les droits d\' un admin.');
+            return $this->redirectToRoute('easyadmin', ['action' => 'show', 'entity' => $request->query->get('entity'), 'id' => $entity->getId()]);
+        } elseif (in_array('ROLE_SUPER_ADMIN', $entity->getRoles()) ) {
+            $this->addFlash('error', 'Vous ne pouvez pas redéfinir un super admin.');
             return $this->redirectToRoute('easyadmin', ['action' => 'show', 'entity' => $request->query->get('entity'), 'id' => $entity->getId()]);
         }
         
