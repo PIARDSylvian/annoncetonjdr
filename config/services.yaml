@@ -29,3 +29,8 @@ services:
     App\EventListener\LoginListener:
         tags:
             - { name: kernel.event_listener, event: security.interactive_login }
+    
+    App\Service\AdminLogger:
+        arguments: ["@logger"]
+        tags:
+            - { name: monolog.logger, channel: admin }
