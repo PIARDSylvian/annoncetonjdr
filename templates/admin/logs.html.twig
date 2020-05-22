@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}log{% endblock %}
+
+{% block stylesheets %}{% endblock %}
+
+{% block body %}
+<h1>Logs du : {{date|date('m-Y')}}</h1>
+<div class="row">
+    <div class="col-md-12 d-flex justify-content-between mt-3 mb-4">
+        <a class="btn btn-outline-secondary" href="{{path('app_logs', {'i': i+1  })}}">mois précedent</a>
+        {% if i != 0 %}
+        <a class="btn btn-outline-secondary" href="{{path('app_logs', {'i': i-1  })}}">mois suivant</a>
+        {% endif %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+    {% for log in logs|split('\n') %}
+        <p>{{log}}</p>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}{% endblock %}

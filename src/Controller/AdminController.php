@@ -11,14 +11,49 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
 use App\Entity\User;
 use App\Entity\Report;
 use App\Entity\Association;
+use App\Service\AdminLogger;
 
 /**
  * @IsGranted("ROLE_ADMIN")
  */
 class AdminController extends EasyAdminController
 {
+    private $logger;
+
+    public function __construct(AdminLogger $adminLogger)
+    {
+        $this->logger = $adminLogger;
+    }
+
+    public function removeEntity($entity)
+    {
+        $logMesage = $this->getUser()->__toString() . ' a supprimer ' . (new \ReflectionClass(get_class($entity)))->getShortName() .' : '. $entity->__toString();
+        $this->logger->warning($logMesage);
+
+        parent::removeEntity($entity);
+    }
+
+    public function persistGameEntity($entity)
+    {
+        $logMesage = $this->getUser()->__toString() . ' a créee ' . (new \ReflectionClass(get_class($entity)))->getShortName() .' : '. $entity->getName() . ', imageUrl : ' . $entity->getImageUrl();
+        $this->logger->notice($logMesage);
+
+        parent::persistEntity($entity);
+    }
+
+    public function updateGameEntity($entity)
+    {
+        $logMesage = $this->getUser()->__toString() . ' a édité ' . (new \ReflectionClass(get_class($entity)))->getShortName() .' : '. $entity->getName() . ', imageUrl : ' . $entity->getImageUrl();
+        $this->logger->notice($logMesage);
+
+        parent::updateEntity($entity);
+    }
+
     public function removeUserEntity($entity)
     {
+        $logMesage = $this->getUser()->__toString() . ' a tenter du supprimer ' . (new \ReflectionClass(get_class($entity)))->getShortName() .' : '. $entity->__toString();
+        $this->logger->notice($logMesage);
+
         if ($entity == $this->getUser()) {
             $this->addFlash('error', 'Vous ne pouvez vous supprimer vous même');
             return $this->redirectToRoute('easyadmin', ['action' => 'list', 'entity' => $this->entity['name']]);
@@ -29,6 +64,9 @@ class AdminController extends EasyAdminController
             $this->addFlash('error', 'Vous ne pouvez pas supprimer un super admin.');
             return $this->redirectToRoute('easyadmin', ['action' => 'list', 'entity' => $this->entity['name']]);
         }
+
+        $logMesage = $this->getUser()->__toString() . ' a supprimer ' . (new \ReflectionClass(get_class($entity)))->getShortName() .' : '. $entity->__toString();
+        $this->logger->warning($logMesage);
 
         parent::removeEntity($entity);
     }
@@ -44,12 +82,15 @@ class AdminController extends EasyAdminController
         $entity = $repository->find($id);
 
         if (in_array('ROLE_SUPER_ADMIN', $entity->getRoles()) ) {
-            $this->addFlash('error', 'Vous ne pouvez pas redéfinir un super admin.');
+            $this->addFlash('error', 'Vous ne pouvez pas redéfinir un SUPER_ADMIN.');
             return $this->redirectToRoute('easyadmin', ['action' => 'list', 'entity' => $request->query->get('entity')]);
         }
 
         $entity->setRoles(['ROLE_ADMIN']);
         $em->flush();
+
+        $logMesage = $this->getUser()->__toString() . ' a ajouter le role ROLE_ADMIN à ' . (new \ReflectionClass(get_class($entity)))->getShortName() .' : '. $entity->__toString();
+        $this->logger->notice($logMesage);
 
         return $this->redirectToRoute('easyadmin', array(
             'action' => 'list',
@@ -75,10 +116,12 @@ class AdminController extends EasyAdminController
             $this->addFlash('error', 'Vous ne pouvez vous enlever les droits d\' un admin.');
             return $this->redirectToRoute('easyadmin', ['action' => 'show', 'entity' => $request->query->get('entity'), 'id' => $entity->getId()]);
         } elseif (in_array('ROLE_SUPER_ADMIN', $entity->getRoles()) ) {
-            $this->addFlash('error', 'Vous ne pouvez pas redéfinir un super admin.');
+            $this->addFlash('error', 'Vous ne pouvez pas redéfinir un SUPER_ADMIN.');
             return $this->redirectToRoute('easyadmin', ['action' => 'show', 'entity' => $request->query->get('entity'), 'id' => $entity->getId()]);
         }
-        
+
+        $logMesage = $this->getUser()->__toString() . ' à retirer le role ROLE_ADMIN à ' . (new \ReflectionClass(get_class($entity)))->getShortName() .' : '. $entity->__toString();
+        $this->logger->notice($logMesage);
 
         $entity->setRoles([]);
         $em->flush();
@@ -102,6 +145,9 @@ class AdminController extends EasyAdminController
         $entity->setSolved(true);
         $em->flush();
 
+        $logMesage = $this->getUser()->__toString() . ' à fermer le ' . (new \ReflectionClass(get_class($entity)))->getShortName() .' : '. $entity->__toString();
+        $this->logger->notice($logMesage);
+
         return $this->redirectToRoute('easyadmin', array(
             'action' => 'list',
             'entity' => $request->query->get('entity'),
@@ -120,6 +166,9 @@ class AdminController extends EasyAdminController
         $entity = $repository->find($id);
         $entity->setPendding(false);
         $em->flush();
+
+        $logMesage = $this->getUser()->__toString() . ' à accepeter l\' ' . (new \ReflectionClass(get_class($entity)))->getShortName() .' : '. $entity->__toString();
+        $this->logger->notice($logMesage);
 
         return $this->redirectToRoute('easyadmin', array(
             'action' => 'list',
