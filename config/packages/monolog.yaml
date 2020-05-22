@@ -1,0 +1,26 @@
+monolog:
+    channels: ["admin"]
+    handlers:
+        group:
+            type:    group
+            members: ["admin_log"]
+            # members: ["admin_log","swift"]
+            channels: admin
+        admin_log:
+            type: rotating_file
+            path: "%kernel.logs_dir%/admin/%kernel.environment%.log"
+            level: info
+            max_files: 12
+            date_format: 'Y-m'
+
+
+        # Whait for update Monolog Not send with mailer component
+        # 
+        # swift:
+        #     type:         swift_mailer
+        #     from_email:   'piard.sylvian@gmail.com'
+        #     to_email:     'piard.sylvian@gmail.com'
+        #     subject:      'An Error Occurred! %%message%%'
+        #     level:        info
+        #     formatter:    monolog.formatter.html
+        #     content_type: text/html
