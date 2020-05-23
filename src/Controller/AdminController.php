@@ -70,6 +70,75 @@ class AdminController extends EasyAdminController
 
         parent::removeEntity($entity);
     }
+
+    /**
+     * @Route("/admin/user/suspend", name="suspend_Admin")
+     */
+    public function SuspendAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository(User::class);
+
+        $id = $request->query->get('id');
+        $entity = $repository->find($id);
+
+        if ($entity == $this->getUser()) {
+            $this->addFlash('error', 'Vous ne pouvez vous desactiver');
+            return $this->redirectToRoute('easyadmin', ['action' => 'show', 'entity' => $request->query->get('entity'), 'id' => $entity->getId()]);
+        } elseif (in_array('ROLE_ADMIN', $entity->getRoles()) && !in_array('ROLE_SUPER_ADMIN', $this->getUser()->getRoles())) {
+            $this->addFlash('error', 'Vous ne pouvez pas desactiver un admin.');
+            return $this->redirectToRoute('easyadmin', ['action' => 'show', 'entity' => $request->query->get('entity'), 'id' => $entity->getId()]);
+        } elseif (in_array('ROLE_SUPER_ADMIN', $entity->getRoles()) ) {
+            $this->addFlash('error', 'Vous ne pouvez pas desactiver un SUPER_ADMIN.');
+            return $this->redirectToRoute('easyadmin', ['action' => 'show', 'entity' => $request->query->get('entity'), 'id' => $entity->getId()]);
+        }
+
+        $entity->setSuspend(true);
+        $em->flush();
+
+        $logMesage = $this->getUser()->__toString() . ' a desactiver ' . (new \ReflectionClass(get_class($entity)))->getShortName() .' : '. $entity->__toString();
+        $this->logger->notice($logMesage);
+
+        return $this->redirectToRoute('easyadmin', array(
+            'action' => 'list',
+            'entity' => $request->query->get('entity'),
+        ));
+    }
+
+    /**
+     * @Route("/admin/user/activate", name="activate_Admin")
+     */
+    public function ActivateAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository(User::class);
+
+        $id = $request->query->get('id');
+        $entity = $repository->find($id);
+
+        if ($entity == $this->getUser()) {
+            $this->addFlash('error', 'Vous ne pouvez vous activer');
+            return $this->redirectToRoute('easyadmin', ['action' => 'show', 'entity' => $request->query->get('entity'), 'id' => $entity->getId()]);
+        } elseif (in_array('ROLE_ADMIN', $entity->getRoles()) && !in_array('ROLE_SUPER_ADMIN', $this->getUser()->getRoles())) {
+            $this->addFlash('error', 'Vous ne pouvez pas activer un admin.');
+            return $this->redirectToRoute('easyadmin', ['action' => 'show', 'entity' => $request->query->get('entity'), 'id' => $entity->getId()]);
+        } elseif (in_array('ROLE_SUPER_ADMIN', $entity->getRoles()) ) {
+            $this->addFlash('error', 'Vous ne pouvez pas activer un SUPER_ADMIN.');
+            return $this->redirectToRoute('easyadmin', ['action' => 'show', 'entity' => $request->query->get('entity'), 'id' => $entity->getId()]);
+        }
+
+        $logMesage = $this->getUser()->__toString() . ' à activer ' . (new \ReflectionClass(get_class($entity)))->getShortName() .' : '. $entity->__toString();
+        $this->logger->notice($logMesage);
+
+        $entity->setSuspend(false);
+        $em->flush();
+
+        return $this->redirectToRoute('easyadmin', array(
+            'action' => 'list',
+            'entity' => $request->query->get('entity'),
+        ));
+    }
+
     /**
      * @Route("/admin/user/addAdmin", name="add_Admin")
      */

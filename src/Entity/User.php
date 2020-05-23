@@ -97,6 +97,11 @@ class User implements UserInterface
      */
     private $confirmToken;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $suspend = false;
+
     public function __construct()
     {
         $this->reports = new ArrayCollection();
@@ -317,6 +322,23 @@ class User implements UserInterface
     public function setConfirmToken(?string $confirmToken): self
     {
         $this->confirmToken = $confirmToken;
+
+        return $this;
+    }
+
+    public function isSuspend(): ?bool
+    {
+        return $this->suspend;
+    }
+
+    public function getSuspend(): ?bool
+    {
+        return $this->suspend;
+    }
+
+    public function setSuspend(bool $suspend): self
+    {
+        $this->suspend = $suspend;
 
         return $this;
     }
