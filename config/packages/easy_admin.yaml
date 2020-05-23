@@ -15,13 +15,15 @@ easy_admin:
             disabled_actions: ['edit', 'new']
             class: App\Entity\User
             list:
-                fields: ['pseudonym', 'email', 'association', 'reports']
+                fields: ['pseudonym', 'email', 'association', 'reports','suspend']
             show:
                 title: '%%entity_label%% (#%%entity_id%%)'
-                fields: ['pseudonym', 'email', 'association','secretR', 'reports']
+                fields: ['pseudonym', 'email', 'association','secretR', 'reports', 'suspend']
                 actions:
                     - { name: 'add_Admin', type: 'route', icon: 'plus-square', css_class: 'btn btn-primary', template: 'admin/admin_add_action.html.twig'}
                     - { name: 'remove_Admin', type: 'route', icon: 'minus-square', css_class: 'btn btn btn-danger', template: 'admin/admin_remove_action.html.twig' }
+                    - { name: 'activate_Admin', type: 'route', icon: 'plus-square', css_class: 'btn btn-primary', template: 'admin/activate_action.html.twig'}
+                    - { name: 'suspend_Admin', type: 'route', icon: 'minus-square', css_class: 'btn btn btn-danger', template: 'admin/suspend_action.html.twig' }
             search:
                 fields: ['pseudonym', 'email', 'association.name', 'roles']
         Game:

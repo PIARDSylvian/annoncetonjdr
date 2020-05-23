@@ -20,6 +20,11 @@ class UserChecker implements UserCheckerInterface
             throw new CustomUserMessageAuthenticationException(
                 'Votre compte n\'est pas encore actif, veuiller verifier vos email et activer votre compte.');
         }
+
+        if ($user->getSuspend()) {
+            throw new CustomUserMessageAuthenticationException(
+                'Votre compte a été suspendu');
+        }
     }
     public function checkPostAuth(UserInterface $user)
     {
