@@ -289,7 +289,7 @@ $(function() {
 		}
 	}
 
-	const stepIncrement = 10;
+	const stepIncrement = 12;
 
 	/**
 	 * Step

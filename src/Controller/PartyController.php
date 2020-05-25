@@ -182,7 +182,7 @@ class PartyController extends AbstractController {
             $this->addFlash('danger', 'Partie non terminée');
         } elseif ($party && !$party->getRegisteredPlayers()->contains($this->getUser())) {
             $this->addFlash('danger', 'Non inscrit');
-        } elseif ($party && $party->getNote()->getNotePlayers()->contains($this->getUser())) {
+        } elseif ($party && $party->getNote() && $party->getNote()->getNotePlayers()->contains($this->getUser())) {
             $this->addFlash('danger', 'Déjà voté');
         } elseif ($party)  {
             $note = New Note();
@@ -194,13 +194,13 @@ class PartyController extends AbstractController {
 
                 if (!$partyNote) {
                     $party->setNote($note);
+                    $partyNote = $note;
                 } else {
                     $partyNote->setAmbiance($partyNote->getAmbiance() + $note->getAmbiance());
                     $party->setNote($partyNote);
                 }
                 
                 $partyNote->addNotePlayer($this->getUser());
-
                 $entityManager->flush();
                 $this->addFlash('notice', 'Partie noté');
             }
