@@ -46,6 +46,12 @@ class Association
     private $description;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("card")
+     */
+    private $imageUrl;
+
+    /**
      * @ORM\Column(type="boolean")
      */
     private $pendding = true;
@@ -115,6 +121,18 @@ class Association
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(?string $imageUrl): self
+    {
+        $this->imageUrl = $imageUrl;
 
         return $this;
     }

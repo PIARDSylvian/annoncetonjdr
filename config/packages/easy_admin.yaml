@@ -43,16 +43,18 @@ easy_admin:
             disabled_actions: ['edit', 'new']
             class: App\Entity\Event
             list:
-                fields: ['name','owner', 'dateStart', 'dateFinish', 'address', 'reports']
+                fields: ['name','owner', 'dateStart', 'dateFinish', 'address', 'pendding', 'reports']
             show:
-                fields: ['name','owner', 'dateStart', 'dateFinish', 'address', 'description', 'commentaries', 'reports']
+                fields: ['name','owner', 'image_url', 'dateStart', 'dateFinish', 'address', 'description', 'pendding', 'commentaries', 'reports']
+                actions:
+                    - { name: 'accept_Admin', type: 'route', css_class: 'btn btn-primary', template: 'admin/admin_accept_action.html.twig'}
         Association:
             disabled_actions: ['edit', 'new']
             class: App\Entity\Association
             list:
                 fields: ['name','owner', 'address', 'pendding', 'reports']
             show:
-                fields: ['name','owner', 'address', 'description', 'pendding', 'commentaries', 'reports']
+                fields: ['name','owner', 'image_url', 'address', 'description', 'pendding', 'commentaries', 'reports']
                 actions:
                     - { name: 'accept_Admin', type: 'route', css_class: 'btn btn-primary', template: 'admin/admin_accept_action.html.twig'}
         Commentary:

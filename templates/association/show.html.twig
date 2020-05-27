@@ -18,32 +18,38 @@
 <p>association de {{ association.owner.pseudonym }}</p>
 <p>Déscription : {{ association.description }}</p>
 
+{% if not association.pendding and association.imageUrl %}
+    <img src="{{association.imageUrl}}" alt="{{association.name}}" class="img-fluid">
+{% endif %}
+
 <p>{{association.address.address}}</p>
 <div id="map" class="iframe-container"></div>
 
-{% if app.user and app.user is same as(association.owner) %}
-    <a href="{{path('app_association_delete_all_com', {id:association.id})}}"><input type="button" value="Supprimer Tout"></a>
-{% endif %}
-
-{% for commentary in commentaries %}
-<div style="border:solid 1px black; padding: 10px; margin-bottom: 20px;">
-    {% if app.user and (app.user is same as(association.owner) or  app.user is same as(commentary.owner)) %}
-        <a href="{{path('app_association_delete_com', {id:association.id,comment_id:commentary.id})}}"><input type="button" value="Supprimer"></a>
+{% if not association.pendding %}
+    {% if app.user and app.user is same as(association.owner) %}
+        <a href="{{path('app_association_delete_all_com', {id:association.id})}}"><input type="button" value="Supprimer Tout"></a>
     {% endif %}
-    {% if app.user and (app.user is not same as(commentary.owner)) %}
-    <a href="{{path('app_report_commentary', {id:commentary.id})}}"><input type="button" value="Signaler"></a>
-    {% endif %}
-    <p>{{commentary.owner.pseudonym}}</p>
-    <p>{{commentary.commentary}}</p>
-</div>
-{% endfor %}
-{{ knp_pagination_render(commentaries) }}
 
-{% if app.user %}
-{{ form_start(form) }}
-    {{ form_row(form.commentary) }}
-    <input type="submit" class="btn" value="commenter"/>
-{{ form_end(form) }}
+    {% for commentary in commentaries %}
+    <div style="border:solid 1px black; padding: 10px; margin-bottom: 20px;">
+        {% if app.user and (app.user is same as(association.owner) or  app.user is same as(commentary.owner)) %}
+            <a href="{{path('app_association_delete_com', {id:association.id,comment_id:commentary.id})}}"><input type="button" value="Supprimer"></a>
+        {% endif %}
+        {% if app.user and (app.user is not same as(commentary.owner)) %}
+        <a href="{{path('app_report_commentary', {id:commentary.id})}}"><input type="button" value="Signaler"></a>
+        {% endif %}
+        <p>{{commentary.owner.pseudonym}}</p>
+        <p>{{commentary.commentary}}</p>
+    </div>
+    {% endfor %}
+    {{ knp_pagination_render(commentaries) }}
+
+    {% if app.user %}
+    {{ form_start(form) }}
+        {{ form_row(form.commentary) }}
+        <input type="submit" class="btn" value="commenter"/>
+    {{ form_end(form) }}
+    {% endif %}
 {% endif %}
 
 {% endblock %}

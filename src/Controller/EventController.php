@@ -52,31 +52,38 @@ class EventController extends AbstractController {
      */
     public function show(Event $event, Request $request, PaginatorInterface $paginator)
     {
-        $repository = $this->getDoctrine()->getRepository(Commentary::class);
+        if ($event->getPendding()) {
+            $this->addFlash('danger', 'Evenement en attente de validation');
 
-        $partyQB = $repository->findByEventQueryBuilder($event);
-        $commentaries = $paginator->paginate(
-            $partyQB,
-            $request->query->getInt('page', 1),
-            10
-        );
+            return $this->render('event/show.html.twig', ['event' => $event]);
+        }
+        else {
+            $repository = $this->getDoctrine()->getRepository(Commentary::class);
 
-        $commentaries->setCustomParameters(['align' => 'center']);
+            $partyQB = $repository->findByEventQueryBuilder($event);
+            $commentaries = $paginator->paginate(
+                $partyQB,
+                $request->query->getInt('page', 1),
+                10
+            );
 
-        $commentary = new Commentary();
-        $form = $this->createForm(CommentaryType::class, $commentary);
-        
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+            $commentaries->setCustomParameters(['align' => 'center']);
+
+            $commentary = new Commentary();
+            $form = $this->createForm(CommentaryType::class, $commentary);
             
-            $commentary->setOwner($this->getUser());
-            $commentary->setEvent($event);
-            $commentary->setCreatedAt(new \DateTime('now'));
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($commentary);
-            $entityManager->flush();
-            
-            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+                
+                $commentary->setOwner($this->getUser());
+                $commentary->setEvent($event);
+                $commentary->setCreatedAt(new \DateTime('now'));
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($commentary);
+                $entityManager->flush();
+                
+                return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+            }
         }
         
         return $this->render('event/show.html.twig', ['event' => $event, 'form' => $form->createView(),'commentaries' => $commentaries]);
@@ -102,7 +109,7 @@ class EventController extends AbstractController {
      */
     public function deleteCom(Event $event, Commentary $commentary)
     {
-        if ($this->getUser() === $event->getOwner() || $this->getUser() === $commentary->getOwner()) {
+        if (!$event->getPendding() && ($this->getUser() === $event->getOwner() || $this->getUser() === $commentary->getOwner())) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($commentary);
             $entityManager->flush();
@@ -116,7 +123,7 @@ class EventController extends AbstractController {
      */
     public function deleteAllCom(Event $event)
     {
-        if ($this->getUser() === $event->getOwner()) {
+        if (!$event->getPendding() && ($this->getUser() === $event->getOwner())) {
             $entityManager = $this->getDoctrine()->getManager();
             foreach ($event->getCommentaries() as $commentary) {
                 $entityManager->remove($commentary);

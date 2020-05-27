@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -33,6 +34,7 @@ class EventType extends AbstractType
             ->add('address', LocationType::class, ['label' => false, 'required' => false])
             ->add('dateStart', DateTimeType::class, ['widget' => 'single_text', 'html5'=>false])
             ->add('dateFinish', DateTimeType::class, ['widget' => 'single_text', 'html5'=>false])
+            ->add('imageUrl')
             ->add('description', TextareaType::class, ['required' => false])
             ->addEventListener(
                 FormEvents::POST_SUBMIT,
@@ -51,6 +53,10 @@ class EventType extends AbstractType
         $data = $event->getData();
         if ( $data->getAddress() instanceof Location ) {
             $form->add('address', LocationType::class, ['disabled' => true]);
+        }
+
+        if ($data->getId()) {
+            $form->add('imageUrl', TextType::class, ['disabled' => true]);
         }
     }
 
