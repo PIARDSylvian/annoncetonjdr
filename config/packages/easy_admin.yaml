@@ -73,7 +73,7 @@ easy_admin:
             show:
                 fields: ['owner','date', 'reason', 'solved', 'commentary', 'association', 'event', 'party', 'user']
                 actions:
-                    - { name: 'closed_Admin', type: 'route', icon: 'plus-square', css_class: 'btn btn-primary'}
+                    - { name: 'closed_Admin', type: 'route', icon: 'plus-square', css_class: 'btn btn-primary', template: 'admin/admin_close_action.html.twig'}
         ClosedReport:
             disabled_actions: ['edit', 'new']
             class: App\Entity\Report
@@ -81,4 +81,4 @@ easy_admin:
                 fields: ['owner', 'date']
                 dql_filter: 'entity.solved = true'
             show:
-                fields: ['owner','date', 'reason', 'solved', 'commentary', 'association', 'event', 'party', 'user']
+                fields: ['owner','date', 'reason', 'action', 'solved', 'commentary', 'association', 'event', 'party', 'user']

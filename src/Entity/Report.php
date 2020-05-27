@@ -41,6 +41,11 @@ class Report
     private $solved = false;
 
     /**
+     * @ORM\Column(type="text")
+     */
+    private $action;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Commentary", inversedBy="reports")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
@@ -107,6 +112,18 @@ class Report
     public function setReason(string $reason): self
     {
         $this->reason = $reason;
+
+        return $this;
+    }
+
+    public function getAction(): ?string
+    {
+        return $this->action;
+    }
+
+    public function setAction(string $action): self
+    {
+        $this->action = $action;
 
         return $this;
     }

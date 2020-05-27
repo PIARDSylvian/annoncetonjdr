@@ -1,0 +1,35 @@
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reportModal">
+  close
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1" role="dialog" aria-labelledby="adminModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="adminModalLabel">Actions réalisé</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <textarea class="form-control" id="adminAction"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                {{ include('@EasyAdmin/default/action.html.twig') }}
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('.action-closed_Admin').click(function(e) {
+        e.preventDefault();
+        const adminAction=$.trim($("#adminAction").val());
+        window.location = this.href+'&adminAction='+ JSON.stringify({data: adminAction});
+    });
+</script>
