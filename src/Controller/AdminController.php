@@ -209,9 +209,20 @@ class AdminController extends EasyAdminController
     {
         $em = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()->getRepository(Report::class);
+        $adminAction = json_decode($request->query->get('adminAction'), true)['data'];
+
+        if (!$adminAction) {
+            $this->addFlash('warning', 'Vous ne pouvez pas fermer un report sans remplir d\' action realiser.');
+            return $this->redirectToRoute('easyadmin', array(
+                'action' => 'show',
+                'entity' => $request->query->get('entity'),
+                'id' => $request->query->get('id')
+            ));
+        }
         
         $id = $request->query->get('id');
         $entity = $repository->find($id);
+        $entity->setAction($adminAction);
         $entity->setSolved(true);
         $em->flush();
 
