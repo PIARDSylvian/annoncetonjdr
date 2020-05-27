@@ -20,13 +20,7 @@ class ProfileFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstName', TextType::class, array(
-                'required' => false
-            ))
-            ->add('lastName', TextType::class, array(
-                'required' => false
-            ))
-            ->add('pseudonym', TextType::class)
+           ->add('pseudonym', TextType::class)
             ->add('email', EmailType::class, ['help' => 'Si modifié, vous deverez valider votre email, vous serez deconnecter.'])
             ->add('secretQ', ChoiceType::class, [
                 'choices'  => [
