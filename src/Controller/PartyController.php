@@ -151,6 +151,8 @@ class PartyController extends AbstractController {
     
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
+
+            $this->addFlash('notice', 'Inscription validée');
         }
 
         return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
@@ -169,6 +171,8 @@ class PartyController extends AbstractController {
 
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->flush();
+
+        $this->addFlash('notice', 'Désinscription validée');
 
         return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
     }
