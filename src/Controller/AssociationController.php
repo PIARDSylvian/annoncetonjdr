@@ -45,35 +45,39 @@ class AssociationController extends AbstractController {
      */
     public function show(Association $association, Request $request, PaginatorInterface $paginator)
     {
-        $repository = $this->getDoctrine()->getRepository(Commentary::class);
-
-        $partyQB = $repository->findByAssocQueryBuilder($association);
-        $commentaries = $paginator->paginate(
-            $partyQB,
-            $request->query->getInt('page', 1),
-            10
-        );
-
-        $commentaries->setCustomParameters(['align' => 'center']);
-
-        $commentary = new Commentary();
-        $form = $this->createForm(CommentaryType::class, $commentary);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $commentary->setOwner($this->getUser());
-            $commentary->setAssociation($association);
-            $commentary->setCreatedAt(new \DateTime('now'));
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($commentary);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_association_show', ['id' => $association->getId()]);
-        }
-
         if ($association->getPendding()) {
-            $this->addFlash('danger', 'association en attente de validation');
+            $this->addFlash('danger', 'Association en attente de validation');
+
+            return $this->render('association/show.html.twig', ['association' => $association]);
+        }
+        else {
+
+            $repository = $this->getDoctrine()->getRepository(Commentary::class);
+
+            $partyQB = $repository->findByAssocQueryBuilder($association);
+            $commentaries = $paginator->paginate(
+                $partyQB,
+                $request->query->getInt('page', 1),
+                10
+            );
+
+            $commentaries->setCustomParameters(['align' => 'center']);
+
+            $commentary = new Commentary();
+            $form = $this->createForm(CommentaryType::class, $commentary);
+
+            $form->handleRequest($request);
+            if ($form->isSubmitted() && $form->isValid()) {
+
+                $commentary->setOwner($this->getUser());
+                $commentary->setAssociation($association);
+                $commentary->setCreatedAt(new \DateTime('now'));
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($commentary);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_association_show', ['id' => $association->getId()]);
+            }
         }
 
         return $this->render('association/show.html.twig', ['association' => $association, 'form' => $form->createView(), 'commentaries' => $commentaries]);
@@ -99,7 +103,7 @@ class AssociationController extends AbstractController {
      */
     public function deleteCom(Association $association, Commentary $commentary)
     {
-        if ($this->getUser() === $association->getOwner() || $this->getUser() === $commentary->getOwner()) {
+        if (!$association->getPendding() && ($this->getUser() === $association->getOwner() || $this->getUser() === $commentary->getOwner())) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($commentary);
             $entityManager->flush();
@@ -113,7 +117,7 @@ class AssociationController extends AbstractController {
      */
     public function deleteAllCom(Association $association)
     {
-        if ($this->getUser() === $association->getOwner()) {
+        if (!$association->getPendding() && ($this->getUser() === $association->getOwner())) {
             $entityManager = $this->getDoctrine()->getManager();
             foreach ($association->getCommentaries() as $commentary) {
                 $entityManager->remove($commentary);

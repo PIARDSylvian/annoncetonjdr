@@ -66,6 +66,17 @@ class Event
     private $description;
 
     /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("card")
+     */
+    private $imageUrl;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $pendding = true;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Commentary", mappedBy="event", cascade={"remove"})
      * @Groups("card")
      */
@@ -169,6 +180,30 @@ class Event
                 ->atPath('address.address')
                 ->addViolation();
         }
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(?string $imageUrl): self
+    {
+        $this->imageUrl = $imageUrl;
+
+        return $this;
+    }
+
+    public function getPendding(): ?bool
+    {
+        return $this->pendding;
+    }
+
+    public function setPendding(bool $pendding): self
+    {
+        $this->pendding = $pendding;
+
+        return $this;
     }
 
     /**

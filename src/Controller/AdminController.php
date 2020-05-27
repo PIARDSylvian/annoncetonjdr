@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\EasyAdminController;
 use App\Entity\User;
 use App\Entity\Report;
+use App\Entity\Event;
 use App\Entity\Association;
 use App\Service\AdminLogger;
 
@@ -224,12 +225,17 @@ class AdminController extends EasyAdminController
     }
 
     /**
-     * @Route("/admin/association/acceptAction", name="accept_Admin")
+     * @Route("/admin/acceptAction", name="accept_Admin")
      */
     public function AcceptAction(Request $request)
     {
+        $entityName = $request->query->get('entity');
         $em = $this->getDoctrine()->getManager();
-        $repository = $this->getDoctrine()->getRepository(Association::class);
+        if ($entityName == "Event") {
+            $repository = $this->getDoctrine()->getRepository(Event::class);
+        } else {
+            $repository = $this->getDoctrine()->getRepository(Association::class);
+        }
         
         $id = $request->query->get('id');
         $entity = $repository->find($id);
