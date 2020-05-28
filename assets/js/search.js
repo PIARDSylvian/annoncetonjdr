@@ -304,16 +304,12 @@ $(function() {
 			this.more = this.more.bind(this);
 		}
 
-		componentDidMount() {
-			if(this.props.items.length === 0) { this.more(); }
-		}
-
 		static getDerivedStateFromProps(nextProps, prevState){
 			if(nextProps.resetStep!==prevState.resetStep){
 				if (nextProps.resetStep == true){
 					nextProps.clickHandler(true);
 				}
-				return { resetStep: nextProps.resetStep, stop: false };
+				return { resetStep: nextProps.resetStep, stop: false, step: stepIncrement};
 			}
 			else return null;
 		 }
@@ -328,7 +324,7 @@ $(function() {
 				if (l.association != null) { count += 1; } 
 			}
 
-			const load = (count <= (this.state.step + stepIncrement));
+			const load = (count < (this.state.step + stepIncrement));
 
 			if (!this.props.stop && load) {
 				await this.props.clickHandler(false);
@@ -646,9 +642,10 @@ $(function() {
 				(result) => {
 					let items = null;
 					let step = null;
+
 					if (resetStep) {
 						items = result;
-						if (result[0].distance == 0) {
+						if (result.length > 0 && result[0].distance == 0) {
 							step = (result.length - 1);
 						} else {
 							step = result.length;
@@ -713,7 +710,7 @@ $(function() {
 						return o_data;
 					})
 					.catch(err => {
-						// console.log('some error', err);
+						console.log('error', err);
 					});
 				
 			};

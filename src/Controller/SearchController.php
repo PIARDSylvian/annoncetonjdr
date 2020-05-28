@@ -38,9 +38,7 @@ class SearchController extends AbstractController {
             }
 
             if($lat == null && $lng == null) {
-                $lat = 48.8566969;
-                $lng = 2.3514616;
-                $address = 'Paris, île-de-France, France';
+                return new JsonResponse([]);
             }
 
             $searchResult = $locationRepository->searchQuery((new Search())->setPage($step)->setSearchLat($lat)->setSearchLng($lng));
