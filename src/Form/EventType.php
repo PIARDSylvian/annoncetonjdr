@@ -54,10 +54,6 @@ class EventType extends AbstractType
         if ( $data->getAddress() instanceof Location ) {
             $form->add('address', LocationType::class, ['disabled' => true]);
         }
-
-        if ($data->getId()) {
-            $form->add('imageUrl', TextType::class, ['disabled' => true]);
-        }
     }
 
     public function postSubmit(FormEvent $event)
