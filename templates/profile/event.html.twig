@@ -14,6 +14,9 @@
                     <div class="card-header">
                         <h5 class="card-title">{{event.name}}</h5>
                     </div>
+                    {% if event.imageUrl %}
+                        <img src="{{event.imageUrl}}" alt="{{event.name}}" class="card-img-top img-fluid">
+                    {% endif %}
                     <div class="card-body">
                         <p class="card-text">{% if event.description %}{{event.description|u.truncate(150, '...')}}{% else %}Aucune description{% endif %}</p>
                     </div>

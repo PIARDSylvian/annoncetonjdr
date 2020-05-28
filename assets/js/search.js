@@ -223,6 +223,8 @@ $(function() {
 				const dateStart = moment(new Date(event.dateStart)).format("MM/DD/YY HH:mm");
 				const dateFinish = moment(new Date(event.dateFinish)).format("MM/DD/YY HH:mm");
 
+				const img = (event.imageUrl && !event.pendding) ? <img src={event.imageUrl} alt={event.name} className="card-img-top img-fluid" /> : null;
+
 				output.push(
 					<div key={event.id} className="col-md-4 card-container">
 						<div className="card-flip">
@@ -230,6 +232,7 @@ $(function() {
 								<div className="card-header">
 									<h5 className="card-title">{event.name}</h5>
 								</div>
+								{img}
 								<div className="card-body">
 									<p className="card-text">{desc}</p>
 								</div>
@@ -260,6 +263,54 @@ $(function() {
 	}
 
 	/**
+	 * CardAssociation
+	 */
+	class CardAssociation extends React.Component {
+		render() {
+			let output = [];
+			const association = this.props.association;
+			if (!association) {
+				return output;
+			}
+
+			const desc = (association.description) ? association.description : 'Aucune description';
+			if (desc.length > 50) { desc = desc.slice(0, 150) + ' ...';}
+
+			const img = (association.imageUrl && !association.pendding) ? <img src={association.imageUrl} alt={association.name} className="card-img-top img-fluid" /> : null;
+
+			output.push(
+				<div key={association.id} className="col-md-4 card-container">
+					<div className="card-flip">
+						<div className="card mt-2 mb-3 front">
+							<div className="card-header">
+								<h5 className="card-title">{this.props.association.name}</h5>
+							</div>
+							{img}
+							<div className="card-body">
+								<p className="card-text">{desc}</p>
+							</div>
+						</div>
+						<div className="card mt-2 mb-3 back">
+							<div className="card-header">
+								Détails
+							</div>
+							<ul className="list-group list-group-flush">
+								<li className="list-group-item">Adresse : {this.props.address}</li>
+								<li className="list-group-item">commentaires : <span className="badge badge-pill badge-secondary">{association.commentaries.length}</span></li>
+							</ul>
+							<div className="card-body"></div>
+							<div className="card-footer text-center">
+								<a href={ROUTES.APP_ASSOCIATION_SHOW + association.id} className="btn btn-primary">Voir plus</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			);
+			return output;
+		}
+	}
+
+	/**
 	 * Card 
 	 */
 	class Cards extends React.Component {
@@ -281,6 +332,8 @@ $(function() {
 					output.push(<CardParty key={count} parties={value.parties} address={value.address}/>)
 					count++;
 					output.push(<CardEvents key={count} events={value.events} address={value.address}/>)
+					count++;
+					output.push(<CardAssociation key={count} association={value.association} address={value.address}/>)
 					count++;
 				}
 			}
