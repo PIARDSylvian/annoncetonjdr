@@ -30,6 +30,7 @@
         <a href="{{path('app_association_delete_all_com', {id:association.id})}}"><input type="button" value="Supprimer Tout"></a>
     {% endif %}
 
+    <small class="form-text text-muted mb-2"><strong>Astuce :</strong> penser rejoindre notre discord : <a href={{discord_link}}>Annonce ton JDR</a> pour echanger plus facilement.</small>
     {% for commentary in commentaries %}
     <div style="border:solid 1px black; padding: 10px; margin-bottom: 20px;">
         {% if app.user and (app.user is same as(association.owner) or  app.user is same as(commentary.owner)) %}

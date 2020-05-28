@@ -20,7 +20,7 @@
         {{ form_widget(form.address, { 'attr': {'class': 'd-none'} }) }}
     {% endif %}
     {{ form_row(form.imageUrl) }}
-    <small class="form-text text-muted mb-2"><strong>Astuce :</strong> penser rejoindre notre discord : <a href={{discord_link}}>Annonce ton JDR</a> ainsi qu' à ajouter votre pseudonym disord dans la description pour echanger plus facilement</small>
+    <small class="form-text text-muted mb-2"><strong>Astuce :</strong> penser rejoindre notre discord : <a href={{discord_link}}>Annonce ton JDR</a> ainsi qu' à ajouter votre pseudonym disord dans la description pour echanger plus facilement.</small>
     {{ form_row(form.description) }}
     {{ form_widget(form._token) }}
     {% if form.vars.value.id %}
