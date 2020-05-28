@@ -29,6 +29,7 @@ class AssociationController extends AbstractController {
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $association->setPendding(true);
             $association->setOwner($this->getUser());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($association);

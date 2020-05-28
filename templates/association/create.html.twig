@@ -22,7 +22,13 @@
     {{ form_row(form.imageUrl) }}
     {{ form_row(form.description) }}
     {{ form_widget(form._token) }}
-    <input type="submit" class="btn" value="Create"/>
+    {% if form.vars.value.id %}
+        <small class="form-text text-muted mb-2">La mise a jour entrainera la une demande de validation et desactivera les comentaires</small>
+        <button type="submit" class="btn btn-primary">Metre a jour</button>
+    {% else %}
+        <small class="form-text text-muted mb-2">La création entrainera la une demande de validation et desactivera les comentaires</small>
+        <button type="submit" class="btn btn-primary">Créer</button>
+    {% endif %}
 {{ form_end(form, {'render_rest': false}) }}
 {% endblock %}
 

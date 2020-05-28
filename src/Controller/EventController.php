@@ -36,6 +36,7 @@ class EventController extends AbstractController {
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $event->setPendding(true);
             $event->setOwner($this->getUser());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($event);
