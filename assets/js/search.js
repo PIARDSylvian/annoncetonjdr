@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { renderToStaticMarkup } from "react-dom/server";
 import { divIcon } from 'leaflet';
 import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import Control from 'react-leaflet-control';
 import Select from 'react-select';
 import AsyncSelect from 'react-select/async';
 
@@ -55,6 +56,7 @@ $(function() {
 
 			return divIcon({ html: iconMarkup, popupAnchor: [30, -10], iconAnchor: [0, 20] });
 		}
+		
 		render() {
 			const center = [this.props.items[0].lat, this.props.items[0].lng];
 			const markers = [];
@@ -93,13 +95,16 @@ $(function() {
 			}
 
 			return (
-			<Map center={center} zoom={zoom}>
-				<TileLayer
-					attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-					url='https://{s}.tile.osm.org/{z}/{x}/{y}.png'
-				/>
-				{markers}
-			</Map>
+				<Map ref='map' center={center} zoom={zoom}>
+					<TileLayer
+						attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+						url='https://{s}.tile.osm.org/{z}/{x}/{y}.png'
+					/>
+					{markers}
+					<Control position="topright" >
+						<button className="btn btn-light btn-outline-dark" onClick={ () => {this.refs.map.leafletElement.setView(center, zoom)} }> centrer </button>
+					</Control>
+				</Map>
 			);
 		}
 	}
