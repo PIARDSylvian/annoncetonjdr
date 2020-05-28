@@ -30,9 +30,14 @@
     {{ form_row(form.nameScenario) }}
     {{ form_row(form.scenarioEdition) }}
     {{ form_row(form.openedCampaign) }}
+    <small class="form-text text-muted mb-2"><strong>Astuce :</strong> penser rejoindre notre discord : <a href={{discord_link}}>Annonce ton JDR</a> ainsi qu' à ajouter votre pseudonym disord dans la description pour echanger plus facilement</small>
     {{ form_row(form.gameDescription) }}
     {{ form_widget(form._token) }}
-    <input type="submit" class="btn" value="Create"/>
+    {% if form.vars.value.id %}
+        <button type="submit" class="btn btn-primary">Metre a jour</button>
+    {% else %}
+        <button type="submit" class="btn btn-primary">Créer</button>
+    {% endif %}
 {{ form_end(form, {'render_rest': false}) }}
 {% endblock %}
 
