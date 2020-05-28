@@ -42,6 +42,7 @@ class Association
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups("card")
      */
     private $description;
 
@@ -53,11 +54,13 @@ class Association
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups("card")
      */
     private $pendding = true;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Commentary", mappedBy="association", cascade={"remove"})
+     * @Groups("card")
      */
     private $commentaries;
 

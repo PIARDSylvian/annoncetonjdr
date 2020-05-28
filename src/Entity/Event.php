@@ -73,6 +73,7 @@ class Event
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups("card")
      */
     private $pendding = true;
 

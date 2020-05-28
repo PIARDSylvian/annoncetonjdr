@@ -42,7 +42,7 @@ class LocationRepository extends ServiceEntityRepository
             ->andWhere( 'p.id IS NOT NULL OR e.id IS NOT NULL OR a.id IS NOT NULL' )
         ;
 
-        $query->setFirstResult($search->getPage())->setMaxResults(1);
+        $query->setFirstResult($search->getPage())->setMaxResults(10);
         $paginator = new Paginator($query, $fetchJoinCollection = true);
 
         return $paginator;
