@@ -749,7 +749,6 @@ $(function() {
 					resetStep: true
 				});
 			} else {
-				console.log('null');
 				this.setState({
 					lat: null,
 					lng: null,
