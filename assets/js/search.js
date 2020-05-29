@@ -36,7 +36,7 @@ $(function() {
 					iconClass = 'fa-dice';
 					break;
 				case 'events':
-					iconClass = 'fa-calendar';
+					iconClass = 'fa-calendar-alt';
 					break;
 				case 'association':
 					iconClass = 'fa-users';
@@ -46,7 +46,7 @@ $(function() {
 					iconClass = 'fa-circle';
 			}
 			const iconMarkup = renderToStaticMarkup(
-				<div className="fa-4x">
+				<div className="fa-3x">
 					<span className="fa-layers fa-fw">
 						<i className={`fas fa-map-marker ${color}`}></i>
 						<i className={`fa-inverse fas ${iconClass}`} data-fa-transform={`${shrink} ${up}`}></i>
@@ -734,12 +734,29 @@ $(function() {
 		}
 
 		handleSelect(e) {
-			this.setState({
-				lat: (e)? e.lat : null,
-				lng: (e)? e.lng : null,
-				address: (e)? e.value : null,
-				resetStep: true
-			});
+			if(e) {
+				this.setState({
+					lat: (e)? e.lat : null,
+					lng: (e)? e.lng : null,
+					address: (e)? e.value : null,
+					resetStep: true
+				});
+			} else if (this.state.address) {
+				this.setState({
+					lat: (e)? e.lat : null,
+					lng: (e)? e.lng : null,
+					address: (e)? e.value : null,
+					resetStep: true
+				});
+			} else {
+				console.log('null');
+				this.setState({
+					lat: null,
+					lng: null,
+					address: null,
+					items: [],
+				});
+			}
 		}
 
 		render() {
@@ -790,7 +807,7 @@ $(function() {
 					<div className="col-md-6 col-xs-12">
 						<div className="form">
 							<label className="sr-only" htmlFor="inputLocation">Ville de recherche</label>
-							<AsyncSelect placeholder="Rechercher proche d'un endroits" cacheOptions isClearable={true} formatOptionLabel={formatOptionLabel} styles={selectStyles} loadOptions={promiseOptions} onChange={this.handleSelect.bind(this)} />
+							<AsyncSelect placeholder="Rechercher proche d'un endroits" cacheOptions isClearable={true} formatOptionLabel={formatOptionLabel} styles={selectStyles} loadOptions={promiseOptions} onChange={this.handleSelect.bind(this)} isDisabled={!isLoaded}/>
 						</div>
 					</div>
 					<Filter items={items} error={error} isLoaded={isLoaded} stop={stop} handler={this.loadMore} resetStep={resetStep}/>
