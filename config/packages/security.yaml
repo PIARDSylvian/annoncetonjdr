@@ -16,7 +16,8 @@ security:
             security: false
         main:
             user_checker: App\Security\UserChecker
-            anonymous: lazy
+            anonymous: true
+            lazy: true
             guard:
                 authenticators:
                     - App\Security\LoginFormAuthenticator
