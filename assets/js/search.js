@@ -703,7 +703,7 @@ $(function() {
 
 					if (resetStep) {
 						items = result;
-						if (result.length > 0 && result[0].distance == 0) {
+						if (result.length > 0 && result[0].distance == 0 && result[0].events.length == 0 && result[0].parties.length == 0 && result[0].association == null) {
 							step = (result.length - 1);
 						} else {
 							step = result.length;
