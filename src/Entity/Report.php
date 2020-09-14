@@ -41,7 +41,7 @@ class Report
     private $solved = false;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $action;
 

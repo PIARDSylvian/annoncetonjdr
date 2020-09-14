@@ -42,6 +42,7 @@ class Commentary
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Party", inversedBy="commentaries")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $party;
 
@@ -53,6 +54,7 @@ class Commentary
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Association", inversedBy="commentaries")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $association;
 
