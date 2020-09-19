@@ -15,7 +15,7 @@
                     <a class="btn btn-outline-secondary" href="{{path('app_party_create')}}">Crée une partie</a>
                     <a class="btn btn-outline-secondary" href="{{path('app_event_create')}}">Crée un event</a>
                     {% if app.user.association %}
-                        <a class="btn btn-outline-secondary" href="{{path('app_association_show', {id:app.user.association.id})}}">Votre association</a>
+                        <a class="btn btn-outline-secondary" href="{{path('app_association_show', {slug:app.user.association.slug})}}">Votre association</a>
                     {% else %}
                         <a class="btn btn-outline-secondary" href="{{path('app_association_create')}}">Ajouter votre association</a>
                     {% endif %}

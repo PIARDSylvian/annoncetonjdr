@@ -11,22 +11,24 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use App\Entity\Commentary;
 use App\Form\CommentaryType;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\String\ByteString;
 
 class EventController extends AbstractController {
 
     /**
      * @Route("/event/create", name="app_event_create")
-     * @Route("/event/update/{id}", name="app_event_update", requirements={"id"="\d+"})
+     * @Route("/event/update/{slug}", name="app_event_update")
      */
-    public function create(Event $event = null, Request $request)
+    public function create(Event $event = null, Request $request, SluggerInterface $slugger)
     {
         if($event && $event->getDateFinish() <= new \DateTime('now')) {
             $this->addFlash('danger', 'Evénement terminé');
-            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+            return $this->redirectToRoute('app_event_show', ['slug' => $event->getSlug()]);
         }
         if($event && $event->getDateStart() <= new \DateTime('+2 hours')) {
             $this->addFlash('danger', 'Modification non autorisé, 2h avant le début');
-            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+            return $this->redirectToRoute('app_event_show', ['slug' => $event->getSlug()]);
         } elseif (!$event) {
             $event = new Event();
         }
@@ -36,20 +38,23 @@ class EventController extends AbstractController {
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            if (!$event->getSlug()) {
+                $event->setSlug($slugger->slug(ByteString::fromRandom(6).'-'.$event->getName().'-'.$event->getDateStart()->format('d-m-Y'))->lower());
+            }
             $event->setPendding(true);
             $event->setOwner($this->getUser());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($event);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+            return $this->redirectToRoute('app_event_show', ['slug' => $event->getSlug()]);
         }
 
         return $this->render('event/create.html.twig',array('form' => $form->createView()));
     }
 
     /**
-     * @Route("/event/{id}", name="app_event_show", requirements={"id"="\d+"})
+     * @Route("/event/{slug}", name="app_event_show")
      */
     public function show(Event $event, Request $request, PaginatorInterface $paginator)
     {
@@ -83,7 +88,7 @@ class EventController extends AbstractController {
                 $entityManager->persist($commentary);
                 $entityManager->flush();
                 
-                return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+                return $this->redirectToRoute('app_event_show', ['slug' => $event->getSlug()]);
             }
         }
         
@@ -116,7 +121,7 @@ class EventController extends AbstractController {
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+        return $this->redirectToRoute('app_event_show', ['slug' => $event->getSlug()]);
     }
 
     /**
@@ -131,6 +136,6 @@ class EventController extends AbstractController {
             }
             $entityManager->flush();
         }
-        return $this->redirectToRoute('app_event_show', ['id' => $event->getId()]);
+        return $this->redirectToRoute('app_event_show', ['slug' => $event->getSlug()]);
     }
 }

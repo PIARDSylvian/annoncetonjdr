@@ -8,7 +8,7 @@
 {% block body %}
 
 {% if app.user and app.user is same as(association.owner) %}
-    <a href="{{path('app_association_update', {id:association.id})}}"><input type="button" value="Modifier"></a>
+    <a href="{{path('app_association_update', {slug:association.slug})}}"><input type="button" value="Modifier"></a>
     <a href="{{path('app_association_delete', {id:association.id})}}"><input type="button" value="Supprimer"></a>
 {% elseif app.user %}
     <a href="{{path('app_report_association', {id:association.id})}}"><input type="button" value="Signaler"></a>

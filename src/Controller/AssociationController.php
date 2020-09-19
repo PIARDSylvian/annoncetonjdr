@@ -11,14 +11,16 @@ use App\Entity\Commentary;
 use App\Form\CommentaryType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\String\ByteString;
 
 class AssociationController extends AbstractController {
     
     /**
      * @Route("/association/create", name="app_association_create")
-     * @Route("/association/update/{id}", name="app_association_update", requirements={"id"="\d+"})
+     * @Route("/association/update/{slug}", name="app_association_update")
      */
-    public function create(Association $association = null, Request $request)
+    public function create(Association $association = null, Request $request, SluggerInterface $slugger)
     {
         if(!$association) {
             $association = new Association();
@@ -29,20 +31,23 @@ class AssociationController extends AbstractController {
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
+            if (!$association->getSlug()) {
+                $association->setSlug($slugger->slug(ByteString::fromRandom(6).'-'.$association->getName())->lower());
+            }
             $association->setPendding(true);
             $association->setOwner($this->getUser());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($association);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_association_show', ['id' => $association->getId()]);
+            return $this->redirectToRoute('app_association_show', ['slug' => $association->getSlug()]);
         }
 
         return $this->render('association/create.html.twig',array('form' => $form->createView()));
     }
 
     /**
-     * @Route("/association/{id}", name="app_association_show", requirements={"id"="\d+"})
+     * @Route("/association/{slug}", name="app_association_show")
      */
     public function show(Association $association, Request $request, PaginatorInterface $paginator)
     {
@@ -77,7 +82,7 @@ class AssociationController extends AbstractController {
                 $entityManager->persist($commentary);
                 $entityManager->flush();
 
-                return $this->redirectToRoute('app_association_show', ['id' => $association->getId()]);
+                return $this->redirectToRoute('app_association_show', ['slug' => $association->getSlug()]);
             }
         }
 
@@ -110,7 +115,7 @@ class AssociationController extends AbstractController {
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_association_show', ['id' => $association->getId()]);
+        return $this->redirectToRoute('app_association_show', ['slug' => $association->getSlug()]);
     }
 
     /**
@@ -125,6 +130,6 @@ class AssociationController extends AbstractController {
             }
             $entityManager->flush();
         }
-        return $this->redirectToRoute('app_association_show', ['id' => $association->getId()]);
+        return $this->redirectToRoute('app_association_show', ['slug' => $association->getSlug()]);
     }
 }
