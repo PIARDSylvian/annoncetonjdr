@@ -146,6 +146,12 @@ class Party
      */
     private $note;
 
+    /**
+     * @ORM\Column(type="string", length=255, unique=true)
+     * @Groups("card")
+     */
+    private $slug;
+
     public function __construct()
     {
         $this->registeredPlayers = new ArrayCollection();
@@ -443,6 +449,18 @@ class Party
     public function setNote(?Note $note): self
     {
         $this->note = $note;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

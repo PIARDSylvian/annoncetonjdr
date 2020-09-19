@@ -51,6 +51,9 @@ class SearchController extends AbstractController {
                     if($step == 0 && $idx == 0 && $result[0]->getLat() != $location->getLat() && $result[0]->getLng() != $location->getLng() && $result[0]->getAddress() != $location->getAddress()) {
                         $output[] = $location;
                     }
+                    if ($result['distance'] == null) {
+                        $result['distance'] = 0;
+                    }
                     $result[0]->setDistance($result['distance']);
                     $output[] = $result[0];
                 }

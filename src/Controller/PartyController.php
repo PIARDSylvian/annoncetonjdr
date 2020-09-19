@@ -14,22 +14,24 @@ use App\Form\PartyType;
 use App\Form\CommentaryType;
 use App\Form\NoteType;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\String\ByteString;
 
 class PartyController extends AbstractController {
     
     /**
      * @Route("/party/create", name="app_party_create")
-     * @Route("/party/update/{id}", name="app_party_update", requirements={"id"="\d+"})
+     * @Route("/party/update/{slug}", name="app_party_update")
      */
-    public function create(Party $party = null, Request $request)
+    public function create(Party $party = null, Request $request, SluggerInterface $slugger)
     {
         if($party && $party->getDate() <= new \DateTime('now')) {
             $this->addFlash('danger', 'Partie terminée');
-            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+            return $this->redirectToRoute('app_party_show', ['slug' => $party->getSlug()]);
         }
         if($party && $party->getDate() <= new \DateTime('+2 hours')) {
             $this->addFlash('danger', 'Modification non autorisé, 2h avant le début');
-            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+            return $this->redirectToRoute('app_party_show', ['slug' => $party->getSlug()]);
         } elseif (!$party) {
             $party = new Party();
         } 
@@ -37,20 +39,22 @@ class PartyController extends AbstractController {
         $form = $this->createForm(PartyType::class, $party);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
+            if (!$party->getSlug()) {
+                $party->setSlug($slugger->slug(ByteString::fromRandom(6).'-'.$party->getPartyName().'-'.$party->getDate()->format('d-m-Y'))->lower());
+            }
             $party->setOwner($this->getUser());
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($party);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+            return $this->redirectToRoute('app_party_show', ['slug' => $party->getSlug()]);
         }
 
         return $this->render('party/create.html.twig',array('form' => $form->createView()));
     }
 
     /**
-     * @Route("/party/{id}", name="app_party_show", requirements={"id"="\d+"})
+     * @Route("/party/{slug}", name="app_party_show")
      */
     public function show(Party $party, Request $request, PaginatorInterface $paginator)
     {
@@ -83,7 +87,7 @@ class PartyController extends AbstractController {
             $entityManager->persist($commentary);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+            return $this->redirectToRoute('app_party_show', ['slug' => $party->getSlug()]);
         }
 
         return $this->render('party/show.html.twig', ['party' => $party,'noteForm' => $noteForm->createView(),'form' => $form->createView(),'commentaries' => $commentaries]);
@@ -115,7 +119,7 @@ class PartyController extends AbstractController {
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+        return $this->redirectToRoute('app_party_show', ['slug' => $party->getSlug()]);
     }
 
     /**
@@ -130,7 +134,7 @@ class PartyController extends AbstractController {
             }
             $entityManager->flush();
         }
-        return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+        return $this->redirectToRoute('app_party_show', ['slug' => $party->getSlug()]);
     }
 
     /**
@@ -140,11 +144,11 @@ class PartyController extends AbstractController {
     {
         if($party && $party->getDate() <= new \DateTime('now')) {
             $this->addFlash('danger', 'Partie terminée');
-            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+            return $this->redirectToRoute('app_party_show', ['slug' => $party->getSlug()]);
         }
         if($party && $party->getDate() <= new \DateTime('+2 hours')) {
             $this->addFlash('danger', 'Inscription non autorisé, 2h avant le début');
-            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+            return $this->redirectToRoute('app_party_show', ['slug' => $party->getSlug()]);
         }
         if (count($party->getRegisteredPlayers()) < $party->getMaxPlayer() && ($this->getUser() != $party->getOwner())) {
             $party->addRegisteredPlayers($this->getUser());
@@ -155,7 +159,7 @@ class PartyController extends AbstractController {
             $this->addFlash('notice', 'Inscription validée');
         }
 
-        return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+        return $this->redirectToRoute('app_party_show', ['slug' => $party->getSlug()]);
     }
 
     /**
@@ -165,7 +169,7 @@ class PartyController extends AbstractController {
     {
         if($party && $party->getDate() <= new \DateTime('now')) {
             $this->addFlash('danger', 'Partie terminée');
-            return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+            return $this->redirectToRoute('app_party_show', ['slug' => $party->getSlug()]);
         }
         $party->removeRegisteredPlayers($this->getUser());
 
@@ -174,7 +178,7 @@ class PartyController extends AbstractController {
 
         $this->addFlash('notice', 'Désinscription validée');
 
-        return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+        return $this->redirectToRoute('app_party_show', ['slug' => $party->getSlug()]);
     }
 
     /**
@@ -209,6 +213,6 @@ class PartyController extends AbstractController {
                 $this->addFlash('notice', 'Partie noté');
             }
         }
-        return $this->redirectToRoute('app_party_show', ['id' => $party->getId()]);
+        return $this->redirectToRoute('app_party_show', ['slug' => $party->getSlug()]);
     }
 }

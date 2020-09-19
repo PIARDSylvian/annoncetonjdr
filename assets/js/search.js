@@ -205,7 +205,7 @@ $(function() {
 								</ul>
 								<div className="card-body"></div>
 								<div className="card-footer text-center">
-									<a href={ROUTES.APP_PARTY_SHOW + party.id} className="btn btn-primary">Voir plus</a>
+									<a href={ROUTES.APP_PARTY_SHOW + party.slug} className="btn btn-primary">Voir plus</a>
 								</div>
 							</div>
 						</div>
@@ -256,7 +256,7 @@ $(function() {
 								</ul>
 								<div className="card-body"></div>
 								<div className="card-footer text-center">
-									<a href={ROUTES.APP_EVENT_SHOW + event.id} className="btn btn-primary">Voir plus</a>
+									<a href={ROUTES.APP_EVENT_SHOW + event.slug} className="btn btn-primary">Voir plus</a>
 								</div>
 							</div>
 						</div>
@@ -305,7 +305,7 @@ $(function() {
 							</ul>
 							<div className="card-body"></div>
 							<div className="card-footer text-center">
-								<a href={ROUTES.APP_ASSOCIATION_SHOW + association.id} className="btn btn-primary">Voir plus</a>
+								<a href={ROUTES.APP_ASSOCIATION_SHOW + association.slug} className="btn btn-primary">Voir plus</a>
 							</div>
 						</div>
 					</div>
@@ -703,7 +703,7 @@ $(function() {
 
 					if (resetStep) {
 						items = result;
-						if (result.length > 0 && result[0].distance == 0) {
+						if (result.length > 0 && result[0].distance == 0 && result[0].events.length == 0 && result[0].parties.length == 0 && result[0].association == null) {
 							step = (result.length - 1);
 						} else {
 							step = result.length;

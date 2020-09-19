@@ -9,7 +9,7 @@
 
 {% if app.user and app.user is same as(event.owner) %}
     {% if "+2hours"|date('U') < event.dateStart.date|date('U') %}
-        <a href="{{path('app_event_update', {id:event.id})}}"><input type="button" value="Modifier"></a>
+        <a href="{{path('app_event_update', {slug:event.slug})}}"><input type="button" value="Modifier"></a>
     {% endif %}
     <a href="{{path('app_event_delete', {id:event.id})}}"><input type="button" value="Supprimer"></a>
 {% elseif app.user %}
