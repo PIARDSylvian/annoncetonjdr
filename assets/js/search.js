@@ -121,7 +121,7 @@ $(function() {
 			if(parties.length === 0) { return };
 			
 			for (const [index, value] of parties.entries()) {
-				output.push(<span key={countPopup} ><a href={ROUTES.APP_PARTY_SHOW + value.id}>{value.partyName}</a><br /></span>);
+				output.push(<span key={countPopup} ><a href={ROUTES.APP_PARTY_SHOW + value.slug}>{value.partyName}</a><br /></span>);
 				countPopup++;
 			}
 
@@ -134,7 +134,7 @@ $(function() {
 			if(events.length === 0) { return };
 
 			for (const [index, value] of events.entries()) {
-				output.push(<span key={countPopup} ><a href={ROUTES.APP_EVENT_SHOW + value.id}>{value.name}</a><br /></span>);
+				output.push(<span key={countPopup} ><a href={ROUTES.APP_EVENT_SHOW + value.slug}>{value.name}</a><br /></span>);
 				countPopup++;
 			}
 
@@ -145,7 +145,7 @@ $(function() {
 
 			if(!association) { return };
 			
-			let output = <span key={countPopup} ><a href={ROUTES.APP_ASSOCIATION_SHOW + association.id}>{association.name}</a></span>;
+			let output = <span key={countPopup} ><a href={ROUTES.APP_ASSOCIATION_SHOW + association.slug}>{association.name}</a></span>;
 			countPopup++;
 			return <span><br />Assoc :<br /><br />{output}</span>;
 		}
