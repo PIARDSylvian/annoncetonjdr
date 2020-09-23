@@ -1,5 +1,5 @@
 <?php
-namespace App\RequestListener;
+namespace App\EventListener;
 
 use App\Entity\User;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
