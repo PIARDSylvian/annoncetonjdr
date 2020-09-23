@@ -1,8 +1,5 @@
 <?php
 
-echo "Bonjour le monde";
-die;
-
 use App\Kernel;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
@@ -25,6 +22,9 @@ if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? false) {
 if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
     Request::setTrustedHosts([$trustedHosts]);
 }
+
+echo "Bonjour le monde";
+die;
 
 $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
 $request = Request::createFromGlobals();
