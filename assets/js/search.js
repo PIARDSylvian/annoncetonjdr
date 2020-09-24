@@ -761,7 +761,7 @@ $(function() {
 		render() {
 			const {error, isLoaded, stop, items, resetStep} = this.state;
 			const promiseOptions = inputValue => {
-				const url = "http://photon.komoot.de/api?" + $.param({q: inputValue, lang: 'fr'});
+				const url = "https://photon.komoot.de/api?" + $.param({q: inputValue, lang: 'fr'});
 				return fetch(url)
 					.then(response => response.json())
 					.then(response => {
