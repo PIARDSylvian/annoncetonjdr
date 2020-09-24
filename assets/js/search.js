@@ -408,7 +408,8 @@ $(function() {
 			const ouputItems = [];
 
 			for (const [idx, l] of items.entries()) {
-				if (idx == 0 && l.distance == 0 && l.parties.length == 0 && l.events.length == 0 && l.association == null && items.length > 1) {
+				if (idx == 0 && l.distance == 0 && l.parties.length == 0 && l.events.length == 0 && l.association == null) {
+				// if (idx == 0 && l.distance == 0 && l.parties.length == 0 && l.events.length == 0 && l.association == null && items.length > 1) {
 					ouputItems.push(l)
 				}
 				if (l.parties.length > countItems) {
@@ -776,8 +777,8 @@ $(function() {
 
 							o_data.push({
 								label: l_str,
-								lat: i_data.geometry.coordinates[1],
-								lng: i_data.geometry.coordinates[0],
+								lat: i_data.geometry.coordinates[1].toFixed(6),
+								lng: i_data.geometry.coordinates[0].toFixed(6),
 								value: l_str
 							});
 						});
