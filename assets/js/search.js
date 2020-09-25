@@ -409,7 +409,7 @@ $(function() {
 
 			for (const [idx, l] of items.entries()) {
 				if (idx == 0 && l.distance == 0 && l.parties.length == 0 && l.events.length == 0 && l.association == null) {
-				//if (idx == 0 && l.distance == 0 && l.parties.length == 0 && l.events.length == 0 && l.association == null && items.length > 1) {
+				// if (idx == 0 && l.distance == 0 && l.parties.length == 0 && l.events.length == 0 && l.association == null && items.length > 1) {
 					ouputItems.push(l)
 				}
 				if (l.parties.length > countItems) {

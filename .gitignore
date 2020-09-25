@@ -22,3 +22,11 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+
+###> heroku branch ###
+Procfile
+composer.json
+config/packages/doctrine.yaml
+config/packages/prod/monolog.yaml
+public/index.php
+###> heroku branch ###
