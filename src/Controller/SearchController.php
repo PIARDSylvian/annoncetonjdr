@@ -62,7 +62,6 @@ class SearchController extends AbstractController {
                 $output[] = $location;
             }
 
-
             $json = $serializer->serialize($output,'json',['groups'=>'card']);
             
             return JsonResponse::fromJsonString($json);
