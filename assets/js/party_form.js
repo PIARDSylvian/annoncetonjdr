@@ -72,7 +72,7 @@ $(function () {
 
     $("#select2-address").select2({
         ajax: {
-            url: "http://photon.komoot.de/api",
+            url: "https://photon.komoot.de/api",
             dataType: 'json',
             data: function (params) {
                 return {

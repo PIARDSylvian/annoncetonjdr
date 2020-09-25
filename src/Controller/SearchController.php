@@ -58,6 +58,9 @@ class SearchController extends AbstractController {
                     $output[] = $result[0];
                 }
             }
+            elseif( count($searchResult) === 0 && $step == 0) {
+                $output[] = $location;
+            }
 
             $json = $serializer->serialize($output,'json',['groups'=>'card']);
             
