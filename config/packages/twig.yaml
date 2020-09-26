@@ -4,3 +4,6 @@ twig:
 
     globals:
         discord_link: '%env(DISCORD_LINK)%'
+        atjdr_mail: '%env(ATJDR_MAIL)%'
+        facebook_link: '%env(FACEBOOK_LINK)%'
+        twitter_link: '%env(TWITTER_LINK)%'
