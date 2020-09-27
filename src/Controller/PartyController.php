@@ -90,9 +90,6 @@ class PartyController extends AbstractController {
             return $this->redirectToRoute('app_party_show', ['slug' => $party->getSlug()]);
         }
 
-        dump($party);
-        die;
-
         return $this->render('party/show.html.twig', ['party' => $party,'noteForm' => $noteForm->createView(),'form' => $form->createView(),'commentaries' => $commentaries]);
     }
 
