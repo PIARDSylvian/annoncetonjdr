@@ -7,8 +7,9 @@
 
 {% block body %}
 date de la partie 
-<p>{{party.date.date}}</p>
+<p>{{ party.date|date("m/d/Y") }}</p>
 date reel
+<p>{{ party.date.date|date("m/d/Y") }}</p>
 <p>{{ "now"|date("m/d/Y") }}</p>
 {% if app.user and app.user is same as(party.owner) %}
     {% if "+2hours"|date('U') < party.date.date|date('U') %}
