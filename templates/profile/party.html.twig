@@ -23,7 +23,7 @@
                             <p class="card-text">{% if party.gameDescription %}{{party.gameDescription|u.truncate(150, '...')}}{% else %}Aucune description{% endif %}</p>
                         </div>
                         <div class="card-footer text-center">
-                            <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{party.date.date|date('d-m-Y H:i')}}</small></p>
+                            <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{party.date|date('d-m-Y H:i')}}</small></p>
                         </div>
                     </div>
                     <div class="card back">
@@ -68,7 +68,7 @@
                             <p class="card-text">{% if party.gameDescription %}{{party.gameDescription|u.truncate(150, '...')}}{% else %}Aucune description{% endif %}</p>
                         </div>
                         <div class="card-footer text-center">
-                            <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{party.date.date|date('d-m-Y H:i')}}</small></p>
+                            <p class="card-text"><i class="far fa-calendar-alt"></i> <small class="text-muted">{{party.date|date('d-m-Y H:i')}}</small></p>
                         </div>
                     </div>
                     <div class="card back">
