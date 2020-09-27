@@ -6,10 +6,6 @@
 {% endblock %}
 
 {% block body %}
-date de la partie 
-<p>{{ party.date|date("m/d/Y") }}</p>
-date reel
-<p>{{ "now"|date("m/d/Y") }}</p>
 {% if app.user and app.user is same as(party.owner) %}
     {% if "+2hours"|date('U') < party.date.date|date('U') %}
         <a href="{{path('app_party_update', {slug:party.slug})}}"><input type="button" value="Modifier"></a>
