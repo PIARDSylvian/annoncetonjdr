@@ -7,7 +7,7 @@
 
 {% block body %}
 {% if app.user and app.user is same as(party.owner) %}
-    {% if "+2hours"|date('U') < party.date.date|date('U') %}
+    {% if "+2hours"|date('U') < party.date|date('U') %}
         <a href="{{path('app_party_update', {slug:party.slug})}}"><input type="button" value="Modifier"></a>
     {% endif %}
     <a href="{{path('app_party_delete', {id:party.id})}}"><input type="button" value="Supprimer"></a>
@@ -17,7 +17,7 @@
 
 <h1>{{party.partyName}}</h1>
 <p>annonce de {{ party.owner.pseudonym }}</p>
-<p>{{ party.date.date }}</p>
+<p>{{party.date|date('d-m-Y H:i')}}</p>
 <p>Déjà inscrit : {{party.alreadySubscribed + party.registeredPlayers|length}}</p>
 <p>Place restante : {{party.maxPlayer - (party.alreadySubscribed + party.registeredPlayers|length)}}</p>
 <p>Accepte les mineur : {{party.minor ? 'Oui':'Non'}}</p>
@@ -35,7 +35,7 @@
 <p>partie en ligne</p>
 {% endif %}
 
-{% if app.user and "now"|date('U') > party.date.date|date('U') %}
+{% if app.user and "now"|date('U') > party.date|date('U') %}
     {% if (not party.note or app.user not in party.note.notePlayers) and app.user in party.registeredPlayers %}
         {{ form_start(noteForm) }}
             {{ form_row(noteForm.ambiance) }}
@@ -48,7 +48,7 @@
     {% endif %}
 {% endif %}
 
-{% if app.user and app.user != party.owner and "+2hours"|date('U') < party.date.date|date('U') %}
+{% if app.user and app.user != party.owner and "+2hours"|date('U') < party.date|date('U') %}
     {% if app.user in party.registeredPlayers %}
     <a href="{{path('app_party_remove', {id:party.id})}}"><input type="button" value="se desincrire"></a>
     {% elseif (party.maxPlayer - (party.alreadySubscribed + party.registeredPlayers|length)) > 0 %}
