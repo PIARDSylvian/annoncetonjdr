@@ -8,7 +8,7 @@
 {% block body %}
 
 {% if app.user and app.user is same as(event.owner) %}
-    {% if "+2hours"|date('U') < event.dateStart.date|date('U') %}
+    {% if "+2hours"|date('U') < event.dateStart|date('U') %}
         <a href="{{path('app_event_update', {slug:event.slug})}}"><input type="button" value="Modifier"></a>
     {% endif %}
     <a href="{{path('app_event_delete', {id:event.id})}}"><input type="button" value="Supprimer"></a>
@@ -18,8 +18,8 @@
 
 <h1>{{event.name}}</h1>
 <p>annonce de {{ event.owner.pseudonym }}</p>
-<p>{{ event.dateStart.date }}</p>
-<p>{{ event.dateFinish.date }}</p>
+<p>{{ event.dateStart|date('d-m-Y H:i')}}</p>
+<p>{{ event.dateFinish|date('d-m-Y H:i')}}</p>
 <p>Déscription : {{event.description}}</p>
 
 {% if not event.pendding and event.imageUrl %}
