@@ -764,13 +764,11 @@ $(function() {
 			const promiseOptions = inputValue => {
 				const url = "https://photon.komoot.de/api?" + $.param({q: inputValue, lang: 'fr'});
 
-				config.setHeader('Access-Control-Allow-Origin', '*');
-
 				// var config = {
 				// 	headers: { 'Access-Control-Allow-Origin': '*' }
 				// };
 
-				return fetch(url, config)
+				return fetch(url, { mode: 'no-cors' })
 					.then(response => response.json())
 					.then(response => {
 						let o_data = [];
