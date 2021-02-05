@@ -768,7 +768,7 @@ $(function() {
 				// 	headers: { 'Access-Control-Allow-Origin': '*' }
 				// };
 
-				return fetch(url, { mode: 'no-cors' })
+				return fetch(url, { mode: "no-cors" })
 					.then(response => response.json())
 					.then(response => {
 						let o_data = [];
