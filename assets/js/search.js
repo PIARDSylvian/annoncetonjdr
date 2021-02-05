@@ -763,7 +763,12 @@ $(function() {
 			const {error, isLoaded, stop, items, resetStep} = this.state;
 			const promiseOptions = inputValue => {
 				const url = "https://photon.komoot.de/api?" + $.param({q: inputValue, lang: 'fr'});
-				return fetch(url)
+
+				var config = {
+					headers: { 'Access-Control-Allow-Origin': '*' }
+				};
+
+				return fetch(url, config)
 					.then(response => response.json())
 					.then(response => {
 						let o_data = [];
